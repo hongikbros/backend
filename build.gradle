@@ -58,3 +58,16 @@ asciidoctor {
     inputs.dir snippetsDir
     dependsOn test
 }
+
+processResources {
+    copy {
+        from "backend-secret"
+        include "application.yml"
+        into "src/main/resources"
+    }
+    copy{
+        from "backend-secret"
+        include "resources-${profile}/**"
+        into "src/main/"
+    }
+}
