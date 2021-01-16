@@ -1,0 +1,4 @@
+[submodule "backend-secret"]
+	path = backend-secret
+	url = https://github.com/hongikbros/backend-secret.git
+	branch = master
