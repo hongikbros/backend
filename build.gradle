@@ -51,6 +51,7 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
     testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+    testImplementation 'org.mockito:mockito-inline:2.13.0'
 }
 
 test {
@@ -69,7 +70,7 @@ processResources {
         include "application.yml"
         into "src/main/resources"
     }
-    copy{
+    copy {
         from "backend-secret"
         include "resources-${profile}/**"
         into "src/main/"
