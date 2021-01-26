@@ -24,7 +24,7 @@ public class BaseEntity {
     private String lastModifiedBy;
 
     @LastModifiedDate
-    private LocalDateTime modifiedDate;
+    private LocalDateTime lastModifiedDate;
 
     public String getCreatedBy() {
         return createdBy;
@@ -38,7 +38,7 @@ public class BaseEntity {
         return lastModifiedBy;
     }
 
-    public LocalDateTime getModifiedDate() {
-        return modifiedDate;
+    public LocalDateTime getLastModifiedDate() {
+        return lastModifiedDate;
     }
 }
