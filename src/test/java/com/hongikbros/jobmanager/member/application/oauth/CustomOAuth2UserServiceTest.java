@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
 
+import java.util.Map;
 import java.util.Optional;
 
 import javax.servlet.http.HttpSession;
@@ -20,11 +21,11 @@ import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserServ
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
-import com.hongikbros.jobmanager.common.utils.TestObjectUtils;
 import com.hongikbros.jobmanager.member.domain.member.Member;
 import com.hongikbros.jobmanager.member.domain.member.MemberRepository;
 import com.hongikbros.jobmanager.member.domain.member.Role;
-import com.hongikbros.jobmanager.member.fixture.AttributesFixture;
+import com.hongikbros.jobmanager.member.fixture.member.MemberFixture;
+import com.hongikbros.jobmanager.member.fixture.oauth.AttributesFixture;
 
 @ExtendWith(MockitoExtension.class)
 class CustomOAuth2UserServiceTest {
@@ -53,9 +54,9 @@ class CustomOAuth2UserServiceTest {
     @Test
     void should_saveOrUpdateMember_whenOauth2UserIsLoad() {
         // given
-        AttributesFixture attributesFixture = new AttributesFixture();
-        Member member = TestObjectUtils.createMember(1L, "1", "EunSeok", "test@test.com",
-                "test.url", "testLogin");
+        Map<String, Object> attributes = AttributesFixture.ATTRIBUTES_FIXTURE;
+        Member member = MemberFixture.MEMBER1;
+
         given(
                 userRequest.getClientRegistration()
                         .getProviderDetails()
@@ -63,7 +64,7 @@ class CustomOAuth2UserServiceTest {
                         .getUserNameAttributeName()
         ).willReturn("id");
         given(defaultOAuth2UserService.loadUser(any())).willReturn(oAuth2User);
-        given(oAuth2User.getAttributes()).willReturn(attributesFixture.getAttribute());
+        given(oAuth2User.getAttributes()).willReturn(attributes);
         given(memberRepository.findByEmail(any())).willReturn(Optional.of(member));
         given(memberRepository.save(any())).willReturn(member);
         // when
@@ -73,9 +74,9 @@ class CustomOAuth2UserServiceTest {
                 .orElseThrow(IllegalArgumentException::new);
         // then
         assertAll(
-                () -> then(httpSession).should(times(1)).setAttribute(any(), any()),
+                () -> then(httpSession).should(times(2)).setAttribute(any(), any()),
                 () -> assertThat(defaultOAuth2User.getAttributes()).containsValues(
-                        "1",
+                        1,
                         "EunSeok",
                         "test@test.com",
                         "avatar.url"),

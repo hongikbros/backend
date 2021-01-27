@@ -1,4 +1,4 @@
-package com.hongikbros.jobmanager.member.application.oauth;
+package com.hongikbros.jobmanager.member.application.member;
 
 import java.io.Serializable;
 

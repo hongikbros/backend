@@ -21,9 +21,12 @@ import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hongikbros.jobmanager.member.application.member.SessionMember;
+import com.hongikbros.jobmanager.member.application.oauth.CustomOAuth2UserService;
+import com.hongikbros.jobmanager.member.fixture.member.MemberFixture;
 
 @ExtendWith(MockitoExtension.class)
-class Oauth2SuccessHandlerTest {
+class CustomOauth2SuccessHandlerTest {
 
     @Mock
     private HttpServletRequest request;
@@ -31,28 +34,30 @@ class Oauth2SuccessHandlerTest {
     private HttpServletResponse response;
     @Mock
     private Authentication authentication;
-    
+
     @Mock
     private HttpSession httpSession;
     @Mock
     private ObjectMapper objectMapper;
 
-    private Oauth2SuccessHandler oauth2SuccessHandler;
+    private CustomOauth2SuccessHandler customOauth2SuccessHandler;
 
     @BeforeEach
     void setUp() {
-        oauth2SuccessHandler = new Oauth2SuccessHandler(httpSession, objectMapper);
+        customOauth2SuccessHandler = new CustomOauth2SuccessHandler(httpSession, objectMapper);
     }
 
     @DisplayName("Authentication 과정이 끝나고 SuccessHandler에 의해 response에 write 된다")
     @Test
     void should_writeResponse_whenAuthenticationIsSuccessful() throws IOException {
         // given
+        given(httpSession.getAttribute(any())).willReturn(SessionMember.of(MemberFixture.MEMBER1));
         // when
-        oauth2SuccessHandler.onAuthenticationSuccess(request, response, authentication);
+        customOauth2SuccessHandler.onAuthenticationSuccess(request, response, authentication);
         // then
         assertAll(
-                () -> then(httpSession).should(times(1)).getAttribute("user"),
+                () -> then(httpSession).should(times(1))
+                        .getAttribute(CustomOAuth2UserService.MEMBER),
                 () -> then(response).should(times(1))
                         .setContentType(MediaType.APPLICATION_JSON_VALUE),
                 () -> then(response).should(times(1)).setStatus(HttpStatus.OK.value()),
