@@ -15,15 +15,17 @@ import org.springframework.security.web.authentication.SimpleUrlAuthenticationSu
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hongikbros.jobmanager.member.application.oauth.SessionMember;
+import com.hongikbros.jobmanager.member.application.member.MemberResponse;
+import com.hongikbros.jobmanager.member.application.member.SessionMember;
+import com.hongikbros.jobmanager.member.application.oauth.CustomOAuth2UserService;
 
 @Component
-public class Oauth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
+public class CustomOauth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
     private final HttpSession httpSession;
     private final ObjectMapper objectMapper;
 
-    public Oauth2SuccessHandler(HttpSession httpSession,
+    public CustomOauth2SuccessHandler(HttpSession httpSession,
             ObjectMapper objectMapper) {
         this.httpSession = httpSession;
         this.objectMapper = objectMapper;
@@ -33,16 +35,23 @@ public class Oauth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
             Authentication authentication) throws IOException {
         try {
-            final SessionMember sessionMember = (SessionMember)httpSession.getAttribute("user");
+            final SessionMember sessionMember = (SessionMember)httpSession.getAttribute(
+                    CustomOAuth2UserService.MEMBER);
 
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
             response.setStatus(HttpStatus.OK.value());
             response.setCharacterEncoding("utf-8");
-            response.getWriter().write(objectMapper.writeValueAsString(sessionMember));
+            response.getWriter()
+                    .write(objectMapper.writeValueAsString(MemberResponse.from(sessionMember)));
 
-            httpSession.removeAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
+            clearAuthenticationAttributes();
         } catch (IllegalStateException e) {
             logger.debug(LogMessage.format("Session is Invalided"));
         }
+    }
+
+    private void clearAuthenticationAttributes() {
+        httpSession.removeAttribute(CustomOAuth2UserService.PRINCIPAL_OAUTHID_BEFORE_SAVING);
+        httpSession.removeAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
     }
 }

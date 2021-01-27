@@ -13,11 +13,15 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.hongikbros.jobmanager.member.application.member.SessionMember;
 import com.hongikbros.jobmanager.member.domain.member.Member;
 import com.hongikbros.jobmanager.member.domain.member.MemberRepository;
 
 @Service
 public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
+
+    public static final String MEMBER = "member";
+    public static final String PRINCIPAL_OAUTHID_BEFORE_SAVING = "principalNameBeforeSaving";
 
     private final MemberRepository memberRepository;
     private final HttpSession httpSession;
@@ -44,7 +48,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
                 userNameAttributeName);
 
         Member member = saveOrUpdate(attributes);
-        httpSession.setAttribute("user", SessionMember.of(member));
+        httpSession.setAttribute(MEMBER, SessionMember.of(member));
 
         return new DefaultOAuth2User(
                 Collections.singletonList(new SimpleGrantedAuthority(member.getRole().getKey())),
@@ -53,6 +57,8 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
     }
 
     private Member saveOrUpdate(OAuthAttributes attributes) {
+        httpSession.setAttribute(PRINCIPAL_OAUTHID_BEFORE_SAVING, attributes.getName());
+
         Member member = memberRepository.findByEmail(attributes.getEmail())
                 .map(entity -> entity.update(attributes.getName(), attributes.getAvatar()))
                 .orElse(attributes.toEntity());
