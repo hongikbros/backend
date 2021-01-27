@@ -14,7 +14,7 @@ class MemberTest {
     @ParameterizedTest
     @ValueSource(strings = {"joseph415", "JA960508"})
     void should_returnAdminMember_whenRoleIsAdmin(String expected) {
-        Member member = Member.of("1L", "EunSeok", "admin@admin.com", "test", expected);
+        Member member = Member.of(1L, "EunSeok", "admin@admin.com", "test", expected);
 
         assertThat(member.getRole()).isEqualByComparingTo(Role.ADMIN);
     }
@@ -22,7 +22,7 @@ class MemberTest {
     @DisplayName("AdminAccount 가 아니면 Member의 Role은 ROLE_USER 이다")
     @Test
     void should_returnUserMember_whenRoleIsUser() {
-        Member member = Member.of("1L", "EunSeok", "admin@admin.com", "test", "user");
+        Member member = Member.of(1L, "EunSeok", "admin@admin.com", "test", "user");
 
         assertThat(member.getRole()).isEqualByComparingTo(Role.USER);
     }
@@ -31,7 +31,7 @@ class MemberTest {
     @Test
     void should_updateMember_whenNameAndAvatarIsGiven() {
         // given
-        Member member = Member.of("1L", "EunSeok", "admin@admin.com", "test", "user");
+        Member member = Member.of(1L, "EunSeok", "admin@admin.com", "test", "user");
         String expectedName = "changingName";
         String expectedAvatar = "changingAvatar";
         // when

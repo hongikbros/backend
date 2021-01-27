@@ -18,7 +18,7 @@ public class Member extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String oauthId;
+    private Long oauthId;
 
     private String name;
 
@@ -32,7 +32,7 @@ public class Member extends BaseEntity {
     protected Member() {
     }
 
-    private Member(Long id, String oauthId, String name, String email, String avatar,
+    private Member(Long id, Long oauthId, String name, String email, String avatar,
             Role role) {
         this.id = id;
         this.oauthId = oauthId;
@@ -42,7 +42,7 @@ public class Member extends BaseEntity {
         this.role = role;
     }
 
-    public static Member of(String oauthId, String name, String email, String avatar,
+    public static Member of(Long oauthId, String name, String email, String avatar,
             String login) {
         if (AdminAccount.isAdmin(login)) {
             return new Member(null, oauthId, name, email, avatar, Role.ADMIN);
@@ -60,7 +60,7 @@ public class Member extends BaseEntity {
         return id;
     }
 
-    public String getOauthId() {
+    public Long getOauthId() {
         return oauthId;
     }
 

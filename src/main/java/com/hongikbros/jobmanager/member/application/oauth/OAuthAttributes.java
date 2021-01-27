@@ -7,13 +7,13 @@ import com.hongikbros.jobmanager.member.domain.member.Member;
 public class OAuthAttributes {
     private final Map<String, Object> attributes;
     private final String nameAttributeKey;
-    private final String oauthId;
+    private final Long oauthId;
     private final String name;
     private final String email;
     private final String avatar;
 
     private OAuthAttributes(Map<String, Object> attributes, String nameAttributeKey,
-            String oauthId, String name, String email, String avatar) {
+            Long oauthId, String name, String email, String avatar) {
         this.attributes = attributes;
         this.nameAttributeKey = nameAttributeKey;
         this.oauthId = oauthId;
@@ -26,7 +26,7 @@ public class OAuthAttributes {
         return new OAuthAttributes(
                 attributes,
                 userNameAttributeName,
-                (String)attributes.get("id"),
+                Long.valueOf((Integer)attributes.get("id")),
                 (String)attributes.get("name"),
                 (String)attributes.get("email"),
                 (String)attributes.get("avatar_url")
@@ -45,7 +45,7 @@ public class OAuthAttributes {
         return nameAttributeKey;
     }
 
-    public String getOauthId() {
+    public Long getOauthId() {
         return oauthId;
     }
 

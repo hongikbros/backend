@@ -24,14 +24,14 @@ class MemberRepositoryTest {
     void should_returnOptionalMember_whenEmailIsGiven() {
         // given
         String email = "admin@admin.com";
-        memberRepository.save(Member.of("1L", "Test auditor", email, "test.avatar", "test login"));
+        memberRepository.save(Member.of(1L, "Test auditor", email, "test.avatar", "test login"));
         // when
         final Member member = memberRepository.findByEmail(email)
                 .orElseThrow(IllegalArgumentException::new);
         // then
         assertAll(
                 () -> assertThat(member.getId()).isEqualTo(1L),
-                () -> assertThat(member.getOauthId()).isEqualTo("1L"),
+                () -> assertThat(member.getOauthId()).isEqualTo(1L),
                 () -> assertThat(member.getName()).isEqualTo("Test auditor"),
                 () -> assertThat(member.getEmail()).isEqualTo(email),
                 () -> assertThat(member.getAvatar()).isEqualTo("test.avatar"),
