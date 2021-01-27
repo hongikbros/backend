@@ -4,20 +4,25 @@ import org.springframework.core.env.Environment;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
+import com.hongikbros.jobmanager.common.domain.security.CustomOauth2SuccessHandler;
 import com.hongikbros.jobmanager.member.application.oauth.CustomOAuth2UserService;
 
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final CustomOAuth2UserService customOAuth2UserService;
+    private final CustomOauth2SuccessHandler customOauth2SuccessHandler;
     private final Environment environment;
 
     public SecurityConfig(
             CustomOAuth2UserService customOAuth2UserService,
+            CustomOauth2SuccessHandler customOauth2SuccessHandler,
             Environment environment) {
         this.customOAuth2UserService = customOAuth2UserService;
+        this.customOauth2SuccessHandler = customOauth2SuccessHandler;
         this.environment = environment;
     }
 
@@ -35,10 +40,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .formLogin().disable()
                 .headers().frameOptions().sameOrigin()
                 .and()
-                    .csrf().requireCsrfProtectionMatcher(new AntPathRequestMatcher("!/h2/**"))
+                    .csrf()
+                        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                        .requireCsrfProtectionMatcher(new AntPathRequestMatcher("!/h2/**"))
                 .and()
-                    .antMatcher("/**")
-                    .authorizeRequests()
+                    .antMatcher("/**").authorizeRequests()
                     .antMatchers("/h2").permitAll()
                 .and()
                 .logout()
@@ -48,7 +54,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .deleteCookies("JSESSIONID")
                 .and()
                     .oauth2Login()
-                        // .loginPage("/")
+                        .successHandler(customOauth2SuccessHandler)
                         .userInfoEndpoint()
                         .userService(customOAuth2UserService);
         //@formatter:on
