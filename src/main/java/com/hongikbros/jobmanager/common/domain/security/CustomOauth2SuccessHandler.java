@@ -1,6 +1,7 @@
 package com.hongikbros.jobmanager.common.domain.security;
 
 import java.io.IOException;
+import java.util.Objects;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -10,7 +11,6 @@ import org.springframework.core.log.LogMessage;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.web.WebAttributes;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
@@ -44,14 +44,16 @@ public class CustomOauth2SuccessHandler extends SimpleUrlAuthenticationSuccessHa
             response.getWriter()
                     .write(objectMapper.writeValueAsString(MemberResponse.from(sessionMember)));
 
-            clearAuthenticationAttributes();
+            clearAuthenticationAttributesInSession(request);
         } catch (IllegalStateException e) {
             logger.debug(LogMessage.format("Session is Invalided"));
         }
     }
 
-    private void clearAuthenticationAttributes() {
-        httpSession.removeAttribute(CustomOAuth2UserService.PRINCIPAL_OAUTHID_BEFORE_SAVING);
-        httpSession.removeAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
+    private void clearAuthenticationAttributesInSession(HttpServletRequest request) {
+        if (Objects.nonNull(httpSession)) {
+            httpSession.removeAttribute(CustomOAuth2UserService.PRINCIPAL_OAUTHID_BEFORE_SAVING);
+        }
+        clearAuthenticationAttributes(request);
     }
 }
