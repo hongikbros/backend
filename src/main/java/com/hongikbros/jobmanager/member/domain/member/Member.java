@@ -44,10 +44,7 @@ public class Member extends BaseEntity {
 
     public static Member of(Long oauthId, String name, String email, String avatar,
             String login) {
-        if (AdminAccount.isAdmin(login)) {
-            return new Member(null, oauthId, name, email, avatar, Role.ADMIN);
-        }
-        return new Member(null, oauthId, name, email, avatar, Role.USER);
+        return new Member(null, oauthId, name, email, avatar, RoleFactory.creatFrom(login));
     }
 
     public Member update(String name, String avatar) {

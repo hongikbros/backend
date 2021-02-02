@@ -10,7 +10,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 class MemberTest {
 
-    @DisplayName("AdminAccount 이면 Member의 Role은 ROLE_ADMIN 이다")
+    @DisplayName("RoleFactory 이면 Member의 Role은 ROLE_ADMIN 이다")
     @ParameterizedTest
     @ValueSource(strings = {"joseph415", "JA960508"})
     void should_returnAdminMember_whenRoleIsAdmin(String expected) {
@@ -19,7 +19,7 @@ class MemberTest {
         assertThat(member.getRole()).isEqualByComparingTo(Role.ADMIN);
     }
 
-    @DisplayName("AdminAccount 가 아니면 Member의 Role은 ROLE_USER 이다")
+    @DisplayName("RoleFactory 가 아니면 Member의 Role은 ROLE_USER 이다")
     @Test
     void should_returnUserMember_whenRoleIsUser() {
         Member member = Member.of(1L, "EunSeok", "admin@admin.com", "test", "user");
