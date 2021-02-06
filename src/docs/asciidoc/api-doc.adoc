@@ -1,0 +1,25 @@
+ifndef::snippets[]
+:snippets: ../../../build/generated-snippets
+endif::[]
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 3
+:sectlinks:
+
+= Job manager API
+https://github.com/hongikbros
+
+[[introduction]]
+== 소개
+
+취업 공고를 편하게 관리하는 Job Manager API 입니다.
+
+[[resources-Notice]]
+== Notice
+
+[[resources-Notice-find]]
+=== 공고 단건 조회
+
+operation::api/notice[snippets='http-request,http-response,request-headers']
