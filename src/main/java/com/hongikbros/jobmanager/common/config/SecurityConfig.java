@@ -48,7 +48,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .headers().frameOptions().sameOrigin()
                 .and()
                     .csrf()
-                        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                        .csrfTokenRepository(new CookieCsrfTokenRepository())
                         .requireCsrfProtectionMatcher(new AntPathRequestMatcher("!/h2/**"))
                 .and()
                     .antMatcher("/**").authorizeRequests()
