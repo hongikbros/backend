@@ -21,9 +21,9 @@ import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hongikbros.jobmanager.common.fixture.member.MemberFixture;
 import com.hongikbros.jobmanager.member.application.member.SessionMember;
 import com.hongikbros.jobmanager.member.application.oauth.CustomOAuth2UserService;
-import com.hongikbros.jobmanager.member.fixture.member.MemberFixture;
 
 @ExtendWith(MockitoExtension.class)
 class CustomOauth2SuccessHandlerTest {

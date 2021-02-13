@@ -1,4 +1,4 @@
-package com.hongikbros.jobmanager.member.fixture.oauth;
+package com.hongikbros.jobmanager.common.fixture.oauth;
 
 import java.util.HashMap;
 import java.util.Map;

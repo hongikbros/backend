@@ -1,4 +1,4 @@
-package com.hongikbros.jobmanager.member.fixture.member;
+package com.hongikbros.jobmanager.common.fixture.member;
 
 import com.hongikbros.jobmanager.common.utils.TestObjectUtils;
 import com.hongikbros.jobmanager.member.domain.member.Member;

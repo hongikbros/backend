@@ -21,11 +21,11 @@ import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserServ
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
+import com.hongikbros.jobmanager.common.fixture.member.MemberFixture;
+import com.hongikbros.jobmanager.common.fixture.oauth.AttributesFixture;
 import com.hongikbros.jobmanager.member.domain.member.Member;
 import com.hongikbros.jobmanager.member.domain.member.MemberRepository;
 import com.hongikbros.jobmanager.member.domain.member.Role;
-import com.hongikbros.jobmanager.member.fixture.member.MemberFixture;
-import com.hongikbros.jobmanager.member.fixture.oauth.AttributesFixture;
 
 @ExtendWith(MockitoExtension.class)
 class CustomOAuth2UserServiceTest {
