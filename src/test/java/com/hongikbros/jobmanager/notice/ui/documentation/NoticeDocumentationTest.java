@@ -1,4 +1,4 @@
-package com.hongikbros.jobmanager.notice.ui;
+package com.hongikbros.jobmanager.notice.ui.documentation;
 
 import static io.restassured.module.mockmvc.RestAssuredMockMvc.*;
 import static org.mockito.ArgumentMatchers.*;
