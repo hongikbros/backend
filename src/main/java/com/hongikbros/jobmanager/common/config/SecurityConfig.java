@@ -35,7 +35,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        if (isLocalMode()) {
+        if (!isProdMode()) {
             setLocalMode(http);
         }
     }
@@ -51,8 +51,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         .csrfTokenRepository(new CookieCsrfTokenRepository())
                         .requireCsrfProtectionMatcher(new AntPathRequestMatcher("!/h2/**"))
                 .and()
-                    .antMatcher("/**").authorizeRequests()
-                    .antMatchers("/h2").permitAll()
+                    .authorizeRequests()
+                    .antMatchers("/h2","/api/notice/**").permitAll()
+                    .anyRequest().authenticated()
                 .and()
                 .logout()
                     .logoutSuccessUrl("/")
@@ -67,11 +68,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         //@formatter:on
     }
 
-    private boolean isLocalMode() {
+    private boolean isProdMode() {
         String profile =
                 environment.getActiveProfiles().length > 0 ? environment.getActiveProfiles()[0] :
-                        "dev";
-        return profile.equals("dev");
+                        "prod";
+        return profile.equals("prod");
     }
 
 }
