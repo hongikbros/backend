@@ -52,7 +52,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         .requireCsrfProtectionMatcher(new AntPathRequestMatcher("!/h2/**"))
                 .and()
                     .authorizeRequests()
-                    .antMatchers("/h2","/api/notice/**").permitAll()
+                    .antMatchers("/h2","/docs/**","/api/notice/**").permitAll()
                     .anyRequest().authenticated()
                 .and()
                 .logout()

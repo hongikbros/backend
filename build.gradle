@@ -108,9 +108,3 @@ processTestResources {
         into('src/test')
     }
 }
-
-task copyDocument(type: Copy) {
-    dependsOn asciidoctor
-    from file("build/asciidoc/html5")
-    into file("src/main/resources/static/docs")
-}
