@@ -3,13 +3,14 @@ package com.hongikbros.jobmanager.common.utils;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import com.hongikbros.jobmanager.common.domain.Association;
-import com.hongikbros.jobmanager.member.domain.member.Member;
+import com.hongikbros.jobmanager.member.domain.Member;
 import com.hongikbros.jobmanager.notice.domain.company.Company;
 import com.hongikbros.jobmanager.notice.domain.notice.ApplyUrl;
 import com.hongikbros.jobmanager.notice.domain.notice.Duration;
 import com.hongikbros.jobmanager.notice.domain.notice.Notice;
 import com.hongikbros.jobmanager.notice.domain.notice.NoticeDescription;
 import com.hongikbros.jobmanager.skill.domain.Skill;
+import com.hongikbros.jobmanager.skill.domain.SkillNotice;
 
 public class TestObjectUtils {
     public static Member createMember(Long id, Long oauthId, String name, String email,
@@ -42,5 +43,13 @@ public class TestObjectUtils {
         ReflectionTestUtils.setField(skill, "id", id);
 
         return skill;
+    }
+
+    public static SkillNotice createSkillNotice(Long id, Association<Skill> skillId,
+            Association<Notice> noticeId) {
+        SkillNotice skillNotice = SkillNotice.of(skillId, noticeId);
+        ReflectionTestUtils.setField(skillNotice, "id", id);
+
+        return skillNotice;
     }
 }

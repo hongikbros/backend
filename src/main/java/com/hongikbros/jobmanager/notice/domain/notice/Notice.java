@@ -1,5 +1,6 @@
 package com.hongikbros.jobmanager.notice.domain.notice;
 
+import javax.persistence.AttributeOverride;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
@@ -31,11 +32,12 @@ public class Notice extends BaseEntity {
     private ApplyUrl applyUrl;
 
     @Embedded
+    @AttributeOverride(name = "id", column = @Column(name = "company_id"))
     @Column(nullable = false)
     private Association<Company> companyId;
 
     @Column(nullable = false)
-    private NoticeDescription contents;
+    private NoticeDescription description;
 
     public Notice() {
     }
@@ -43,13 +45,13 @@ public class Notice extends BaseEntity {
     private Notice(Long id, String title,
             Duration duration, ApplyUrl applyUrl,
             Association<Company> companyId,
-            NoticeDescription contents) {
+            NoticeDescription description) {
         this.id = id;
         this.title = title;
         this.duration = duration;
         this.applyUrl = applyUrl;
         this.companyId = companyId;
-        this.contents = contents;
+        this.description = description;
     }
 
     public static Notice of(String title,
@@ -79,7 +81,7 @@ public class Notice extends BaseEntity {
         return companyId;
     }
 
-    public NoticeDescription getContents() {
-        return contents;
+    public NoticeDescription getDescription() {
+        return description;
     }
 }

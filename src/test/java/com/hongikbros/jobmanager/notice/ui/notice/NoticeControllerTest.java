@@ -46,7 +46,7 @@ class NoticeControllerTest {
                 new Association<Company>(1L),
                 NoticeDescription.from("잘하는 사람 뽑습니다.")
         );
-        final Company toss = TestObjectUtils.createCompany(1L, "naver", "icon.url");
+        final Company toss = TestObjectUtils.createCompany(1L, "toss", "icon.url");
         final Skill skill = TestObjectUtils.createSkill(1L, "Spring Framework");
 
         NoticeResponse noticeResponse = NoticeResponse.of(notice, toss,
@@ -61,6 +61,6 @@ class NoticeControllerTest {
                 () -> assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK),
                 () -> assertThat(responseEntity.getBody()).isNotNull()
         );
-        
+
     }
 }

@@ -46,9 +46,9 @@ class NoticeDocumentationTest extends Documentation {
         super.setUp(webApplicationContext, restDocumentation);
     }
 
-    @DisplayName("공고 상세 조회를 요청하면 ResponseEntity NoticeResponse을 리턴한다.")
+    @DisplayName("비회원용 - 공고 상세 조회를 요청하면 ResponseEntity NoticeResponse을 리턴한다.")
     @Test
-    void shouldGenerate_NoticeResponseDocument() {
+    void shouldGenerate_NoticeResponseDocument_whenNotLogin() {
         //given
         final Notice notice = TestObjectUtils.createNotice(
                 1L,
@@ -58,7 +58,7 @@ class NoticeDocumentationTest extends Documentation {
                 new Association<Company>(1L),
                 NoticeDescription.from("잘하는 사람 뽑습니다.")
         );
-        final Company toss = TestObjectUtils.createCompany(1L, "naver", "icon.url");
+        final Company toss = TestObjectUtils.createCompany(1L, "toss", "icon.url");
         final Skill skill = TestObjectUtils.createSkill(1L, "Spring Framework");
 
         NoticeResponse noticeResponse = NoticeResponse.of(notice, toss,
@@ -75,11 +75,8 @@ class NoticeDocumentationTest extends Documentation {
                         getDocumentRequest(),
                         getDocumentResponse(),
                         requestHeaders(
-                                headerWithName("cookie").description("클라이언트의 sessionId")
-                                        .optional(),
                                 headerWithName("accept").description("클라이언트가 받을 Content-type")),
                         responseHeaders(
-                                headerWithName("Set-Cookie").description("sessionId").optional(),
                                 headerWithName("Set-Cookie").description("csrf token")
                         ),
                         pathParameters(
