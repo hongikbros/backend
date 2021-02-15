@@ -1,9 +1,9 @@
-package com.hongikbros.jobmanager.member.application.member;
+package com.hongikbros.jobmanager.member.ui;
 
 import java.io.Serializable;
 
-import com.hongikbros.jobmanager.member.domain.member.Member;
-import com.hongikbros.jobmanager.member.domain.member.Role;
+import com.hongikbros.jobmanager.member.domain.Member;
+import com.hongikbros.jobmanager.member.domain.Role;
 
 public class SessionMember implements Serializable {
     private final Long id;

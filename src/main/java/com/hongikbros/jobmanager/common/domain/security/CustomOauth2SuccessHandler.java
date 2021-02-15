@@ -16,8 +16,8 @@ import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hongikbros.jobmanager.member.application.member.MemberResponse;
-import com.hongikbros.jobmanager.member.application.member.SessionMember;
 import com.hongikbros.jobmanager.member.application.oauth.CustomOAuth2UserService;
+import com.hongikbros.jobmanager.member.ui.SessionMember;
 
 @Component
 public class CustomOauth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler {

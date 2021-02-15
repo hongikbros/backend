@@ -1,5 +1,7 @@
 package com.hongikbros.jobmanager.member.application.member;
 
+import com.hongikbros.jobmanager.member.ui.SessionMember;
+
 public class MemberResponse {
     private final String name;
     private final String avatar;

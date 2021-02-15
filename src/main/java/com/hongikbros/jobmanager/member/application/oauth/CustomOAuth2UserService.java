@@ -13,9 +13,9 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.hongikbros.jobmanager.member.application.member.SessionMember;
-import com.hongikbros.jobmanager.member.domain.member.Member;
-import com.hongikbros.jobmanager.member.domain.member.MemberRepository;
+import com.hongikbros.jobmanager.member.domain.Member;
+import com.hongikbros.jobmanager.member.domain.MemberRepository;
+import com.hongikbros.jobmanager.member.ui.SessionMember;
 
 @Service
 public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {

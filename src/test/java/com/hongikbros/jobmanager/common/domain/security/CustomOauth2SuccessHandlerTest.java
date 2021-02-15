@@ -22,7 +22,7 @@ import org.springframework.security.core.Authentication;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hongikbros.jobmanager.common.fixture.member.MemberFixture;
-import com.hongikbros.jobmanager.member.application.member.SessionMember;
+import com.hongikbros.jobmanager.member.ui.SessionMember;
 import com.hongikbros.jobmanager.member.application.oauth.CustomOAuth2UserService;
 
 @ExtendWith(MockitoExtension.class)

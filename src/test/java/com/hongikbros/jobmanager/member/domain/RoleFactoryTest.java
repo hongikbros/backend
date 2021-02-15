@@ -1,4 +1,4 @@
-package com.hongikbros.jobmanager.member.domain.member;
+package com.hongikbros.jobmanager.member.domain;
 
 import static org.assertj.core.api.Assertions.*;
 

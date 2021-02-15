@@ -47,7 +47,7 @@ public class NoticeResponse {
                 notice.getDuration().getEndDate(),
                 covertSkillsToResponses(skills),
                 notice.getRedirectUrl().getRedirectUrl(),
-                notice.getContents().getDescription(),
+                notice.getDescription().getDescription(),
                 bookmarkState
         );
     }

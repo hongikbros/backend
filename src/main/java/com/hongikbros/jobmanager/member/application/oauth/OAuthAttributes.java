@@ -2,7 +2,7 @@ package com.hongikbros.jobmanager.member.application.oauth;
 
 import java.util.Map;
 
-import com.hongikbros.jobmanager.member.domain.member.Member;
+import com.hongikbros.jobmanager.member.domain.Member;
 
 public class OAuthAttributes {
     private final Map<String, Object> attributes;

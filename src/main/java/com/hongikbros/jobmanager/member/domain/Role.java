@@ -1,4 +1,4 @@
-package com.hongikbros.jobmanager.member.domain.member;
+package com.hongikbros.jobmanager.member.domain;
 
 public enum Role {
     ADMIN("ROLE_ADMIN", "관리자"),

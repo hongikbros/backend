@@ -1,4 +1,4 @@
-package com.hongikbros.jobmanager.member.domain.member;
+package com.hongikbros.jobmanager.member.domain;
 
 import java.util.Arrays;
 
