@@ -1,4 +1,4 @@
-package com.hongikbros.jobmanager.notice.domain.bookmark;
+package com.hongikbros.jobmanager.notice.bookmark;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

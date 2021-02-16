@@ -1,4 +1,4 @@
-package com.hongikbros.jobmanager.notice.ui.documentation;
+package com.hongikbros.jobmanager.notice.notice.ui.documentation;
 
 import static io.restassured.module.mockmvc.RestAssuredMockMvc.*;
 import static org.mockito.ArgumentMatchers.*;
@@ -16,7 +16,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.web.context.WebApplicationContext;
@@ -24,14 +23,14 @@ import org.springframework.web.context.WebApplicationContext;
 import com.hongikbros.jobmanager.common.documentation.Documentation;
 import com.hongikbros.jobmanager.common.domain.Association;
 import com.hongikbros.jobmanager.common.utils.TestObjectUtils;
-import com.hongikbros.jobmanager.notice.domain.company.Company;
-import com.hongikbros.jobmanager.notice.domain.notice.ApplyUrl;
-import com.hongikbros.jobmanager.notice.domain.notice.Duration;
-import com.hongikbros.jobmanager.notice.domain.notice.Notice;
-import com.hongikbros.jobmanager.notice.domain.notice.NoticeDescription;
-import com.hongikbros.jobmanager.notice.ui.notice.NoticeController;
-import com.hongikbros.jobmanager.notice.ui.notice.NoticeResponse;
-import com.hongikbros.jobmanager.notice.ui.notice.NoticeViewService;
+import com.hongikbros.jobmanager.notice.company.Company;
+import com.hongikbros.jobmanager.notice.notice.domain.ApplyUrl;
+import com.hongikbros.jobmanager.notice.notice.domain.Duration;
+import com.hongikbros.jobmanager.notice.notice.domain.Notice;
+import com.hongikbros.jobmanager.notice.notice.domain.NoticeDescription;
+import com.hongikbros.jobmanager.notice.notice.ui.NoticeController;
+import com.hongikbros.jobmanager.notice.notice.ui.NoticeResponse;
+import com.hongikbros.jobmanager.notice.notice.ui.NoticeViewService;
 import com.hongikbros.jobmanager.skill.domain.Skill;
 
 @WebMvcTest(controllers = NoticeController.class)
@@ -46,7 +45,7 @@ class NoticeDocumentationTest extends Documentation {
         super.setUp(webApplicationContext, restDocumentation);
     }
 
-    @DisplayName("비회원용 - 공고 상세 조회를 요청하면 ResponseEntity NoticeResponse을 리턴한다.")
+    @DisplayName("공고 상세 조회를 요청하면 ResponseEntity NoticeResponse 을 리턴한다.")
     @Test
     void shouldGenerate_NoticeResponseDocument_whenNotLogin() {
         //given
@@ -63,19 +62,16 @@ class NoticeDocumentationTest extends Documentation {
 
         NoticeResponse noticeResponse = NoticeResponse.of(notice, toss,
                 Collections.singletonList(skill), false);
-        BDDMockito.given(noticeViewService.showNotice(anyLong())).willReturn(noticeResponse);
+        BDDMockito.given(noticeViewService.showNotice(anyLong(), any())).willReturn(noticeResponse);
 
         //when
         given().log().all().
-                accept(MediaType.APPLICATION_JSON_VALUE).
                 when().
                 get(NoticeController.API_NOTICE + "/{id}", 1L).
                 then().log().all()
                 .apply(document("api/notice",
                         getDocumentRequest(),
                         getDocumentResponse(),
-                        requestHeaders(
-                                headerWithName("accept").description("클라이언트가 받을 Content-type")),
                         responseHeaders(
                                 headerWithName("Set-Cookie").description("csrf token")
                         ),
@@ -103,7 +99,8 @@ class NoticeDocumentationTest extends Documentation {
                                 fieldWithPath("description").type(JsonFieldType.STRING)
                                         .description("공고의 상세내용"),
                                 fieldWithPath("bookmarkState").type(JsonFieldType.BOOLEAN)
-                                        .description("공고의 bookmark 상태값"))
+                                        .description(
+                                                "공고의 bookmark state\n - 비회원의 bookmarkState 는 항상 false"))
                 ))
                 .extract();
     }

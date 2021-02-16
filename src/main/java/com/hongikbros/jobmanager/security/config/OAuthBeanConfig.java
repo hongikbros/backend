@@ -1,4 +1,4 @@
-package com.hongikbros.jobmanager.common.config;
+package com.hongikbros.jobmanager.security.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

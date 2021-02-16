@@ -1,4 +1,4 @@
-package com.hongikbros.jobmanager.notice.domain.bookmark;
+package com.hongikbros.jobmanager.notice.bookmark;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

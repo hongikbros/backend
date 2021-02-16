@@ -9,7 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 import com.hongikbros.jobmanager.common.domain.Association;
-import com.hongikbros.jobmanager.notice.domain.notice.Notice;
+import com.hongikbros.jobmanager.notice.notice.domain.Notice;
 
 @Entity
 public class SkillNotice {

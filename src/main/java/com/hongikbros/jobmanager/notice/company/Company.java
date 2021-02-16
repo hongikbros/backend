@@ -1,4 +1,4 @@
-package com.hongikbros.jobmanager.notice.domain.company;
+package com.hongikbros.jobmanager.notice.company;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

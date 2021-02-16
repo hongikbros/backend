@@ -1,11 +1,11 @@
-package com.hongikbros.jobmanager.notice.ui.notice;
+package com.hongikbros.jobmanager.notice.notice.ui;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.hongikbros.jobmanager.notice.domain.company.Company;
-import com.hongikbros.jobmanager.notice.domain.notice.Notice;
+import com.hongikbros.jobmanager.notice.company.Company;
+import com.hongikbros.jobmanager.notice.notice.domain.Notice;
 import com.hongikbros.jobmanager.skill.domain.Skill;
 
 public class NoticeResponse {

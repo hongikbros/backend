@@ -1,15 +1,16 @@
-package com.hongikbros.jobmanager.notice.ui.notice;
+package com.hongikbros.jobmanager.notice.notice.ui;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
-import com.hongikbros.jobmanager.notice.domain.bookmark.BookmarkRepository;
-import com.hongikbros.jobmanager.notice.domain.company.Company;
-import com.hongikbros.jobmanager.notice.domain.company.CompanyRepository;
-import com.hongikbros.jobmanager.notice.domain.notice.Notice;
-import com.hongikbros.jobmanager.notice.domain.notice.NoticeRepository;
+import com.hongikbros.jobmanager.member.ui.SessionMember;
+import com.hongikbros.jobmanager.notice.bookmark.BookmarkRepository;
+import com.hongikbros.jobmanager.notice.company.Company;
+import com.hongikbros.jobmanager.notice.company.CompanyRepository;
+import com.hongikbros.jobmanager.notice.notice.domain.Notice;
+import com.hongikbros.jobmanager.notice.notice.domain.NoticeRepository;
 import com.hongikbros.jobmanager.skill.domain.Skill;
 import com.hongikbros.jobmanager.skill.domain.SkillNotice;
 import com.hongikbros.jobmanager.skill.domain.SkillNoticeRepository;
@@ -41,21 +42,19 @@ public class NoticeViewService {
         this.bookmarkRepository = bookmarkRepository;
     }
 
-    public NoticeResponse showNotice(Long noticeId) {
+    public NoticeResponse showNotice(Long noticeId, SessionMember member) {
         final Notice notice = noticeRepository.findById(noticeId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 공고의 아이디가 존재하지 않습니다."));
         final Company company = companyRepository.findById(notice.getCompanyId().getId())
                 .orElseThrow(() -> new IllegalArgumentException("해당 회사의 아이디가 존재하지 않습니다."));
         final List<SkillNotice> skillNotices = skillNoticeRepository.findAllByNoticeId(
-                notice.getId())
-                .orElseThrow(() -> new IllegalArgumentException("해당 공고의 아이디가 존재하지 않습니다."));
+                notice.getId());
 
         final List<Long> skillIds = skillNotices.stream()
                 .map(skillNotice -> skillNotice.getNoticeId().getId())
                 .collect(Collectors.toList());
 
-        final List<Skill> skills = skillRepository.findByIdIn(skillIds)
-                .orElseThrow(() -> new IllegalArgumentException("해당 스킬의 아이디가 존재하지 않습니다."));
+        final List<Skill> skills = skillRepository.findByIdIn(skillIds);
 
         return NoticeResponse.of(notice, company, skills, true);
     }

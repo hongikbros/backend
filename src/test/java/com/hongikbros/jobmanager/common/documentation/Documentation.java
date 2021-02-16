@@ -15,8 +15,8 @@ import org.springframework.restdocs.operation.preprocess.OperationResponsePrepro
 import org.springframework.restdocs.snippet.Attributes;
 import org.springframework.web.context.WebApplicationContext;
 
-import com.hongikbros.jobmanager.common.domain.security.CustomOauth2SuccessHandler;
-import com.hongikbros.jobmanager.member.application.oauth.CustomOAuth2UserService;
+import com.hongikbros.jobmanager.security.oauth2.CustomOAuth2UserService;
+import com.hongikbros.jobmanager.security.oauth2.CustomOauth2SuccessHandler;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 
 @ExtendWith({RestDocumentationExtension.class})

@@ -1,4 +1,4 @@
-package com.hongikbros.jobmanager.common.config;
+package com.hongikbros.jobmanager.security.config;
 
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.core.env.Environment;
@@ -9,8 +9,8 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
-import com.hongikbros.jobmanager.common.domain.security.CustomOauth2SuccessHandler;
-import com.hongikbros.jobmanager.member.application.oauth.CustomOAuth2UserService;
+import com.hongikbros.jobmanager.security.oauth2.CustomOAuth2UserService;
+import com.hongikbros.jobmanager.security.oauth2.CustomOauth2SuccessHandler;
 
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
