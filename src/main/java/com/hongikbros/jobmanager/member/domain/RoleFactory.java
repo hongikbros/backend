@@ -13,9 +13,9 @@ public enum RoleFactory {
         this.role = role;
     }
 
-    public static Role creatFrom(String login) {
+    public static Role creatFrom(String loginId) {
         final RoleFactory account = Arrays.stream(RoleFactory.values())
-                .filter(roleFactory -> roleFactory.name().equalsIgnoreCase(login))
+                .filter(roleFactory -> roleFactory.name().equalsIgnoreCase(loginId))
                 .findFirst()
                 .orElse(ELSE);
 

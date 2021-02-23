@@ -43,8 +43,8 @@ public class Member extends BaseEntity {
     }
 
     public static Member of(Long oauthId, String name, String email, String avatar,
-            String login) {
-        return new Member(null, oauthId, name, email, avatar, RoleFactory.creatFrom(login));
+            String loginId) {
+        return new Member(null, oauthId, name, email, avatar, RoleFactory.creatFrom(loginId));
     }
 
     public Member update(String name, String avatar) {
