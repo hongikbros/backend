@@ -1,5 +1,6 @@
 package com.hongikbros.jobmanager.common.domain;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 import javax.persistence.EntityListeners;
@@ -13,7 +14,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
-public class BaseEntity {
+public class BaseEntity implements Serializable {
     @CreatedBy
     private String createdBy;
 
