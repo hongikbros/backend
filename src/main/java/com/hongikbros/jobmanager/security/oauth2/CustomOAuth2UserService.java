@@ -8,19 +8,18 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
-import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.hongikbros.jobmanager.member.domain.LoginMember;
+import com.hongikbros.jobmanager.member.domain.LoginMemberAdapter;
 import com.hongikbros.jobmanager.member.domain.Member;
 import com.hongikbros.jobmanager.member.domain.MemberRepository;
-import com.hongikbros.jobmanager.member.ui.SessionMember;
 
 @Service
 public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
 
-    public static final String MEMBER = "member";
     public static final String PRINCIPAL_OAUTHID_BEFORE_SAVING = "principalNameBeforeSaving";
 
     private final MemberRepository memberRepository;
@@ -46,14 +45,14 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
 
         OAuthAttributes attributes = OAuthAttributes.of(oAuth2User.getAttributes(),
                 userNameAttributeName);
-
         Member member = saveOrUpdate(attributes);
-        httpSession.setAttribute(MEMBER, SessionMember.of(member));
 
-        return new DefaultOAuth2User(
+        return new LoginMemberAdapter(
                 Collections.singletonList(new SimpleGrantedAuthority(member.getRole().getKey())),
                 attributes.getAttributes(),
-                attributes.getNameAttributeKey());
+                attributes.getNameAttributeKey(),
+                LoginMember.of(member)
+        );
     }
 
     private Member saveOrUpdate(OAuthAttributes attributes) {

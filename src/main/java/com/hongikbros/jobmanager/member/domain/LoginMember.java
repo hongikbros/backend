@@ -1,18 +1,13 @@
-package com.hongikbros.jobmanager.member.ui;
+package com.hongikbros.jobmanager.member.domain;
 
-import java.io.Serializable;
-
-import com.hongikbros.jobmanager.member.domain.Member;
-import com.hongikbros.jobmanager.member.domain.Role;
-
-public class SessionMember implements Serializable {
+public class LoginMember implements CurrentMember {
     private final Long id;
     private final String name;
     private final String email;
     private final String avatar;
     private final Role role;
 
-    private SessionMember(Long id, String name, String email, String avatar,
+    private LoginMember(Long id, String name, String email, String avatar,
             Role role) {
         this.id = id;
         this.name = name;
@@ -21,13 +16,17 @@ public class SessionMember implements Serializable {
         this.role = role;
     }
 
-    public static SessionMember of(Member member) {
-        return new SessionMember(
+    public static LoginMember of(Member member) {
+        return new LoginMember(
                 member.getId(),
                 member.getName(),
                 member.getEmail(),
                 member.getAvatar(),
                 member.getRole());
+    }
+
+    public boolean isLogin() {
+        return true;
     }
 
     public Long getId() {

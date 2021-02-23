@@ -13,8 +13,8 @@ public enum Role {
         this.title = title;
     }
 
-    public static boolean isGuest(String role) {
-        return role.equals(GUEST.getKey());
+    public boolean isLogin() {
+        return !(this.equals(Role.GUEST));
     }
 
     public String getKey() {

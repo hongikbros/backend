@@ -1,6 +1,6 @@
-package com.hongikbros.jobmanager.member.application.member;
+package com.hongikbros.jobmanager.member.application;
 
-import com.hongikbros.jobmanager.member.ui.SessionMember;
+import com.hongikbros.jobmanager.member.domain.LoginMember;
 
 public class MemberResponse {
     private final String name;
@@ -11,8 +11,8 @@ public class MemberResponse {
         this.avatar = avatar;
     }
 
-    public static MemberResponse from(SessionMember sessionMember) {
-        return new MemberResponse(sessionMember.getName(), sessionMember.getAvatar());
+    public static MemberResponse from(LoginMember loginMember) {
+        return new MemberResponse(loginMember.getName(), loginMember.getAvatar());
     }
 
     public String getName() {

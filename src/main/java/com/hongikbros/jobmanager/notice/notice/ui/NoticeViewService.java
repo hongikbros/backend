@@ -5,7 +5,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
-import com.hongikbros.jobmanager.member.ui.SessionMember;
+import com.hongikbros.jobmanager.member.domain.CurrentMember;
 import com.hongikbros.jobmanager.notice.bookmark.BookmarkRepository;
 import com.hongikbros.jobmanager.notice.company.Company;
 import com.hongikbros.jobmanager.notice.company.CompanyRepository;
@@ -42,7 +42,7 @@ public class NoticeViewService {
         this.bookmarkRepository = bookmarkRepository;
     }
 
-    public NoticeResponse showNotice(Long noticeId, SessionMember member) {
+    public NoticeResponse showNotice(Long noticeId, CurrentMember currentMember) {
         final Notice notice = noticeRepository.findById(noticeId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 공고의 아이디가 존재하지 않습니다."));
         final Company company = companyRepository.findById(notice.getCompanyId().getId())
@@ -56,6 +56,15 @@ public class NoticeViewService {
 
         final List<Skill> skills = skillRepository.findByIdIn(skillIds);
 
-        return NoticeResponse.of(notice, company, skills, true);
+        boolean bookmarkState = bookmarkStateOf(currentMember);
+
+        return NoticeResponse.of(notice, company, skills, bookmarkState);
+    }
+
+    private boolean bookmarkStateOf(CurrentMember currentMember) {
+        if (currentMember.isLogin()) {
+            return bookmarkRepository.existsBookmarkByMemberId(currentMember.getId());
+        }
+        return false;
     }
 }
