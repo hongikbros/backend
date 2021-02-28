@@ -1,4 +1,4 @@
-package com.hongikbros.jobmanager.skill.domain;
+package com.hongikbros.jobmanager.skill.domain.skillnotice;
 
 import javax.persistence.AttributeOverride;
 import javax.persistence.Column;
@@ -10,7 +10,8 @@ import javax.persistence.Id;
 
 import com.hongikbros.jobmanager.common.domain.Association;
 import com.hongikbros.jobmanager.common.domain.BaseEntity;
-import com.hongikbros.jobmanager.notice.notice.domain.Notice;
+import com.hongikbros.jobmanager.notice.domain.notice.Notice;
+import com.hongikbros.jobmanager.skill.domain.skill.Skill;
 
 @Entity
 public class SkillNotice extends BaseEntity {

@@ -1,4 +1,4 @@
-package com.hongikbros.jobmanager.notice.notice.ui;
+package com.hongikbros.jobmanager.notice.ui;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;

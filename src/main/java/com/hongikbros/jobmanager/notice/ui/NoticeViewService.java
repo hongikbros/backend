@@ -1,4 +1,4 @@
-package com.hongikbros.jobmanager.notice.notice.ui;
+package com.hongikbros.jobmanager.notice.ui;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -6,15 +6,15 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 import com.hongikbros.jobmanager.member.domain.CurrentMember;
-import com.hongikbros.jobmanager.notice.bookmark.BookmarkRepository;
-import com.hongikbros.jobmanager.notice.company.Company;
-import com.hongikbros.jobmanager.notice.company.CompanyRepository;
-import com.hongikbros.jobmanager.notice.notice.domain.Notice;
-import com.hongikbros.jobmanager.notice.notice.domain.NoticeRepository;
-import com.hongikbros.jobmanager.skill.domain.Skill;
-import com.hongikbros.jobmanager.skill.domain.SkillNotice;
-import com.hongikbros.jobmanager.skill.domain.SkillNoticeRepository;
-import com.hongikbros.jobmanager.skill.domain.SkillRepository;
+import com.hongikbros.jobmanager.notice.domain.bookmark.BookmarkRepository;
+import com.hongikbros.jobmanager.notice.domain.company.Company;
+import com.hongikbros.jobmanager.notice.domain.company.CompanyRepository;
+import com.hongikbros.jobmanager.notice.domain.notice.Notice;
+import com.hongikbros.jobmanager.notice.domain.notice.NoticeRepository;
+import com.hongikbros.jobmanager.skill.domain.skill.Skill;
+import com.hongikbros.jobmanager.skill.domain.skill.SkillRepository;
+import com.hongikbros.jobmanager.skill.domain.skillnotice.SkillNotice;
+import com.hongikbros.jobmanager.skill.domain.skillnotice.SkillNoticeRepository;
 
 @Service
 public class NoticeViewService {

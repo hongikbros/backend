@@ -1,38 +1,32 @@
-package com.hongikbros.jobmanager.notice.company;
+package com.hongikbros.jobmanager.skill.domain.skill;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Lob;
 
 import com.hongikbros.jobmanager.common.domain.BaseEntity;
 
 @Entity
-public class Company extends BaseEntity {
-
+public class Skill extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "company_id")
+    @Column(name = "skill_id")
     private Long id;
 
     private String name;
 
-    @Lob
-    private String icon;
-
-    protected Company() {
+    protected Skill() {
     }
 
-    private Company(Long id, String name, String icon) {
+    private Skill(Long id, String name) {
         this.id = id;
         this.name = name;
-        this.icon = icon;
     }
 
-    public static Company of(String name, String icon) {
-        return new Company(null, name, icon);
+    public static Skill from(String name) {
+        return new Skill(null, name);
     }
 
     public Long getId() {
@@ -41,9 +35,5 @@ public class Company extends BaseEntity {
 
     public String getName() {
         return name;
-    }
-
-    public String getIcon() {
-        return icon;
     }
 }

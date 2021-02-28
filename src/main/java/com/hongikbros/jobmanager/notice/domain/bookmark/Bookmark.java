@@ -1,4 +1,4 @@
-package com.hongikbros.jobmanager.notice.bookmark;
+package com.hongikbros.jobmanager.notice.domain.bookmark;
 
 import javax.persistence.AttributeOverride;
 import javax.persistence.Column;
@@ -11,7 +11,7 @@ import javax.persistence.Id;
 import com.hongikbros.jobmanager.common.domain.Association;
 import com.hongikbros.jobmanager.common.domain.BaseEntity;
 import com.hongikbros.jobmanager.member.domain.Member;
-import com.hongikbros.jobmanager.notice.notice.domain.Notice;
+import com.hongikbros.jobmanager.notice.domain.notice.Notice;
 
 @Entity
 public class Bookmark extends BaseEntity {

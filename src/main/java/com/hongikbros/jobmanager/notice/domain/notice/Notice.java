@@ -1,4 +1,4 @@
-package com.hongikbros.jobmanager.notice.notice.domain;
+package com.hongikbros.jobmanager.notice.domain.notice;
 
 import javax.persistence.AttributeOverride;
 import javax.persistence.Column;
@@ -10,7 +10,7 @@ import javax.persistence.Id;
 
 import com.hongikbros.jobmanager.common.domain.Association;
 import com.hongikbros.jobmanager.common.domain.BaseEntity;
-import com.hongikbros.jobmanager.notice.company.Company;
+import com.hongikbros.jobmanager.notice.domain.company.Company;
 
 @Entity
 public class Notice extends BaseEntity {

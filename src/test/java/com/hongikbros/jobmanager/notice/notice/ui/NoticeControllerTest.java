@@ -19,12 +19,15 @@ import org.springframework.http.ResponseEntity;
 import com.hongikbros.jobmanager.common.domain.Association;
 import com.hongikbros.jobmanager.common.fixture.sessionmember.SessionMemberFixture;
 import com.hongikbros.jobmanager.common.utils.TestObjectUtils;
-import com.hongikbros.jobmanager.notice.company.Company;
-import com.hongikbros.jobmanager.notice.notice.domain.ApplyUrl;
-import com.hongikbros.jobmanager.notice.notice.domain.Duration;
-import com.hongikbros.jobmanager.notice.notice.domain.Notice;
-import com.hongikbros.jobmanager.notice.notice.domain.NoticeDescription;
-import com.hongikbros.jobmanager.skill.domain.Skill;
+import com.hongikbros.jobmanager.notice.domain.company.Company;
+import com.hongikbros.jobmanager.notice.domain.notice.ApplyUrl;
+import com.hongikbros.jobmanager.notice.domain.notice.Duration;
+import com.hongikbros.jobmanager.notice.domain.notice.Notice;
+import com.hongikbros.jobmanager.notice.domain.notice.NoticeDescription;
+import com.hongikbros.jobmanager.notice.ui.NoticeController;
+import com.hongikbros.jobmanager.notice.ui.NoticeResponse;
+import com.hongikbros.jobmanager.notice.ui.NoticeViewService;
+import com.hongikbros.jobmanager.skill.domain.skill.Skill;
 
 @ExtendWith(MockitoExtension.class)
 class NoticeControllerTest {
@@ -44,7 +47,7 @@ class NoticeControllerTest {
                 "백앤드 개발자 상시모집",
                 Duration.of(LocalDateTime.MIN, LocalDateTime.MAX),
                 ApplyUrl.from("hi.com"),
-                new Association<Company>(1L),
+                new Association<>(1L),
                 NoticeDescription.from("잘하는 사람 뽑습니다.")
         );
         final Company toss = TestObjectUtils.createCompany(1L, "toss", "icon.url");

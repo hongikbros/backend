@@ -1,4 +1,4 @@
-package com.hongikbros.jobmanager.skill.domain;
+package com.hongikbros.jobmanager.skill.domain.skillnotice;
 
 import java.util.List;
 

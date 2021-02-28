@@ -1,4 +1,4 @@
-package com.hongikbros.jobmanager.notice.notice.domain;
+package com.hongikbros.jobmanager.notice.domain.notice;
 
 import java.io.Serializable;
 import java.util.Objects;

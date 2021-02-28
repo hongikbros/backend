@@ -1,4 +1,4 @@
-package com.hongikbros.jobmanager.notice.company;
+package com.hongikbros.jobmanager.notice.domain.company;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

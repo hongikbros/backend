@@ -5,13 +5,13 @@ import org.springframework.test.util.ReflectionTestUtils;
 import com.hongikbros.jobmanager.common.domain.Association;
 import com.hongikbros.jobmanager.member.domain.LoginMember;
 import com.hongikbros.jobmanager.member.domain.Member;
-import com.hongikbros.jobmanager.notice.company.Company;
-import com.hongikbros.jobmanager.notice.notice.domain.ApplyUrl;
-import com.hongikbros.jobmanager.notice.notice.domain.Duration;
-import com.hongikbros.jobmanager.notice.notice.domain.Notice;
-import com.hongikbros.jobmanager.notice.notice.domain.NoticeDescription;
-import com.hongikbros.jobmanager.skill.domain.Skill;
-import com.hongikbros.jobmanager.skill.domain.SkillNotice;
+import com.hongikbros.jobmanager.notice.domain.company.Company;
+import com.hongikbros.jobmanager.notice.domain.notice.ApplyUrl;
+import com.hongikbros.jobmanager.notice.domain.notice.Duration;
+import com.hongikbros.jobmanager.notice.domain.notice.Notice;
+import com.hongikbros.jobmanager.notice.domain.notice.NoticeDescription;
+import com.hongikbros.jobmanager.skill.domain.skill.Skill;
+import com.hongikbros.jobmanager.skill.domain.skillnotice.SkillNotice;
 
 public class TestObjectUtils {
     public static Member createMember(Long id, Long oauthId, String name, String email,
