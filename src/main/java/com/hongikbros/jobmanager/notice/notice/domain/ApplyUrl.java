@@ -1,5 +1,6 @@
 package com.hongikbros.jobmanager.notice.notice.domain;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 import javax.persistence.Access;
@@ -8,7 +9,7 @@ import javax.persistence.Embeddable;
 
 @Access(AccessType.FIELD)
 @Embeddable
-public class ApplyUrl {
+public class ApplyUrl implements Serializable {
 
     private String redirectUrl;
 

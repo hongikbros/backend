@@ -9,10 +9,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 import com.hongikbros.jobmanager.common.domain.Association;
+import com.hongikbros.jobmanager.common.domain.BaseEntity;
 import com.hongikbros.jobmanager.notice.notice.domain.Notice;
 
 @Entity
-public class SkillNotice {
+public class SkillNotice extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "skill_notice_id")

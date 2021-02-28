@@ -1,5 +1,6 @@
 package com.hongikbros.jobmanager.notice.notice.domain;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 import javax.persistence.Access;
@@ -9,7 +10,8 @@ import javax.persistence.Embeddable;
 
 @Access(AccessType.FIELD)
 @Embeddable
-public class NoticeDescription {
+public class NoticeDescription implements Serializable {
+
     @Column(columnDefinition = "Text")
     private String description;
 

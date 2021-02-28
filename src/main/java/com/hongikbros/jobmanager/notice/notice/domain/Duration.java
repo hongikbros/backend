@@ -1,5 +1,6 @@
 package com.hongikbros.jobmanager.notice.notice.domain;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -9,10 +10,9 @@ import javax.persistence.Embeddable;
 
 @Access(AccessType.FIELD)
 @Embeddable
-public class Duration {
+public class Duration implements Serializable {
 
     private LocalDateTime startDate;
-
     private LocalDateTime endDate;
 
     protected Duration() {
