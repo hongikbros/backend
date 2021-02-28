@@ -1,4 +1,4 @@
-package com.hongikbros.jobmanager.notice.ui.notice;
+package com.hongikbros.jobmanager.notice.notice.ui;
 
 import static org.assertj.core.api.AssertionsForClassTypes.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -17,12 +17,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import com.hongikbros.jobmanager.common.domain.Association;
+import com.hongikbros.jobmanager.common.fixture.sessionmember.SessionMemberFixture;
 import com.hongikbros.jobmanager.common.utils.TestObjectUtils;
-import com.hongikbros.jobmanager.notice.domain.company.Company;
-import com.hongikbros.jobmanager.notice.domain.notice.ApplyUrl;
-import com.hongikbros.jobmanager.notice.domain.notice.Duration;
-import com.hongikbros.jobmanager.notice.domain.notice.Notice;
-import com.hongikbros.jobmanager.notice.domain.notice.NoticeDescription;
+import com.hongikbros.jobmanager.notice.company.Company;
+import com.hongikbros.jobmanager.notice.notice.domain.ApplyUrl;
+import com.hongikbros.jobmanager.notice.notice.domain.Duration;
+import com.hongikbros.jobmanager.notice.notice.domain.Notice;
+import com.hongikbros.jobmanager.notice.notice.domain.NoticeDescription;
 import com.hongikbros.jobmanager.skill.domain.Skill;
 
 @ExtendWith(MockitoExtension.class)
@@ -51,11 +52,11 @@ class NoticeControllerTest {
 
         NoticeResponse noticeResponse = NoticeResponse.of(notice, toss,
                 Collections.singletonList(skill), false);
-        given(noticeViewService.showNotice(anyLong())).willReturn(noticeResponse);
+        given(noticeViewService.showNotice(anyLong(), any())).willReturn(noticeResponse);
 
         // when
-        final ResponseEntity<NoticeResponse> responseEntity = noticeController.showNotice(
-                1L);
+        final ResponseEntity<NoticeResponse> responseEntity = noticeController.showNotice(1L,
+                SessionMemberFixture.EUN_SEOK);
         // then
         assertAll(
                 () -> assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK),

@@ -55,7 +55,7 @@ class CustomOAuth2UserServiceTest {
     void should_saveOrUpdateMember_whenOauth2UserIsLoad() {
         // given
         Map<String, Object> attributes = AttributesFixture.ATTRIBUTES_FIXTURE;
-        Member member = MemberFixture.MEMBER1;
+        Member member = MemberFixture.EUN_SEOK;
 
         given(
                 userRequest.getClientRegistration()
@@ -74,7 +74,7 @@ class CustomOAuth2UserServiceTest {
                 .orElseThrow(IllegalArgumentException::new);
         // then
         assertAll(
-                () -> then(httpSession).should(times(2)).setAttribute(any(), any()),
+                () -> then(httpSession).should(times(1)).setAttribute(any(), any()),
                 () -> assertThat(defaultOAuth2User.getAttributes()).containsValues(
                         1,
                         "EunSeok",

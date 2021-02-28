@@ -1,4 +1,4 @@
-package com.hongikbros.jobmanager.notice.notice.ui.documentation;
+package com.hongikbros.jobmanager.notice.notice.documentation;
 
 import static io.restassured.module.mockmvc.RestAssuredMockMvc.*;
 import static org.mockito.ArgumentMatchers.*;
@@ -20,8 +20,10 @@ import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.web.context.WebApplicationContext;
 
+import com.hongikbros.jobmanager.common.auth.TestAuthenticationToken;
 import com.hongikbros.jobmanager.common.documentation.Documentation;
 import com.hongikbros.jobmanager.common.domain.Association;
+import com.hongikbros.jobmanager.common.fixture.sessionmember.SessionMemberFixture;
 import com.hongikbros.jobmanager.common.utils.TestObjectUtils;
 import com.hongikbros.jobmanager.notice.company.Company;
 import com.hongikbros.jobmanager.notice.notice.domain.ApplyUrl;
@@ -49,6 +51,9 @@ class NoticeDocumentationTest extends Documentation {
     @Test
     void shouldGenerate_NoticeResponseDocument_whenNotLogin() {
         //given
+        final TestAuthenticationToken testAuthenticationToken = new TestAuthenticationToken(
+                SessionMemberFixture.EUN_SEOK);
+
         final Notice notice = TestObjectUtils.createNotice(
                 1L,
                 "백앤드 개발자 상시모집",
@@ -65,15 +70,17 @@ class NoticeDocumentationTest extends Documentation {
         BDDMockito.given(noticeViewService.showNotice(anyLong(), any())).willReturn(noticeResponse);
 
         //when
-        given().log().all().
+        //@formatter:off
+        given().
+                auth().principal(testAuthenticationToken).log().all().
                 when().
-                get(NoticeController.API_NOTICE + "/{id}", 1L).
-                then().log().all()
-                .apply(document("api/notice",
+                    get(NoticeController.API_NOTICE + "/{id}", 1L).
+                then().log().all().
+                    apply(document("api/notice",
                         getDocumentRequest(),
                         getDocumentResponse(),
                         responseHeaders(
-                                headerWithName("Set-Cookie").description("csrf token")
+                                headerWithName("Set-Cookie").description("csrf token - Required, JSEESIONID - Optional")
                         ),
                         pathParameters(
                                 parameterWithName("id").description("공고의 id")),
@@ -103,5 +110,6 @@ class NoticeDocumentationTest extends Documentation {
                                                 "공고의 bookmark state\n - 비회원의 bookmarkState 는 항상 false"))
                 ))
                 .extract();
+        //@formatter:on
     }
 }
