@@ -3,6 +3,7 @@ package com.hongikbros.jobmanager.member.application;
 import com.hongikbros.jobmanager.member.domain.LoginMember;
 
 public class MemberResponse {
+
     private final String name;
     private final String avatar;
 

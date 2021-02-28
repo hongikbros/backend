@@ -7,6 +7,6 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface SkillNoticeRepository extends JpaRepository<SkillNotice, Long> {
 
-    @Query("select skillNoice from SkillNotice skillNoice where skillNoice.noticeId.id = :noticeId")
+    @Query("select case when count(skillNoice) > 0 then true else false end from SkillNotice skillNoice where skillNoice.noticeId.id = :noticeId")
     List<SkillNotice> findAllByNoticeId(Long noticeId);
 }
