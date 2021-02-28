@@ -3,6 +3,7 @@ package com.hongikbros.jobmanager.common.utils;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import com.hongikbros.jobmanager.common.domain.Association;
+import com.hongikbros.jobmanager.member.domain.LoginMember;
 import com.hongikbros.jobmanager.member.domain.Member;
 import com.hongikbros.jobmanager.notice.company.Company;
 import com.hongikbros.jobmanager.notice.notice.domain.ApplyUrl;
@@ -14,8 +15,8 @@ import com.hongikbros.jobmanager.skill.domain.SkillNotice;
 
 public class TestObjectUtils {
     public static Member createMember(Long id, Long oauthId, String name, String email,
-            String avatar, String login) {
-        Member member = Member.of(oauthId, name, email, avatar, login);
+            String avatar, String loginId) {
+        Member member = Member.of(oauthId, name, email, avatar, loginId);
         ReflectionTestUtils.setField(member, "id", id);
 
         return member;
@@ -51,5 +52,9 @@ public class TestObjectUtils {
         ReflectionTestUtils.setField(skillNotice, "id", id);
 
         return skillNotice;
+    }
+
+    public static LoginMember createSessionMember(Member member) {
+        return LoginMember.of(member);
     }
 }
