@@ -29,10 +29,6 @@ sourceSets {
     }
 }
 
-ext {
-    set('snippetsDir', file("build/generated-snippets"))
-}
-
 dependencies {
     print(project.property('profile'))
     implementation 'org.springframework.boot:spring-boot-starter-web'
@@ -40,7 +36,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 
-    if (profile == 'dev') {
+    if ("${profile}" == 'dev') {
         implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.6.3'
     }
 
@@ -48,10 +44,22 @@ dependencies {
     runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
 
+    //rest-assured
+    testImplementation 'io.rest-assured:rest-assured:3.3.0'
+    testImplementation 'io.rest-assured:spring-mock-mvc:3.3.0'
+
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
+
+    asciidoctor 'org.springframework.restdocs:spring-restdocs-asciidoctor'
     testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+
     testImplementation 'org.mockito:mockito-inline:2.13.0'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+}
+
+ext {
+    set('snippetsDir', file("build/generated-snippets"))
 }
 
 test {
@@ -64,15 +72,40 @@ asciidoctor {
     dependsOn test
 }
 
-processResources {
-    copy {
-        from "backend-secret"
-        include "application.yml"
-        into "src/main/resources"
+bootJar {
+    dependsOn asciidoctor
+    from("${asciidoctor.outputDir}/html5") {
+        into 'static/docs'
     }
+}
+
+processResources {
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
     copy {
-        from "backend-secret"
-        include "resources-${profile}/**"
-        into "src/main/"
+        from 'backend-secret'
+        include 'application.yml'
+        into 'src/main/resources'
+    }
+
+    copy {
+        from('backend-secret')
+        include("resources-${profile}/**")
+        into('src/main')
+    }
+}
+
+processTestResources {
+    duplicatesStrategy = DuplicatesStrategy.INHERIT
+    copy {
+        from('backend-secret')
+        include('application-test.yml')
+        into('src/test/resources')
+        rename('application-test.yml', 'application.yml')
+    }
+
+    copy {
+        from('backend-secret')
+        include('resources-test/**')
+        into('src/test')
     }
 }
