@@ -5,12 +5,12 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
-import com.hongikbros.jobmanager.member.domain.CurrentMember;
 import com.hongikbros.jobmanager.notice.domain.bookmark.BookmarkRepository;
 import com.hongikbros.jobmanager.notice.domain.company.Company;
 import com.hongikbros.jobmanager.notice.domain.company.CompanyRepository;
 import com.hongikbros.jobmanager.notice.domain.notice.Notice;
 import com.hongikbros.jobmanager.notice.domain.notice.NoticeRepository;
+import com.hongikbros.jobmanager.security.core.CurrentMember;
 import com.hongikbros.jobmanager.skill.domain.skill.Skill;
 import com.hongikbros.jobmanager.skill.domain.skill.SkillRepository;
 import com.hongikbros.jobmanager.skill.domain.skillnotice.SkillNotice;

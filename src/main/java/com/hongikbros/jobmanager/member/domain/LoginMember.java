@@ -1,5 +1,7 @@
 package com.hongikbros.jobmanager.member.domain;
 
+import com.hongikbros.jobmanager.security.core.CurrentMember;
+
 public class LoginMember implements CurrentMember {
     private final Long id;
     private final String name;

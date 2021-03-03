@@ -4,6 +4,8 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.RequestScope;
 
+import com.hongikbros.jobmanager.security.core.CurrentMember;
+
 @Lazy
 @RequestScope
 @Component
