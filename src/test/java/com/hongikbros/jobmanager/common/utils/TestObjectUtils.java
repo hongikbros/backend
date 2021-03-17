@@ -22,11 +22,10 @@ public class TestObjectUtils {
         return member;
     }
 
-    public static Notice createNotice(Long id, String title,
+    public static Notice createNotice(Long id, Company company, String title,
             Duration duration, ApplyUrl applyUrl,
-            Association<Company> companyId,
             NoticeDescription contents) {
-        Notice notice = Notice.of(title, duration, applyUrl, companyId, contents);
+        Notice notice = Notice.of(company, title, duration, applyUrl, contents);
         ReflectionTestUtils.setField(notice, "id", id);
 
         return notice;

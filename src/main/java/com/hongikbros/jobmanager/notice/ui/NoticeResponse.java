@@ -19,11 +19,10 @@ public class NoticeResponse {
     private final List<String> skills;
     private final String applyUrl;
     private final String description;
-    private final boolean bookmarkState;
 
     private NoticeResponse(Long id, String title, String company, String icon,
             LocalDateTime startDate, LocalDateTime endDate, List<String> skills,
-            String applyUrl, String description, boolean bookmarkState) {
+            String applyUrl, String description) {
         this.id = id;
         this.title = title;
         this.company = company;
@@ -33,11 +32,9 @@ public class NoticeResponse {
         this.skills = skills;
         this.applyUrl = applyUrl;
         this.description = description;
-        this.bookmarkState = bookmarkState;
     }
 
-    public static NoticeResponse of(Notice notice, Company company, List<Skill> skills,
-            boolean bookmarkState) {
+    public static NoticeResponse of(Notice notice, Company company, List<Skill> skills) {
         return new NoticeResponse(
                 notice.getId(),
                 notice.getTitle(),
@@ -46,9 +43,8 @@ public class NoticeResponse {
                 notice.getDuration().getStartDate(),
                 notice.getDuration().getEndDate(),
                 covertSkillsToResponses(skills),
-                notice.getRedirectUrl().getRedirectUrl(),
-                notice.getDescription().getDescription(),
-                bookmarkState
+                notice.getApplyUrl().getRedirectUrl(),
+                notice.getDescription().getDescription()
         );
     }
 
@@ -94,7 +90,4 @@ public class NoticeResponse {
         return description;
     }
 
-    public boolean isBookmarkState() {
-        return bookmarkState;
-    }
 }

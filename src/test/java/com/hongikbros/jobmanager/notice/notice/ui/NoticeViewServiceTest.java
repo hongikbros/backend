@@ -18,14 +18,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import com.hongikbros.jobmanager.common.domain.Association;
 import com.hongikbros.jobmanager.common.fixture.sessionmember.SessionMemberFixture;
 import com.hongikbros.jobmanager.common.utils.TestObjectUtils;
-import com.hongikbros.jobmanager.notice.domain.bookmark.BookmarkRepository;
+import com.hongikbros.jobmanager.notice.domain.NoticeRepository;
 import com.hongikbros.jobmanager.notice.domain.company.Company;
-import com.hongikbros.jobmanager.notice.domain.company.CompanyRepository;
 import com.hongikbros.jobmanager.notice.domain.notice.ApplyUrl;
 import com.hongikbros.jobmanager.notice.domain.notice.Duration;
 import com.hongikbros.jobmanager.notice.domain.notice.Notice;
 import com.hongikbros.jobmanager.notice.domain.notice.NoticeDescription;
-import com.hongikbros.jobmanager.notice.domain.notice.NoticeRepository;
 import com.hongikbros.jobmanager.notice.ui.NoticeResponse;
 import com.hongikbros.jobmanager.notice.ui.NoticeViewService;
 import com.hongikbros.jobmanager.skill.domain.skill.Skill;
@@ -39,48 +37,40 @@ class NoticeViewServiceTest {
     private NoticeRepository noticeRepository;
 
     @Mock
-    private CompanyRepository companyRepository;
-
-    @Mock
     private SkillNoticeRepository skillNoticeRepository;
 
     @Mock
     private SkillRepository skillRepository;
 
-    @Mock
-    private BookmarkRepository bookmarkRepository;
-
     private NoticeViewService noticeViewService;
 
     @BeforeEach
     void setUp() {
-        noticeViewService = new NoticeViewService(noticeRepository, companyRepository,
-                skillNoticeRepository, skillRepository, bookmarkRepository);
+        noticeViewService = new NoticeViewService(noticeRepository, skillNoticeRepository,
+                skillRepository);
     }
 
     @DisplayName("공고 상세 내용을 조회하면 NoticeResponse dto를 반환한다.")
     @Test
     void should_returnNoticeResponse_whenShowNoticeIsRequested() {
         // given
+        final Company toss = TestObjectUtils.createCompany(1L, "toss", "icon.url");
         final Notice notice = TestObjectUtils.createNotice(
                 1L,
+                toss,
                 "백앤드 개발자 상시모집",
                 Duration.of(LocalDateTime.MIN, LocalDateTime.MAX),
                 ApplyUrl.from("hi.com"),
-                new Association<>(1L),
                 NoticeDescription.from("잘하는 사람 뽑습니다.")
         );
-        final Company toss = TestObjectUtils.createCompany(1L, "toss", "icon.url");
         final SkillNotice skillNotice = TestObjectUtils.createSkillNotice(1L,
                 new Association<>(1L), new Association<>(1L));
         final Skill skill = TestObjectUtils.createSkill(1L, "Spring Framework");
 
         given(noticeRepository.findById(anyLong())).willReturn(Optional.of(notice));
-        given(companyRepository.findById(anyLong())).willReturn(Optional.of(toss));
         given(skillNoticeRepository.findAllByNoticeId(any())).willReturn(
                 Collections.singletonList(skillNotice));
         given(skillRepository.findByIdIn(anyList())).willReturn(Collections.singletonList(skill));
-        given(bookmarkRepository.existsBookmarkByMemberId(anyLong())).willReturn(true);
         // when
         final NoticeResponse noticeResponse = noticeViewService.showNotice(1L,
                 SessionMemberFixture.EUN_SEOK);
@@ -91,8 +81,7 @@ class NoticeViewServiceTest {
                 () -> assertThat(noticeResponse.getStartDate()).isEqualTo(LocalDateTime.MIN),
                 () -> assertThat(noticeResponse.getEndDate()).isEqualTo(LocalDateTime.MAX),
                 () -> assertThat(noticeResponse.getApplyUrl()).isEqualTo("hi.com"),
-                () -> assertThat(noticeResponse.getDescription()).isEqualTo("잘하는 사람 뽑습니다."),
-                () -> assertThat(noticeResponse.isBookmarkState()).isTrue()
+                () -> assertThat(noticeResponse.getDescription()).isEqualTo("잘하는 사람 뽑습니다.")
         );
     }
 

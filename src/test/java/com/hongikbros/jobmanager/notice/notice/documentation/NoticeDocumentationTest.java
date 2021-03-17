@@ -22,7 +22,6 @@ import org.springframework.web.context.WebApplicationContext;
 
 import com.hongikbros.jobmanager.common.auth.TestAuthenticationToken;
 import com.hongikbros.jobmanager.common.documentation.Documentation;
-import com.hongikbros.jobmanager.common.domain.Association;
 import com.hongikbros.jobmanager.common.fixture.sessionmember.SessionMemberFixture;
 import com.hongikbros.jobmanager.common.utils.TestObjectUtils;
 import com.hongikbros.jobmanager.notice.domain.company.Company;
@@ -54,19 +53,19 @@ class NoticeDocumentationTest extends Documentation {
         final TestAuthenticationToken testAuthenticationToken = new TestAuthenticationToken(
                 SessionMemberFixture.EUN_SEOK);
 
+        final Company toss = TestObjectUtils.createCompany(1L, "toss", "icon.url");
         final Notice notice = TestObjectUtils.createNotice(
                 1L,
+                toss,
                 "백앤드 개발자 상시모집",
                 Duration.of(LocalDateTime.MIN, LocalDateTime.MAX),
                 ApplyUrl.from("hi.com"),
-                new Association<>(1L),
                 NoticeDescription.from("잘하는 사람 뽑습니다.")
         );
-        final Company toss = TestObjectUtils.createCompany(1L, "toss", "icon.url");
         final Skill skill = TestObjectUtils.createSkill(1L, "Spring Framework");
 
         NoticeResponse noticeResponse = NoticeResponse.of(notice, toss,
-                Collections.singletonList(skill), false);
+                Collections.singletonList(skill));
         BDDMockito.given(noticeViewService.showNotice(anyLong(), any())).willReturn(noticeResponse);
 
         //when
