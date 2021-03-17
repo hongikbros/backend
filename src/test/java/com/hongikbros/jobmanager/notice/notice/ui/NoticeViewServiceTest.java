@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -15,7 +14,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.hongikbros.jobmanager.common.domain.Association;
 import com.hongikbros.jobmanager.common.fixture.sessionmember.SessionMemberFixture;
 import com.hongikbros.jobmanager.common.utils.TestObjectUtils;
 import com.hongikbros.jobmanager.notice.domain.NoticeRepository;
@@ -26,28 +24,17 @@ import com.hongikbros.jobmanager.notice.domain.notice.Notice;
 import com.hongikbros.jobmanager.notice.domain.notice.NoticeDescription;
 import com.hongikbros.jobmanager.notice.ui.NoticeResponse;
 import com.hongikbros.jobmanager.notice.ui.NoticeViewService;
-import com.hongikbros.jobmanager.skill.domain.skill.Skill;
-import com.hongikbros.jobmanager.skill.domain.skill.SkillRepository;
-import com.hongikbros.jobmanager.skill.domain.skillnotice.SkillNotice;
-import com.hongikbros.jobmanager.skill.domain.skillnotice.SkillNoticeRepository;
 
 @ExtendWith(MockitoExtension.class)
 class NoticeViewServiceTest {
     @Mock
     private NoticeRepository noticeRepository;
 
-    @Mock
-    private SkillNoticeRepository skillNoticeRepository;
-
-    @Mock
-    private SkillRepository skillRepository;
-
     private NoticeViewService noticeViewService;
 
     @BeforeEach
     void setUp() {
-        noticeViewService = new NoticeViewService(noticeRepository, skillNoticeRepository,
-                skillRepository);
+        noticeViewService = new NoticeViewService(noticeRepository);
     }
 
     @DisplayName("공고 상세 내용을 조회하면 NoticeResponse dto를 반환한다.")
@@ -63,14 +50,8 @@ class NoticeViewServiceTest {
                 ApplyUrl.from("hi.com"),
                 NoticeDescription.from("잘하는 사람 뽑습니다.")
         );
-        final SkillNotice skillNotice = TestObjectUtils.createSkillNotice(1L,
-                new Association<>(1L), new Association<>(1L));
-        final Skill skill = TestObjectUtils.createSkill(1L, "Spring Framework");
 
         given(noticeRepository.findById(anyLong())).willReturn(Optional.of(notice));
-        given(skillNoticeRepository.findAllByNoticeId(any())).willReturn(
-                Collections.singletonList(skillNotice));
-        given(skillRepository.findByIdIn(anyList())).willReturn(Collections.singletonList(skill));
         // when
         final NoticeResponse noticeResponse = noticeViewService.showNotice(1L,
                 SessionMemberFixture.EUN_SEOK);

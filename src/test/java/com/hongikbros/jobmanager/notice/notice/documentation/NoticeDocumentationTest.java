@@ -8,7 +8,6 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -32,7 +31,6 @@ import com.hongikbros.jobmanager.notice.domain.notice.NoticeDescription;
 import com.hongikbros.jobmanager.notice.ui.NoticeController;
 import com.hongikbros.jobmanager.notice.ui.NoticeResponse;
 import com.hongikbros.jobmanager.notice.ui.NoticeViewService;
-import com.hongikbros.jobmanager.skill.domain.skill.Skill;
 
 @WebMvcTest(controllers = NoticeController.class)
 class NoticeDocumentationTest extends Documentation {
@@ -62,10 +60,7 @@ class NoticeDocumentationTest extends Documentation {
                 ApplyUrl.from("hi.com"),
                 NoticeDescription.from("잘하는 사람 뽑습니다.")
         );
-        final Skill skill = TestObjectUtils.createSkill(1L, "Spring Framework");
-
-        NoticeResponse noticeResponse = NoticeResponse.of(notice, toss,
-                Collections.singletonList(skill));
+        NoticeResponse noticeResponse = NoticeResponse.of(notice, toss);
         BDDMockito.given(noticeViewService.showNotice(anyLong(), any())).willReturn(noticeResponse);
 
         //when
