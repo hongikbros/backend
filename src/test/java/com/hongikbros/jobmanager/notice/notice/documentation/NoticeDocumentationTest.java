@@ -74,7 +74,7 @@ class NoticeDocumentationTest extends Documentation {
                         getDocumentRequest(),
                         getDocumentResponse(),
                         responseHeaders(
-                                headerWithName("Set-Cookie").description("csrf token - Required, JSEESIONID - Optional")
+                                headerWithName("Set-Cookie").description("csrf token, JSEESIONID - Required")
                         ),
                         pathParameters(
                                 parameterWithName("id").description("공고의 id")),
@@ -93,17 +93,12 @@ class NoticeDocumentationTest extends Documentation {
                                 fieldWithPath("endDate").type(JsonFieldType.STRING)
                                         .attributes(getDateFormat())
                                         .description("공고의 endDate"),
-                                fieldWithPath("skills").type(JsonFieldType.ARRAY)
-                                        .description("공고의 스킬 요구사항들"),
                                 fieldWithPath("applyUrl").type(JsonFieldType.STRING)
                                         .description("공고의 applyUrl"),
                                 fieldWithPath("description").type(JsonFieldType.STRING)
-                                        .description("공고의 상세내용"),
-                                fieldWithPath("bookmarkState").type(JsonFieldType.BOOLEAN)
-                                        .description(
-                                                "공고의 bookmark state\n - 비회원의 bookmarkState 는 항상 false"))
-                ))
-                .extract();
+                                        .description("공고의 상세내용"))
+                    )).
+                extract();
         //@formatter:on
     }
 }
