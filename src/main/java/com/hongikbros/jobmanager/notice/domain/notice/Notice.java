@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 
 import com.hongikbros.jobmanager.common.domain.BaseEntity;
@@ -20,7 +21,7 @@ public class Notice extends BaseEntity {
     private Long id;
 
     @OneToOne
-    @Column(nullable = false, name = "company_id")
+    @JoinColumn(nullable = false, name = "company_id")
     private Company company;
 
     @Column(nullable = false)
