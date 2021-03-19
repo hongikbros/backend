@@ -8,7 +8,6 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -22,7 +21,6 @@ import org.springframework.web.context.WebApplicationContext;
 
 import com.hongikbros.jobmanager.common.auth.TestAuthenticationToken;
 import com.hongikbros.jobmanager.common.documentation.Documentation;
-import com.hongikbros.jobmanager.common.domain.Association;
 import com.hongikbros.jobmanager.common.fixture.sessionmember.SessionMemberFixture;
 import com.hongikbros.jobmanager.common.utils.TestObjectUtils;
 import com.hongikbros.jobmanager.notice.domain.company.Company;
@@ -33,7 +31,6 @@ import com.hongikbros.jobmanager.notice.domain.notice.NoticeDescription;
 import com.hongikbros.jobmanager.notice.ui.NoticeController;
 import com.hongikbros.jobmanager.notice.ui.NoticeResponse;
 import com.hongikbros.jobmanager.notice.ui.NoticeViewService;
-import com.hongikbros.jobmanager.skill.domain.skill.Skill;
 
 @WebMvcTest(controllers = NoticeController.class)
 class NoticeDocumentationTest extends Documentation {
@@ -54,19 +51,16 @@ class NoticeDocumentationTest extends Documentation {
         final TestAuthenticationToken testAuthenticationToken = new TestAuthenticationToken(
                 SessionMemberFixture.EUN_SEOK);
 
+        final Company toss = TestObjectUtils.createCompany(1L, "toss", "icon.url");
         final Notice notice = TestObjectUtils.createNotice(
                 1L,
+                toss,
                 "백앤드 개발자 상시모집",
                 Duration.of(LocalDateTime.MIN, LocalDateTime.MAX),
                 ApplyUrl.from("hi.com"),
-                new Association<>(1L),
                 NoticeDescription.from("잘하는 사람 뽑습니다.")
         );
-        final Company toss = TestObjectUtils.createCompany(1L, "toss", "icon.url");
-        final Skill skill = TestObjectUtils.createSkill(1L, "Spring Framework");
-
-        NoticeResponse noticeResponse = NoticeResponse.of(notice, toss,
-                Collections.singletonList(skill), false);
+        NoticeResponse noticeResponse = NoticeResponse.of(notice, toss);
         BDDMockito.given(noticeViewService.showNotice(anyLong(), any())).willReturn(noticeResponse);
 
         //when
@@ -80,7 +74,7 @@ class NoticeDocumentationTest extends Documentation {
                         getDocumentRequest(),
                         getDocumentResponse(),
                         responseHeaders(
-                                headerWithName("Set-Cookie").description("csrf token - Required, JSEESIONID - Optional")
+                                headerWithName("Set-Cookie").description("csrf token, JSEESIONID - Required")
                         ),
                         pathParameters(
                                 parameterWithName("id").description("공고의 id")),
@@ -99,17 +93,12 @@ class NoticeDocumentationTest extends Documentation {
                                 fieldWithPath("endDate").type(JsonFieldType.STRING)
                                         .attributes(getDateFormat())
                                         .description("공고의 endDate"),
-                                fieldWithPath("skills").type(JsonFieldType.ARRAY)
-                                        .description("공고의 스킬 요구사항들"),
                                 fieldWithPath("applyUrl").type(JsonFieldType.STRING)
                                         .description("공고의 applyUrl"),
                                 fieldWithPath("description").type(JsonFieldType.STRING)
-                                        .description("공고의 상세내용"),
-                                fieldWithPath("bookmarkState").type(JsonFieldType.BOOLEAN)
-                                        .description(
-                                                "공고의 bookmark state\n - 비회원의 bookmarkState 는 항상 false"))
-                ))
-                .extract();
+                                        .description("공고의 상세내용"))
+                    )).
+                extract();
         //@formatter:on
     }
 }

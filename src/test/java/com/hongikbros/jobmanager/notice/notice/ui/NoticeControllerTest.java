@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -16,7 +15,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import com.hongikbros.jobmanager.common.domain.Association;
 import com.hongikbros.jobmanager.common.fixture.sessionmember.SessionMemberFixture;
 import com.hongikbros.jobmanager.common.utils.TestObjectUtils;
 import com.hongikbros.jobmanager.notice.domain.company.Company;
@@ -27,7 +25,6 @@ import com.hongikbros.jobmanager.notice.domain.notice.NoticeDescription;
 import com.hongikbros.jobmanager.notice.ui.NoticeController;
 import com.hongikbros.jobmanager.notice.ui.NoticeResponse;
 import com.hongikbros.jobmanager.notice.ui.NoticeViewService;
-import com.hongikbros.jobmanager.skill.domain.skill.Skill;
 
 @ExtendWith(MockitoExtension.class)
 class NoticeControllerTest {
@@ -42,19 +39,17 @@ class NoticeControllerTest {
     @Test
     void should_returnResponseEntity() {
         // given
+        final Company toss = TestObjectUtils.createCompany(1L, "toss", "icon.url");
         final Notice notice = TestObjectUtils.createNotice(
                 1L,
+                toss,
                 "백앤드 개발자 상시모집",
                 Duration.of(LocalDateTime.MIN, LocalDateTime.MAX),
                 ApplyUrl.from("hi.com"),
-                new Association<>(1L),
                 NoticeDescription.from("잘하는 사람 뽑습니다.")
         );
-        final Company toss = TestObjectUtils.createCompany(1L, "toss", "icon.url");
-        final Skill skill = TestObjectUtils.createSkill(1L, "Spring Framework");
 
-        NoticeResponse noticeResponse = NoticeResponse.of(notice, toss,
-                Collections.singletonList(skill), false);
+        NoticeResponse noticeResponse = NoticeResponse.of(notice, toss);
         given(noticeViewService.showNotice(anyLong(), any())).willReturn(noticeResponse);
 
         // when
