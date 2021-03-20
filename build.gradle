@@ -54,6 +54,7 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
     testImplementation 'org.mockito:mockito-inline:2.13.0'
+    implementation 'org.mock-server:mockserver-junit-jupiter:5.11.1'
     //jsoup
     implementation 'org.jsoup:jsoup:1.13.1'
 }
