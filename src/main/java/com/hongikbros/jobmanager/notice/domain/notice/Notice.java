@@ -35,25 +35,19 @@ public class Notice extends BaseEntity {
     @Column(nullable = false)
     private ApplyUrl applyUrl;
 
-    @Column(nullable = false)
-    private NoticeDescription description;
-
     public Notice() {
     }
 
-    private Notice(Long id, Company company, String title, Duration duration, ApplyUrl applyUrl,
-            NoticeDescription description) {
+    private Notice(Long id, Company company, String title, Duration duration, ApplyUrl applyUrl) {
         this.id = id;
         this.company = company;
         this.title = title;
         this.duration = duration;
         this.applyUrl = applyUrl;
-        this.description = description;
     }
 
-    public static Notice of(Company company, String title, Duration duration, ApplyUrl applyUrl,
-            NoticeDescription contents) {
-        return new Notice(null, company, title, duration, applyUrl, contents);
+    public static Notice of(Company company, String title, Duration duration, ApplyUrl applyUrl) {
+        return new Notice(null, company, title, duration, applyUrl);
     }
 
     public Long getId() {
@@ -74,9 +68,5 @@ public class Notice extends BaseEntity {
 
     public ApplyUrl getApplyUrl() {
         return applyUrl;
-    }
-
-    public NoticeDescription getDescription() {
-        return description;
     }
 }

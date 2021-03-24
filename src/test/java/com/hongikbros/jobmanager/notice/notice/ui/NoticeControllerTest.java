@@ -21,7 +21,6 @@ import com.hongikbros.jobmanager.notice.domain.company.Company;
 import com.hongikbros.jobmanager.notice.domain.notice.ApplyUrl;
 import com.hongikbros.jobmanager.notice.domain.notice.Duration;
 import com.hongikbros.jobmanager.notice.domain.notice.Notice;
-import com.hongikbros.jobmanager.notice.domain.notice.NoticeDescription;
 import com.hongikbros.jobmanager.notice.ui.NoticeController;
 import com.hongikbros.jobmanager.notice.ui.NoticeResponse;
 import com.hongikbros.jobmanager.notice.ui.NoticeViewService;
@@ -39,14 +38,13 @@ class NoticeControllerTest {
     @Test
     void should_returnResponseEntity() {
         // given
-        final Company toss = TestObjectUtils.createCompany(1L, "toss", "icon.url");
+        final Company toss = TestObjectUtils.createCompany(1L, "icon.url");
         final Notice notice = TestObjectUtils.createNotice(
                 1L,
                 toss,
                 "백앤드 개발자 상시모집",
                 Duration.of(LocalDateTime.MIN, LocalDateTime.MAX),
-                ApplyUrl.from("hi.com"),
-                NoticeDescription.from("잘하는 사람 뽑습니다.")
+                ApplyUrl.from("hi.com")
         );
 
         NoticeResponse noticeResponse = NoticeResponse.of(notice, toss);

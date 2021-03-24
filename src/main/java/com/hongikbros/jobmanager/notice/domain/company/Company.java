@@ -17,30 +17,23 @@ public class Company extends BaseEntity {
     @Column(name = "company_id")
     private Long id;
 
-    private String name;
-
     @Lob
     private String icon;
 
     protected Company() {
     }
 
-    private Company(Long id, String name, String icon) {
+    private Company(Long id, String icon) {
         this.id = id;
-        this.name = name;
         this.icon = icon;
     }
 
-    public static Company of(String name, String icon) {
-        return new Company(null, name, icon);
+    public static Company from(String icon) {
+        return new Company(null, icon);
     }
 
     public Long getId() {
         return id;
-    }
-
-    public String getName() {
-        return name;
     }
 
     public String getIcon() {
