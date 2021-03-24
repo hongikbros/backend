@@ -6,6 +6,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockserver.model.HttpRequest.*;
 import static org.mockserver.model.HttpResponse.*;
 
+import java.time.LocalDateTime;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -18,6 +20,7 @@ import org.mockserver.junit.jupiter.MockServerSettings;
 import org.springframework.http.HttpStatus;
 
 import com.hongikbros.jobmanager.common.utils.TestFileIoUtils;
+import com.hongikbros.jobmanager.notice.domain.notice.Duration;
 import com.hongikbros.jobmanager.notice.domain.notice.Notice;
 import com.hongikbros.jobmanager.notice.domain.scraper.Scraper;
 import com.hongikbros.jobmanager.notice.infrastructure.scraper.JsoupScraper;
@@ -46,13 +49,15 @@ class JsoupScraperTest {
     @Test
     void should_whenUrlIsGiven_makeNotice() {
         // given
-        String noticeUrl = "https://careers.kakaoenterprise.com/job";
+        final String path = "/job";
+        final String noticeUrl = "http://localhost:" + MOCK_SEVER_PORT + path;
+        final Duration duration = Duration.of(LocalDateTime.MIN, LocalDateTime.MAX);
 
         new MockServerClient("localhost", MOCK_SEVER_PORT)
                 .when(
                         request()
                                 .withMethod("GET")
-                                .withPath(noticeUrl)
+                                .withPath(path)
                 )
                 .respond(
                         response()
@@ -60,12 +65,16 @@ class JsoupScraperTest {
                                 .withBody(response)
                 );
         // when
-        Notice notice = scraper.createNotice(noticeUrl);
+        Notice notice = scraper.createNotice(noticeUrl, duration);
         // then
         assertAll(
-                () -> assertThat(notice.getCompany().getName()).isEqualTo("kakaoenterprise"),
-                () -> assertThat(notice.getApplyUrl().getRedirectUrl()).isEqualTo(
-                        "https://careers.kakaoenterprise.com/job")
+                () -> assertThat(notice.getCompany().getIcon()).isNotNull(),
+                () -> assertThat(notice.getTitle()).isEqualTo(
+                        "[vertical팀] 앱/웹 UX/UI 기획 지원 체험형 인턴 모집"
+                ),
+                () -> assertThat(notice.getDuration().getStartDate()).isEqualTo(LocalDateTime.MIN),
+                () -> assertThat(notice.getDuration().getEndDate()).isEqualTo(LocalDateTime.MAX),
+                () -> assertThat(notice.getApplyUrl().getRedirectUrl()).isEqualTo(noticeUrl)
         );
     }
 }
