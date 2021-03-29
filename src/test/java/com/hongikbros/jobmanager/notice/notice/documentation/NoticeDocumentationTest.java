@@ -23,12 +23,12 @@ import com.hongikbros.jobmanager.common.auth.TestAuthenticationToken;
 import com.hongikbros.jobmanager.common.documentation.Documentation;
 import com.hongikbros.jobmanager.common.fixture.sessionmember.SessionMemberFixture;
 import com.hongikbros.jobmanager.common.utils.TestObjectUtils;
+import com.hongikbros.jobmanager.notice.application.dto.NoticeResponse;
 import com.hongikbros.jobmanager.notice.domain.company.Company;
 import com.hongikbros.jobmanager.notice.domain.notice.ApplyUrl;
 import com.hongikbros.jobmanager.notice.domain.notice.Duration;
 import com.hongikbros.jobmanager.notice.domain.notice.Notice;
 import com.hongikbros.jobmanager.notice.ui.NoticeController;
-import com.hongikbros.jobmanager.notice.ui.NoticeResponse;
 import com.hongikbros.jobmanager.notice.ui.NoticeViewService;
 
 @WebMvcTest(controllers = NoticeController.class)

@@ -17,19 +17,20 @@ import org.springframework.http.ResponseEntity;
 
 import com.hongikbros.jobmanager.common.fixture.sessionmember.SessionMemberFixture;
 import com.hongikbros.jobmanager.common.utils.TestObjectUtils;
+import com.hongikbros.jobmanager.notice.application.NoticeService;
+import com.hongikbros.jobmanager.notice.application.dto.NoticeResponse;
 import com.hongikbros.jobmanager.notice.domain.company.Company;
 import com.hongikbros.jobmanager.notice.domain.notice.ApplyUrl;
 import com.hongikbros.jobmanager.notice.domain.notice.Duration;
 import com.hongikbros.jobmanager.notice.domain.notice.Notice;
 import com.hongikbros.jobmanager.notice.ui.NoticeController;
-import com.hongikbros.jobmanager.notice.ui.NoticeResponse;
-import com.hongikbros.jobmanager.notice.ui.NoticeViewService;
+import com.hongikbros.jobmanager.notice.ui.dto.NoticeCreateRequest;
 
 @ExtendWith(MockitoExtension.class)
 class NoticeControllerTest {
 
     @Mock
-    private NoticeViewService noticeViewService;
+    private NoticeService noticeService;
 
     @InjectMocks
     private NoticeController noticeController;
@@ -47,15 +48,20 @@ class NoticeControllerTest {
                 ApplyUrl.from("hi.com")
         );
 
+        NoticeCreateRequest noticeCreateRequest = new NoticeCreateRequest(
+                "apply.url",
+                LocalDateTime.MIN,
+                LocalDateTime.MAX
+        );
         NoticeResponse noticeResponse = NoticeResponse.of(notice, toss);
-        given(noticeViewService.showNotice(anyLong(), any())).willReturn(noticeResponse);
+        given(noticeService.createNotice(anyLong(), any(), any())).willReturn(noticeResponse);
 
         // when
-        final ResponseEntity<NoticeResponse> responseEntity = noticeController.showNotice(1L,
-                SessionMemberFixture.EUN_SEOK);
+        final ResponseEntity<NoticeResponse> responseEntity = noticeController.createNotice(
+                noticeCreateRequest, SessionMemberFixture.EUN_SEOK);
         // then
         assertAll(
-                () -> assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK),
+                () -> assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.CREATED),
                 () -> assertThat(responseEntity.getBody()).isNotNull()
         );
 

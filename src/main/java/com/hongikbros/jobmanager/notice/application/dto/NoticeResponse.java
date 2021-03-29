@@ -1,4 +1,4 @@
-package com.hongikbros.jobmanager.notice.ui;
+package com.hongikbros.jobmanager.notice.application.dto;
 
 import java.time.LocalDateTime;
 
