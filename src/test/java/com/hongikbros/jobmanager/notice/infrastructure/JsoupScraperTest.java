@@ -8,61 +8,63 @@ import static org.mockserver.model.HttpResponse.*;
 
 import java.time.LocalDateTime;
 
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.TestInstance;
 import org.mockserver.client.MockServerClient;
 import org.mockserver.integration.ClientAndServer;
-import org.mockserver.junit.jupiter.MockServerExtension;
 import org.mockserver.junit.jupiter.MockServerSettings;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 
 import com.hongikbros.jobmanager.common.utils.TestFileIoUtils;
 import com.hongikbros.jobmanager.notice.domain.notice.Duration;
 import com.hongikbros.jobmanager.notice.domain.notice.Notice;
 import com.hongikbros.jobmanager.notice.domain.scraper.Scraper;
+import com.hongikbros.jobmanager.notice.infrastructure.exception.NotScrapingException;
 import com.hongikbros.jobmanager.notice.infrastructure.scraper.JsoupScraper;
+import com.hongikbros.jobmanager.notice.infrastructure.scraper.ScrapingExceptionCode;
 
-@ExtendWith(MockServerExtension.class)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @MockServerSettings(ports = {MOCK_SEVER_PORT})
 class JsoupScraperTest {
     public static final int MOCK_SEVER_PORT = 9000;
-    private Scraper scraper;
-    private ClientAndServer mockServer;
-    private byte[] response;
+    public static final String PATH = "/job";
+    public static final String DOMAIN = "http://localhost:";
 
-    @BeforeEach
-    void setUp(ClientAndServer clientAndServer) {
-        scraper = new JsoupScraper();
-        response = TestFileIoUtils.loadFileFromClasspath("/static/kakao_recruiting_test_page.html");
-        this.mockServer = clientAndServer;
+    private ClientAndServer mockServer;
+    private final Scraper scraper = new JsoupScraper();
+    private final Duration duration = Duration.of(LocalDateTime.MIN, LocalDateTime.MAX);
+
+    @BeforeAll
+    void beforeAll() {
+        mockServer = ClientAndServer.startClientAndServer();
     }
 
     @AfterEach
     void tearDown() {
-        this.mockServer.stop();
+        new MockServerClient("localhost", MOCK_SEVER_PORT).reset();
     }
 
     @DisplayName("url이 주어지면 해당 공고를 만들어 post하는 기능")
     @Test
     void should_whenUrlIsGiven_makeNotice() {
         // given
-        final String path = "/job";
-        final String noticeUrl = "http://localhost:" + MOCK_SEVER_PORT + path;
-        final Duration duration = Duration.of(LocalDateTime.MIN, LocalDateTime.MAX);
+        final String noticeUrl = DOMAIN + MOCK_SEVER_PORT + PATH;
+        final byte[] response = TestFileIoUtils.loadFileFromClasspath(
+                "/static/kakao_recruiting_test_page.html");
 
         new MockServerClient("localhost", MOCK_SEVER_PORT)
-                .when(
-                        request()
-                                .withMethod("GET")
-                                .withPath(path)
+                .when(request()
+                        .withMethod(HttpMethod.GET.name())
+                        .withPath(PATH)
                 )
-                .respond(
-                        response()
-                                .withStatusCode(HttpStatus.OK.value())
-                                .withBody(response)
+                .respond(response()
+                        .withStatusCode(HttpStatus.OK.value())
+                        .withBody(response)
                 );
         // when
         Notice notice = scraper.createNotice(noticeUrl, duration);
@@ -76,5 +78,59 @@ class JsoupScraperTest {
                 () -> assertThat(notice.getDuration().getEndDate()).isEqualTo(LocalDateTime.MAX),
                 () -> assertThat(notice.getApplyUrl().getRedirectUrl()).isEqualTo(noticeUrl)
         );
+    }
+
+    @DisplayName("연결할 수 없는 url 요청으로 크롤링 시 예외 테스트")
+    @Test
+    void should_whenIncorrectUrlIsGiven_ExceptionTest() {
+        new MockServerClient("localhost", MOCK_SEVER_PORT)
+                .when(request()
+                        .withMethod(HttpMethod.GET.name()))
+                .respond(response()
+                        .withStatusCode(HttpStatus.BAD_REQUEST.value()));
+
+        assertThatThrownBy(
+                () -> scraper.createNotice(DOMAIN + MOCK_SEVER_PORT, duration))
+                .isInstanceOf(NotScrapingException.class)
+                .hasMessage(ScrapingExceptionCode.URL_NOT_CONNECT.getMessage());
+    }
+
+    @DisplayName("찾을 수 없는 URL 예외 테스트")
+    @Test
+    void notFoundUrlExceptionTest() {
+        new MockServerClient("localhost", MOCK_SEVER_PORT)
+                .when(request()
+                        .withMethod(HttpMethod.GET.name())
+                        .withPath(PATH))
+                .respond(response()
+                        .withStatusCode(HttpStatus.NOT_FOUND.value())
+                );
+
+        assertThatThrownBy(
+                () -> scraper.createNotice(DOMAIN + MOCK_SEVER_PORT + PATH, duration))
+                .isInstanceOf(NotScrapingException.class)
+                .hasMessage(ScrapingExceptionCode.NOT_FOUND_URL.getMessage());
+    }
+
+    @DisplayName("너무 많은 요청을 보내 발생하는 429 예외 테스트")
+    @Test
+    void tooManyRequestExceptionTest() {
+        new MockServerClient("localhost", MOCK_SEVER_PORT)
+                .when(request()
+                        .withMethod(HttpMethod.GET.name())
+                        .withPath(PATH))
+                .respond(response()
+                        .withStatusCode(HttpStatus.TOO_MANY_REQUESTS.value())
+                );
+
+        assertThatThrownBy(
+                () -> scraper.createNotice(DOMAIN + MOCK_SEVER_PORT + PATH, duration))
+                .isInstanceOf(NotScrapingException.class)
+                .hasMessage(ScrapingExceptionCode.TOO_MANY_REQUEST.getMessage());
+    }
+
+    @AfterAll
+    void afterAll() {
+        mockServer.stop();
     }
 }

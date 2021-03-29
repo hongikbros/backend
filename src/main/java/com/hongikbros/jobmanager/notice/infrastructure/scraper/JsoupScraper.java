@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
+import org.jsoup.HttpStatusException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -14,8 +15,8 @@ import com.hongikbros.jobmanager.notice.domain.notice.ApplyUrl;
 import com.hongikbros.jobmanager.notice.domain.notice.Duration;
 import com.hongikbros.jobmanager.notice.domain.notice.Notice;
 import com.hongikbros.jobmanager.notice.domain.scraper.Scraper;
-import com.hongikbros.jobmanager.notice.infrastructure.exception.NotParseCompany;
-import com.hongikbros.jobmanager.notice.infrastructure.exception.NotScrapingUrlException;
+import com.hongikbros.jobmanager.notice.infrastructure.exception.NotParseException;
+import com.hongikbros.jobmanager.notice.infrastructure.exception.NotScrapingException;
 
 public class JsoupScraper implements Scraper {
 
@@ -31,10 +32,18 @@ public class JsoupScraper implements Scraper {
     private Notice parseNotice(String noticeUrl, Duration duration) {
         final Document document = scrapDocument(noticeUrl);
         final Company company = parseCompany(document);
-        final String title = document.title();
+        final String title = parseTitle(document);
         final ApplyUrl applyUrl = ApplyUrl.from(noticeUrl);
 
         return Notice.of(company, title, duration, applyUrl);
+    }
+
+    private String parseTitle(Document document) {
+        try {
+            return document.select("title").first().text();
+        } catch (NullPointerException e) {
+            throw new NotParseException(ParseExceptionCode.NOT_FOUND_MATCH_REGEX);
+        }
     }
 
     private Company parseCompany(Document document) {
@@ -51,7 +60,7 @@ public class JsoupScraper implements Scraper {
             }
             return Company.from(byteArrayOutputStream.toString());
         } catch (IOException e) {
-            throw new NotParseCompany("Company를 parse하는 도중 문제가 발생하였습니다." + e.getMessage());
+            throw new NotParseException(ParseExceptionCode.NOT_PARSE_COMPANY_LOGO);
         }
     }
 
@@ -61,8 +70,15 @@ public class JsoupScraper implements Scraper {
                     .userAgent(USER_AGENT)
                     .timeout(HOLDING_TIME)
                     .get();
+        } catch (HttpStatusException e) {
+            if (e.getStatusCode() == NOT_FOUND) {
+                throw new NotScrapingException(ScrapingExceptionCode.NOT_FOUND_URL);
+            } else if (e.getStatusCode() == TOO_MANY_REQUEST) {
+                throw new NotScrapingException(ScrapingExceptionCode.TOO_MANY_REQUEST);
+            }
+            throw new NotScrapingException(ScrapingExceptionCode.URL_NOT_CONNECT);
         } catch (IOException e) {
-            throw new NotScrapingUrlException("noticeUrl 을 스크랩하지 못하였습니다.: " + e.getMessage());
+            throw new NotScrapingException(ScrapingExceptionCode.URL_NOT_CONNECT);
         }
     }
 }
