@@ -2,6 +2,7 @@ package com.hongikbros.jobmanager.notice.ui;
 
 import org.springframework.stereotype.Service;
 
+import com.hongikbros.jobmanager.notice.application.dto.NoticeResponse;
 import com.hongikbros.jobmanager.notice.domain.NoticeRepository;
 import com.hongikbros.jobmanager.notice.domain.company.Company;
 import com.hongikbros.jobmanager.notice.domain.notice.Notice;

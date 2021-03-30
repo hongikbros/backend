@@ -20,6 +20,7 @@ import org.mockserver.junit.jupiter.MockServerSettings;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 
+import com.hongikbros.jobmanager.common.fixture.member.MemberFixture;
 import com.hongikbros.jobmanager.common.utils.TestFileIoUtils;
 import com.hongikbros.jobmanager.notice.domain.notice.Duration;
 import com.hongikbros.jobmanager.notice.domain.notice.Notice;
@@ -27,6 +28,7 @@ import com.hongikbros.jobmanager.notice.domain.scraper.Scraper;
 import com.hongikbros.jobmanager.notice.infrastructure.exception.NotScrapingException;
 import com.hongikbros.jobmanager.notice.infrastructure.scraper.JsoupScraper;
 import com.hongikbros.jobmanager.notice.infrastructure.scraper.ScrapingExceptionCode;
+import com.hongikbros.jobmanager.security.core.CurrentMember;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @MockServerSettings(ports = {MOCK_SEVER_PORT})
@@ -38,6 +40,7 @@ class JsoupScraperTest {
     private ClientAndServer mockServer;
     private final Scraper scraper = new JsoupScraper();
     private final Duration duration = Duration.of(LocalDateTime.MIN, LocalDateTime.MAX);
+    private final CurrentMember currentMember = MemberFixture.SESSION_MEMBER_EUNSEOK;
 
     @BeforeAll
     void beforeAll() {
@@ -67,7 +70,7 @@ class JsoupScraperTest {
                         .withBody(response)
                 );
         // when
-        Notice notice = scraper.createNotice(noticeUrl, duration);
+        Notice notice = scraper.createNotice(currentMember.getId(), noticeUrl, duration);
         // then
         assertAll(
                 () -> assertThat(notice.getCompany().getIcon()).isNotNull(),
@@ -90,7 +93,8 @@ class JsoupScraperTest {
                         .withStatusCode(HttpStatus.BAD_REQUEST.value()));
 
         assertThatThrownBy(
-                () -> scraper.createNotice(DOMAIN + MOCK_SEVER_PORT, duration))
+                () -> scraper.createNotice(currentMember.getId(), DOMAIN + MOCK_SEVER_PORT,
+                        duration))
                 .isInstanceOf(NotScrapingException.class)
                 .hasMessage(ScrapingExceptionCode.URL_NOT_CONNECT.getMessage());
     }
@@ -107,7 +111,8 @@ class JsoupScraperTest {
                 );
 
         assertThatThrownBy(
-                () -> scraper.createNotice(DOMAIN + MOCK_SEVER_PORT + PATH, duration))
+                () -> scraper.createNotice(currentMember.getId(), DOMAIN + MOCK_SEVER_PORT + PATH,
+                        duration))
                 .isInstanceOf(NotScrapingException.class)
                 .hasMessage(ScrapingExceptionCode.NOT_FOUND_URL.getMessage());
     }
@@ -124,7 +129,8 @@ class JsoupScraperTest {
                 );
 
         assertThatThrownBy(
-                () -> scraper.createNotice(DOMAIN + MOCK_SEVER_PORT + PATH, duration))
+                () -> scraper.createNotice(currentMember.getId(), DOMAIN + MOCK_SEVER_PORT + PATH,
+                        duration))
                 .isInstanceOf(NotScrapingException.class)
                 .hasMessage(ScrapingExceptionCode.TOO_MANY_REQUEST.getMessage());
     }

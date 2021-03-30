@@ -25,17 +25,17 @@ public class JsoupScraper implements Scraper {
     private static final int NOT_FOUND = 404;
     private static final int TOO_MANY_REQUEST = 429;
 
-    public Notice createNotice(String noticeUrl, Duration duration) {
-        return parseNotice(noticeUrl, duration);
+    public Notice createNotice(Long memberId, String noticeUrl, Duration duration) {
+        return parseNotice(memberId, noticeUrl, duration);
     }
 
-    private Notice parseNotice(String noticeUrl, Duration duration) {
+    private Notice parseNotice(Long memberId, String noticeUrl, Duration duration) {
         final Document document = scrapDocument(noticeUrl);
         final Company company = parseCompany(document);
         final String title = parseTitle(document);
         final ApplyUrl applyUrl = ApplyUrl.from(noticeUrl);
 
-        return Notice.of(company, title, duration, applyUrl);
+        return Notice.of(memberId, company, title, duration, applyUrl);
     }
 
     private String parseTitle(Document document) {

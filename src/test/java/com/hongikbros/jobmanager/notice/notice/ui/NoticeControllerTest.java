@@ -1,6 +1,6 @@
 package com.hongikbros.jobmanager.notice.notice.ui;
 
-import static org.assertj.core.api.AssertionsForClassTypes.*;
+import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
 
@@ -15,6 +15,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import com.hongikbros.jobmanager.common.fixture.member.MemberFixture;
 import com.hongikbros.jobmanager.common.fixture.sessionmember.SessionMemberFixture;
 import com.hongikbros.jobmanager.common.utils.TestObjectUtils;
 import com.hongikbros.jobmanager.notice.application.NoticeService;
@@ -25,6 +26,7 @@ import com.hongikbros.jobmanager.notice.domain.notice.Duration;
 import com.hongikbros.jobmanager.notice.domain.notice.Notice;
 import com.hongikbros.jobmanager.notice.ui.NoticeController;
 import com.hongikbros.jobmanager.notice.ui.dto.NoticeCreateRequest;
+import com.hongikbros.jobmanager.security.core.CurrentMember;
 
 @ExtendWith(MockitoExtension.class)
 class NoticeControllerTest {
@@ -39,9 +41,11 @@ class NoticeControllerTest {
     @Test
     void should_returnResponseEntity() {
         // given
+        final CurrentMember currentMember = MemberFixture.SESSION_MEMBER_EUNSEOK;
         final Company toss = TestObjectUtils.createCompany(1L, "icon.url");
         final Notice notice = TestObjectUtils.createNotice(
                 1L,
+                currentMember.getId(),
                 toss,
                 "백앤드 개발자 상시모집",
                 Duration.of(LocalDateTime.MIN, LocalDateTime.MAX),
@@ -56,7 +60,7 @@ class NoticeControllerTest {
         NoticeResponse noticeResponse = NoticeResponse.of(notice, toss);
         given(noticeService.createNotice(anyLong(), any(), any())).willReturn(noticeResponse);
 
-        // when
+        //when
         final ResponseEntity<NoticeResponse> responseEntity = noticeController.createNotice(
                 noticeCreateRequest, SessionMemberFixture.EUN_SEOK);
         // then

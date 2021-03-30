@@ -18,9 +18,9 @@ public class TestObjectUtils {
         return member;
     }
 
-    public static Notice createNotice(Long id, Company company, String title,
+    public static Notice createNotice(Long id, Long memberId, Company company, String title,
             Duration duration, ApplyUrl applyUrl) {
-        Notice notice = Notice.of(company, title, duration, applyUrl);
+        Notice notice = Notice.of(memberId, company, title, duration, applyUrl);
         ReflectionTestUtils.setField(notice, "id", id);
 
         return notice;

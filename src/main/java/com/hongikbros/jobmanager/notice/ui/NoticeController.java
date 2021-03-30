@@ -29,7 +29,7 @@ public class NoticeController {
     public ResponseEntity<NoticeResponse> createNotice(NoticeCreateRequest createNoticeRequest,
             @AuthMember CurrentMember currentMember) {
         final NoticeResponse notice = noticeService.createNotice(currentMember.getId(),
-                createNoticeRequest.getUrl(),
+                createNoticeRequest.getApplyUrl(),
                 createNoticeRequest.toDuration());
 
         return ResponseEntity

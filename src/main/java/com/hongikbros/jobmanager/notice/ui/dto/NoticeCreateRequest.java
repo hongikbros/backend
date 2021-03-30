@@ -5,29 +5,30 @@ import java.time.LocalDateTime;
 import com.hongikbros.jobmanager.notice.domain.notice.Duration;
 
 public class NoticeCreateRequest {
-    private final String url;
-    private final LocalDateTime startTime;
-    private final LocalDateTime endTime;
+    private final String applyUrl;
+    private final LocalDateTime startDate;
+    private final LocalDateTime endDate;
 
-    public NoticeCreateRequest(String url, LocalDateTime startTime, LocalDateTime endTime) {
-        this.url = url;
-        this.startTime = startTime;
-        this.endTime = endTime;
+    public NoticeCreateRequest(String applyUrl, LocalDateTime startDate,
+            LocalDateTime endDate) {
+        this.applyUrl = applyUrl;
+        this.startDate = startDate;
+        this.endDate = endDate;
     }
 
     public Duration toDuration() {
-        return Duration.of(this.startTime, this.endTime);
+        return Duration.of(this.startDate, this.endDate);
     }
 
-    public String getUrl() {
-        return url;
+    public String getApplyUrl() {
+        return applyUrl;
     }
 
-    public LocalDateTime getStartTime() {
-        return startTime;
+    public LocalDateTime getStartDate() {
+        return startDate;
     }
 
-    public LocalDateTime getEndTime() {
-        return endTime;
+    public LocalDateTime getEndDate() {
+        return endDate;
     }
 }
