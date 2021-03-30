@@ -1,6 +1,7 @@
 package com.hongikbros.jobmanager.notice.application;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.hongikbros.jobmanager.notice.application.dto.NoticeResponse;
 import com.hongikbros.jobmanager.notice.domain.NoticeRepository;
@@ -12,16 +13,20 @@ import com.hongikbros.jobmanager.notice.domain.scraper.Scraper;
 public class NoticeService {
 
     private final NoticeRepository noticeRepository;
-    private final Scraper scraper;
+    private final Scraper jsoupScraper;
 
     public NoticeService(NoticeRepository noticeRepository,
-            Scraper scraper) {
+            Scraper jsoupScraper) {
         this.noticeRepository = noticeRepository;
-        this.scraper = scraper;
+        this.jsoupScraper = jsoupScraper;
     }
 
+    @Transactional
     public NoticeResponse createNotice(Long memberId, String url, Duration duration) {
-        Notice notice = scraper.createNotice(memberId, url, duration);
-        return null;
+        Notice notice = jsoupScraper.createNotice(memberId, url, duration);
+
+        noticeRepository.save(notice);
+
+        return NoticeResponse.of(notice);
     }
 }
