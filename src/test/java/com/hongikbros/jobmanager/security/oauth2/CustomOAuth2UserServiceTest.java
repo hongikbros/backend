@@ -55,7 +55,7 @@ class CustomOAuth2UserServiceTest {
     void should_saveOrUpdateMember_whenOauth2UserIsLoad() {
         // given
         Map<String, Object> attributes = AttributesFixture.ATTRIBUTES_FIXTURE;
-        Member member = MemberFixture.EUN_SEOK;
+        Member member = MemberFixture.MEMBER_EUN_SEOK;
 
         given(
                 userRequest.getClientRegistration()

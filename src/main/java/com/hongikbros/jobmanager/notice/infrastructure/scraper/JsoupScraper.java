@@ -9,6 +9,7 @@ import org.jsoup.HttpStatusException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.springframework.stereotype.Component;
 
 import com.hongikbros.jobmanager.notice.domain.company.Company;
 import com.hongikbros.jobmanager.notice.domain.notice.ApplyUrl;
@@ -18,6 +19,7 @@ import com.hongikbros.jobmanager.notice.domain.scraper.Scraper;
 import com.hongikbros.jobmanager.notice.infrastructure.exception.NotParseException;
 import com.hongikbros.jobmanager.notice.infrastructure.exception.NotScrapingException;
 
+@Component
 public class JsoupScraper implements Scraper {
 
     private static final String USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_6) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0.3 Safari/605.1.15";

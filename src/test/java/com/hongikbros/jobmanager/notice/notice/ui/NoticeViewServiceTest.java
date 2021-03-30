@@ -15,7 +15,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.hongikbros.jobmanager.common.fixture.member.MemberFixture;
-import com.hongikbros.jobmanager.common.fixture.sessionmember.SessionMemberFixture;
 import com.hongikbros.jobmanager.common.utils.TestObjectUtils;
 import com.hongikbros.jobmanager.notice.application.dto.NoticeResponse;
 import com.hongikbros.jobmanager.notice.domain.NoticeRepository;
@@ -42,7 +41,7 @@ class NoticeViewServiceTest {
     @Test
     void should_returnNoticeResponse_whenShowNoticeIsRequested() {
         // given
-        final CurrentMember currentMember = MemberFixture.SESSION_MEMBER_EUNSEOK;
+        final CurrentMember currentMember = MemberFixture.LOGIN_MEMBER_EUNSEOK;
         final Company toss = TestObjectUtils.createCompany(1L, "icon.url");
         final Notice notice = TestObjectUtils.createNotice(
                 1L,
@@ -56,7 +55,7 @@ class NoticeViewServiceTest {
         given(noticeRepository.findById(anyLong())).willReturn(Optional.of(notice));
         // when
         final NoticeResponse noticeResponse = noticeViewService.showNotice(1L,
-                SessionMemberFixture.EUN_SEOK);
+                MemberFixture.LOGIN_MEMBER_EUNSEOK);
         // then
         assertAll(
                 () -> assertThat(noticeResponse.getId()).isEqualTo(1L),

@@ -2,7 +2,6 @@ package com.hongikbros.jobmanager.notice.application.dto;
 
 import java.time.LocalDateTime;
 
-import com.hongikbros.jobmanager.notice.domain.company.Company;
 import com.hongikbros.jobmanager.notice.domain.notice.Notice;
 
 public class NoticeResponse {
@@ -24,11 +23,11 @@ public class NoticeResponse {
         this.applyUrl = applyUrl;
     }
 
-    public static NoticeResponse of(Notice notice, Company company) {
+    public static NoticeResponse of(Notice notice) {
         return new NoticeResponse(
                 notice.getId(),
                 notice.getTitle(),
-                company.getIcon(),
+                notice.getCompany().getIcon(),
                 notice.getDuration().getStartDate(),
                 notice.getDuration().getEndDate(),
                 notice.getApplyUrl().getRedirectUrl()

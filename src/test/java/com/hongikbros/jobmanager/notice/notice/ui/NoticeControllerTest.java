@@ -16,7 +16,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import com.hongikbros.jobmanager.common.fixture.member.MemberFixture;
-import com.hongikbros.jobmanager.common.fixture.sessionmember.SessionMemberFixture;
 import com.hongikbros.jobmanager.common.utils.TestObjectUtils;
 import com.hongikbros.jobmanager.notice.application.NoticeService;
 import com.hongikbros.jobmanager.notice.application.dto.NoticeResponse;
@@ -41,7 +40,7 @@ class NoticeControllerTest {
     @Test
     void should_returnResponseEntity() {
         // given
-        final CurrentMember currentMember = MemberFixture.SESSION_MEMBER_EUNSEOK;
+        final CurrentMember currentMember = MemberFixture.LOGIN_MEMBER_EUNSEOK;
         final Company toss = TestObjectUtils.createCompany(1L, "icon.url");
         final Notice notice = TestObjectUtils.createNotice(
                 1L,
@@ -57,12 +56,12 @@ class NoticeControllerTest {
                 LocalDateTime.MIN,
                 LocalDateTime.MAX
         );
-        NoticeResponse noticeResponse = NoticeResponse.of(notice, toss);
+        NoticeResponse noticeResponse = NoticeResponse.of(notice);
         given(noticeService.createNotice(anyLong(), any(), any())).willReturn(noticeResponse);
 
         //when
         final ResponseEntity<NoticeResponse> responseEntity = noticeController.createNotice(
-                noticeCreateRequest, SessionMemberFixture.EUN_SEOK);
+                noticeCreateRequest, MemberFixture.LOGIN_MEMBER_EUNSEOK);
         // then
         assertAll(
                 () -> assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.CREATED),

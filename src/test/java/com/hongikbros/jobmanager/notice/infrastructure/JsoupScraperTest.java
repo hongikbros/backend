@@ -40,7 +40,7 @@ class JsoupScraperTest {
     private ClientAndServer mockServer;
     private final Scraper scraper = new JsoupScraper();
     private final Duration duration = Duration.of(LocalDateTime.MIN, LocalDateTime.MAX);
-    private final CurrentMember currentMember = MemberFixture.SESSION_MEMBER_EUNSEOK;
+    private final CurrentMember currentMember = MemberFixture.LOGIN_MEMBER_EUNSEOK;
 
     @BeforeAll
     void beforeAll() {
@@ -54,7 +54,7 @@ class JsoupScraperTest {
 
     @DisplayName("url이 주어지면 해당 공고를 만들어 post하는 기능")
     @Test
-    void should_whenUrlIsGiven_makeNotice() {
+    void should_createNotice_GivenUrl() {
         // given
         final String noticeUrl = DOMAIN + MOCK_SEVER_PORT + PATH;
         final byte[] response = TestFileIoUtils.loadFileFromClasspath(
@@ -85,15 +85,18 @@ class JsoupScraperTest {
 
     @DisplayName("연결할 수 없는 url 요청으로 크롤링 시 예외 테스트")
     @Test
-    void should_whenIncorrectUrlIsGiven_ExceptionTest() {
+    void should_Exception_GivenIncorrectUrlIsGiven() {
+        //given
         new MockServerClient("localhost", MOCK_SEVER_PORT)
                 .when(request()
                         .withMethod(HttpMethod.GET.name()))
                 .respond(response()
                         .withStatusCode(HttpStatus.BAD_REQUEST.value()));
+        final Long id = currentMember.getId();
 
+        //then
         assertThatThrownBy(
-                () -> scraper.createNotice(currentMember.getId(), DOMAIN + MOCK_SEVER_PORT,
+                () -> scraper.createNotice(id, DOMAIN + MOCK_SEVER_PORT,
                         duration))
                 .isInstanceOf(NotScrapingException.class)
                 .hasMessage(ScrapingExceptionCode.URL_NOT_CONNECT.getMessage());
@@ -101,7 +104,8 @@ class JsoupScraperTest {
 
     @DisplayName("찾을 수 없는 URL 예외 테스트")
     @Test
-    void notFoundUrlExceptionTest() {
+    void should_Exception_GivenNotFoundUrl() {
+        //given
         new MockServerClient("localhost", MOCK_SEVER_PORT)
                 .when(request()
                         .withMethod(HttpMethod.GET.name())
@@ -109,9 +113,11 @@ class JsoupScraperTest {
                 .respond(response()
                         .withStatusCode(HttpStatus.NOT_FOUND.value())
                 );
+        final Long id = currentMember.getId();
 
+        //then
         assertThatThrownBy(
-                () -> scraper.createNotice(currentMember.getId(), DOMAIN + MOCK_SEVER_PORT + PATH,
+                () -> scraper.createNotice(id, DOMAIN + MOCK_SEVER_PORT + PATH,
                         duration))
                 .isInstanceOf(NotScrapingException.class)
                 .hasMessage(ScrapingExceptionCode.NOT_FOUND_URL.getMessage());
@@ -119,7 +125,8 @@ class JsoupScraperTest {
 
     @DisplayName("너무 많은 요청을 보내 발생하는 429 예외 테스트")
     @Test
-    void tooManyRequestExceptionTest() {
+    void should_Exception_GivenTooManyRequest() {
+        //given
         new MockServerClient("localhost", MOCK_SEVER_PORT)
                 .when(request()
                         .withMethod(HttpMethod.GET.name())
@@ -127,9 +134,11 @@ class JsoupScraperTest {
                 .respond(response()
                         .withStatusCode(HttpStatus.TOO_MANY_REQUESTS.value())
                 );
+        final Long id = currentMember.getId();
 
+        //then
         assertThatThrownBy(
-                () -> scraper.createNotice(currentMember.getId(), DOMAIN + MOCK_SEVER_PORT + PATH,
+                () -> scraper.createNotice(id, DOMAIN + MOCK_SEVER_PORT + PATH,
                         duration))
                 .isInstanceOf(NotScrapingException.class)
                 .hasMessage(ScrapingExceptionCode.TOO_MANY_REQUEST.getMessage());

@@ -21,7 +21,7 @@ import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.web.context.WebApplicationContext;
 
-import com.hongikbros.jobmanager.common.auth.CurrentMemberAdapter;
+import com.hongikbros.jobmanager.common.auth.TestLoginMemberAdapter;
 import com.hongikbros.jobmanager.common.documentation.Documentation;
 import com.hongikbros.jobmanager.common.fixture.member.MemberFixture;
 import com.hongikbros.jobmanager.common.utils.TestObjectUtils;
@@ -47,22 +47,22 @@ class NoticeDocumentationTest extends Documentation {
 
     @DisplayName("공고 상세 조회를 요청하면 ResponseEntity NoticeResponse 을 리턴한다.")
     @Test
-    void shouldGenerate_NoticeResponseDocument_whenNotLogin() {
+    void should_generateNoticePostDocument() {
         //given
-        final CurrentMemberAdapter currentMemberAdapter = new CurrentMemberAdapter(
-                MemberFixture.SESSION_MEMBER_EUNSEOK);
+        final TestLoginMemberAdapter testLoginMemberAdapter = new TestLoginMemberAdapter(
+                MemberFixture.LOGIN_MEMBER_EUNSEOK);
 
         final Company toss = TestObjectUtils.createCompany(1L, "icon.url");
         final Notice notice = TestObjectUtils.createNotice(
                 1L,
-                currentMemberAdapter.getSessionMember().getId(),
+                testLoginMemberAdapter.getLoginMember().getId(),
                 toss,
                 "백앤드 개발자 상시모집",
                 Duration.of(LocalDateTime.of(2020, 3, 10, 0, 0)
                         , LocalDateTime.of(2020, 5, 30, 0, 0)),
                 ApplyUrl.from("hi.com")
         );
-        NoticeResponse noticeResponse = NoticeResponse.of(notice, toss);
+        NoticeResponse noticeResponse = NoticeResponse.of(notice);
         BDDMockito.given(noticeService.createNotice(anyLong(), any(), any()))
                 .willReturn(noticeResponse);
         Map<String, String> noticeCreateRequest = new HashMap<>();
@@ -77,7 +77,7 @@ class NoticeDocumentationTest extends Documentation {
         //when
         //@formatter:off
         given().
-                auth().principal(currentMemberAdapter).log().all().
+                auth().principal(testLoginMemberAdapter).log().all().
                 contentType("application/json").
                 body(noticeCreateRequest).
                 when().
