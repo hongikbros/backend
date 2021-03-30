@@ -5,9 +5,11 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.springframework.restdocs.headers.HeaderDocumentation.*;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.restdocs.request.RequestDocumentation.*;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -19,23 +21,23 @@ import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.web.context.WebApplicationContext;
 
-import com.hongikbros.jobmanager.common.auth.TestAuthenticationToken;
+import com.hongikbros.jobmanager.common.auth.CurrentMemberAdapter;
 import com.hongikbros.jobmanager.common.documentation.Documentation;
-import com.hongikbros.jobmanager.common.fixture.sessionmember.SessionMemberFixture;
+import com.hongikbros.jobmanager.common.fixture.member.MemberFixture;
 import com.hongikbros.jobmanager.common.utils.TestObjectUtils;
+import com.hongikbros.jobmanager.notice.application.NoticeService;
 import com.hongikbros.jobmanager.notice.application.dto.NoticeResponse;
 import com.hongikbros.jobmanager.notice.domain.company.Company;
 import com.hongikbros.jobmanager.notice.domain.notice.ApplyUrl;
 import com.hongikbros.jobmanager.notice.domain.notice.Duration;
 import com.hongikbros.jobmanager.notice.domain.notice.Notice;
 import com.hongikbros.jobmanager.notice.ui.NoticeController;
-import com.hongikbros.jobmanager.notice.ui.NoticeViewService;
 
 @WebMvcTest(controllers = NoticeController.class)
 class NoticeDocumentationTest extends Documentation {
 
     @MockBean
-    private NoticeViewService noticeViewService;
+    private NoticeService noticeService;
 
     @BeforeEach
     public void setUp(WebApplicationContext webApplicationContext,
@@ -47,26 +49,39 @@ class NoticeDocumentationTest extends Documentation {
     @Test
     void shouldGenerate_NoticeResponseDocument_whenNotLogin() {
         //given
-        final TestAuthenticationToken testAuthenticationToken = new TestAuthenticationToken(
-                SessionMemberFixture.EUN_SEOK);
+        final CurrentMemberAdapter currentMemberAdapter = new CurrentMemberAdapter(
+                MemberFixture.SESSION_MEMBER_EUNSEOK);
 
         final Company toss = TestObjectUtils.createCompany(1L, "icon.url");
         final Notice notice = TestObjectUtils.createNotice(
                 1L,
+                currentMemberAdapter.getSessionMember().getId(),
                 toss,
                 "백앤드 개발자 상시모집",
-                Duration.of(LocalDateTime.MIN, LocalDateTime.MAX),
+                Duration.of(LocalDateTime.of(2020, 3, 10, 0, 0)
+                        , LocalDateTime.of(2020, 5, 30, 0, 0)),
                 ApplyUrl.from("hi.com")
         );
         NoticeResponse noticeResponse = NoticeResponse.of(notice, toss);
-        BDDMockito.given(noticeViewService.showNotice(anyLong(), any())).willReturn(noticeResponse);
+        BDDMockito.given(noticeService.createNotice(anyLong(), any(), any()))
+                .willReturn(noticeResponse);
+        Map<String, String> noticeCreateRequest = new HashMap<>();
+        noticeCreateRequest.put("applyUrl", "hi.com");
+        noticeCreateRequest.put("startDate",
+                LocalDateTime.of(2020, 3, 10, 0, 0)
+                        .format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+        noticeCreateRequest.put("endDate",
+                LocalDateTime.of(2020, 5, 30, 0, 0)
+                        .format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
 
         //when
         //@formatter:off
         given().
-                auth().principal(testAuthenticationToken).log().all().
+                auth().principal(currentMemberAdapter).log().all().
+                contentType("application/json").
+                body(noticeCreateRequest).
                 when().
-                    get(NoticeController.API_NOTICE + "/{id}", 1L).
+                    post(NoticeController.API_NOTICE).
                 then().log().all().
                     apply(document("api/notice",
                         getDocumentRequest(),
@@ -74,8 +89,14 @@ class NoticeDocumentationTest extends Documentation {
                         responseHeaders(
                                 headerWithName("Set-Cookie").description("csrf token, JSEESIONID - Required")
                         ),
-                        pathParameters(
-                                parameterWithName("id").description("공고의 id")),
+                        requestFields(
+                                fieldWithPath("applyUrl").type(JsonFieldType.STRING).description("공고의 url"),
+                                fieldWithPath("startDate").type(JsonFieldType.STRING)
+                                        .attributes(getDateFormat())
+                                        .description("공고의 startDate"),
+                                fieldWithPath("endDate").type(JsonFieldType.STRING)
+                                        .attributes(getDateFormat())
+                                        .description("공고의 endDate")),
                         responseFields(
                                 fieldWithPath("id").type(JsonFieldType.NUMBER)
                                         .description("공고의 id"),
