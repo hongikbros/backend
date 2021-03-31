@@ -1,6 +1,6 @@
 package com.hongikbros.jobmanager.notice.application.dto;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 import com.hongikbros.jobmanager.notice.domain.notice.Notice;
 
@@ -9,12 +9,12 @@ public class NoticeResponse {
     private final Long id;
     private final String title;
     private final String icon;
-    private final LocalDateTime startDate;
-    private final LocalDateTime endDate;
+    private final LocalDate startDate;
+    private final LocalDate endDate;
     private final String applyUrl;
 
     private NoticeResponse(Long id, String title, String icon,
-            LocalDateTime startDate, LocalDateTime endDate, String applyUrl) {
+            LocalDate startDate, LocalDate endDate, String applyUrl) {
         this.id = id;
         this.title = title;
         this.icon = icon;
@@ -46,11 +46,11 @@ public class NoticeResponse {
         return icon;
     }
 
-    public LocalDateTime getStartDate() {
+    public LocalDate getStartDate() {
         return startDate;
     }
 
-    public LocalDateTime getEndDate() {
+    public LocalDate getEndDate() {
         return endDate;
     }
 

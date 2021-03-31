@@ -6,7 +6,7 @@ import static org.springframework.restdocs.headers.HeaderDocumentation.*;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
@@ -58,8 +58,8 @@ class NoticeDocumentationTest extends Documentation {
                 testLoginMemberAdapter.getLoginMember().getId(),
                 toss,
                 "백앤드 개발자 상시모집",
-                Duration.of(LocalDateTime.of(2020, 3, 10, 0, 0)
-                        , LocalDateTime.of(2020, 5, 30, 0, 0)),
+                Duration.of(LocalDate.MIN
+                        , LocalDate.MAX),
                 ApplyUrl.from("hi.com")
         );
         NoticeResponse noticeResponse = NoticeResponse.of(notice);
@@ -68,11 +68,9 @@ class NoticeDocumentationTest extends Documentation {
         Map<String, String> noticeCreateRequest = new HashMap<>();
         noticeCreateRequest.put("applyUrl", "hi.com");
         noticeCreateRequest.put("startDate",
-                LocalDateTime.of(2020, 3, 10, 0, 0)
-                        .format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+                LocalDate.MIN.format(DateTimeFormatter.ISO_LOCAL_DATE));
         noticeCreateRequest.put("endDate",
-                LocalDateTime.of(2020, 5, 30, 0, 0)
-                        .format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+                LocalDate.MAX.format(DateTimeFormatter.ISO_LOCAL_DATE));
 
         //when
         //@formatter:off

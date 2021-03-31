@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -47,14 +47,14 @@ class NoticeControllerTest {
                 currentMember.getId(),
                 toss,
                 "백앤드 개발자 상시모집",
-                Duration.of(LocalDateTime.MIN, LocalDateTime.MAX),
+                Duration.of(LocalDate.MIN, LocalDate.MAX),
                 ApplyUrl.from("hi.com")
         );
 
         NoticeCreateRequest noticeCreateRequest = new NoticeCreateRequest(
                 "apply.url",
-                LocalDateTime.MIN,
-                LocalDateTime.MAX
+                LocalDate.MIN,
+                LocalDate.MAX
         );
         NoticeResponse noticeResponse = NoticeResponse.of(notice);
         given(noticeService.createNotice(anyLong(), any(), any())).willReturn(noticeResponse);
@@ -67,6 +67,5 @@ class NoticeControllerTest {
                 () -> assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.CREATED),
                 () -> assertThat(responseEntity.getBody()).isNotNull()
         );
-
     }
 }

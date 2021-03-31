@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -48,7 +48,7 @@ class NoticeViewServiceTest {
                 currentMember.getId(),
                 toss,
                 "백앤드 개발자 상시모집",
-                Duration.of(LocalDateTime.MIN, LocalDateTime.MAX),
+                Duration.of(LocalDate.MIN, LocalDate.MAX),
                 ApplyUrl.from("hi.com")
         );
 
@@ -60,8 +60,8 @@ class NoticeViewServiceTest {
         assertAll(
                 () -> assertThat(noticeResponse.getId()).isEqualTo(1L),
                 () -> assertThat(noticeResponse.getTitle()).isEqualTo("백앤드 개발자 상시모집"),
-                () -> assertThat(noticeResponse.getStartDate()).isEqualTo(LocalDateTime.MIN),
-                () -> assertThat(noticeResponse.getEndDate()).isEqualTo(LocalDateTime.MAX),
+                () -> assertThat(noticeResponse.getStartDate()).isEqualTo(LocalDate.MIN),
+                () -> assertThat(noticeResponse.getEndDate()).isEqualTo(LocalDate.MAX),
                 () -> assertThat(noticeResponse.getApplyUrl()).isEqualTo("hi.com")
         );
     }

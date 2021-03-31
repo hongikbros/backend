@@ -2,6 +2,8 @@ package com.hongikbros.jobmanager.notice.ui;
 
 import java.net.URI;
 
+import javax.validation.Valid;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,7 +28,8 @@ public class NoticeController {
     }
 
     @PostMapping
-    public ResponseEntity<NoticeResponse> createNotice(NoticeCreateRequest createNoticeRequest,
+    public ResponseEntity<NoticeResponse> createNotice(
+            @Valid NoticeCreateRequest createNoticeRequest,
             @AuthMember CurrentMember currentMember) {
         final NoticeResponse notice = noticeService.createNotice(currentMember.getId(),
                 createNoticeRequest.getApplyUrl(),

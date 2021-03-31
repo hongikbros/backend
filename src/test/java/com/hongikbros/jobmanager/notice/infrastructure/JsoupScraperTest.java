@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockserver.model.HttpRequest.*;
 import static org.mockserver.model.HttpResponse.*;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -39,7 +39,7 @@ class JsoupScraperTest {
 
     private ClientAndServer mockServer;
     private final Scraper scraper = new JsoupScraper();
-    private final Duration duration = Duration.of(LocalDateTime.MIN, LocalDateTime.MAX);
+    private final Duration duration = Duration.of(LocalDate.MIN, LocalDate.MAX);
     private final CurrentMember currentMember = MemberFixture.LOGIN_MEMBER_EUNSEOK;
 
     @BeforeAll
@@ -77,8 +77,8 @@ class JsoupScraperTest {
                 () -> assertThat(notice.getTitle()).isEqualTo(
                         "[vertical팀] 앱/웹 UX/UI 기획 지원 체험형 인턴 모집"
                 ),
-                () -> assertThat(notice.getDuration().getStartDate()).isEqualTo(LocalDateTime.MIN),
-                () -> assertThat(notice.getDuration().getEndDate()).isEqualTo(LocalDateTime.MAX),
+                () -> assertThat(notice.getDuration().getStartDate()).isEqualTo(LocalDate.MIN),
+                () -> assertThat(notice.getDuration().getEndDate()).isEqualTo(LocalDate.MAX),
                 () -> assertThat(notice.getApplyUrl().getRedirectUrl()).isEqualTo(noticeUrl)
         );
     }

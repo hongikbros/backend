@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -41,8 +41,8 @@ class NoticeServiceTest {
         final CurrentMember currentMember = MemberFixture.LOGIN_MEMBER_EUNSEOK;
         final String applyUrl = "apply.url";
         final Duration duration = Duration.of(
-                LocalDateTime.of(2020, 3, 10, 0, 0),
-                LocalDateTime.of(2020, 5, 30, 0, 0)
+                LocalDate.MIN,
+                LocalDate.MAX
         );
         final Company toss = TestObjectUtils.createCompany(1L, "icon.url");
         final Notice notice = TestObjectUtils.createNotice(
@@ -50,8 +50,7 @@ class NoticeServiceTest {
                 currentMember.getId(),
                 toss,
                 "백앤드 개발자 상시모집",
-                Duration.of(LocalDateTime.of(2020, 3, 10, 0, 0)
-                        , LocalDateTime.of(2020, 5, 30, 0, 0)),
+                Duration.of(LocalDate.MIN, LocalDate.MAX),
                 ApplyUrl.from("apply.url")
         );
 
