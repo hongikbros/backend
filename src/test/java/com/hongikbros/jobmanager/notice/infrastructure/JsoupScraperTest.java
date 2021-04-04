@@ -34,8 +34,8 @@ import com.hongikbros.jobmanager.security.core.CurrentMember;
 @MockServerSettings(ports = {MOCK_SEVER_PORT})
 class JsoupScraperTest {
     public static final int MOCK_SEVER_PORT = 9000;
-    public static final String PATH = "/job";
-    public static final String DOMAIN = "http://localhost:";
+    private static final String PATH = "/job";
+    private static final String DOMAIN = "http://localhost:";
 
     private ClientAndServer mockServer;
     private final Scraper scraper = new JsoupScraper();

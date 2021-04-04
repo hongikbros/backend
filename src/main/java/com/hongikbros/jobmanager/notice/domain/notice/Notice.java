@@ -1,6 +1,7 @@
 package com.hongikbros.jobmanager.notice.domain.notice;
 
 import javax.persistence.AttributeOverride;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
@@ -20,14 +21,14 @@ public class Notice extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "Notice_id")
+    @Column(name = "notice_id")
     private Long id;
 
     @Embedded
     @AttributeOverride(name = "id", column = @Column(nullable = false, name = "member_id"))
     private Association<Member> memberId;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(nullable = false, name = "company_id")
     private Company company;
 

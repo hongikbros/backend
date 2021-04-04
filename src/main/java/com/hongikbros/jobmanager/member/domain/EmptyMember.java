@@ -12,7 +12,6 @@ import com.hongikbros.jobmanager.security.core.CurrentMember;
 public class EmptyMember implements CurrentMember {
 
     private static final String EMPTY = "EMPTY";
-    private static final long EMPTY_ID = -1000L;
 
     @Override
     public boolean isLogin() {
@@ -21,7 +20,7 @@ public class EmptyMember implements CurrentMember {
 
     @Override
     public Long getId() {
-        return EMPTY_ID;
+        return null;
     }
 
     @Override
