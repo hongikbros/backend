@@ -36,7 +36,8 @@ public class DataBaseClean {
         for (String tableName : tableNames) {
             entityManager.createNativeQuery("TRUNCATE TABLE " + tableName).executeUpdate();
             entityManager.createNativeQuery(
-                    "ALTER TABLE " + tableName + " ALTER COLUMN " + "ID RESTART WITH 1")
+                    "ALTER TABLE " + tableName + " ALTER COLUMN " + tableName
+                            + "_ID RESTART WITH 1")
                     .executeUpdate();
         }
 
