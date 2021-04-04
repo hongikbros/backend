@@ -1,4 +1,4 @@
-package com.hongikbros.jobmanager.notice.notice.documentation;
+package com.hongikbros.jobmanager.notice.documentation;
 
 import static io.restassured.module.mockmvc.RestAssuredMockMvc.*;
 import static org.mockito.ArgumentMatchers.*;
@@ -19,6 +19,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.payload.JsonFieldType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.hongikbros.jobmanager.common.auth.TestLoginMemberAdapter;
@@ -47,6 +48,7 @@ class NoticeDocumentationTest extends Documentation {
 
     @DisplayName("공고 상세 조회를 요청하면 ResponseEntity NoticeResponse 을 리턴한다.")
     @Test
+    @WithMockUser
     void should_generateNoticePostDocument() {
         //given
         final TestLoginMemberAdapter testLoginMemberAdapter = new TestLoginMemberAdapter(
@@ -58,19 +60,20 @@ class NoticeDocumentationTest extends Documentation {
                 testLoginMemberAdapter.getLoginMember().getId(),
                 toss,
                 "백앤드 개발자 상시모집",
-                Duration.of(LocalDate.MIN
-                        , LocalDate.MAX),
+                Duration.of(LocalDate.of(1000, 3, 1)
+                        , LocalDate.of(3000, 10, 2)),
                 ApplyUrl.from("hi.com")
         );
         NoticeResponse noticeResponse = NoticeResponse.of(notice);
         BDDMockito.given(noticeService.createNotice(anyLong(), any(), any()))
                 .willReturn(noticeResponse);
+
         Map<String, String> noticeCreateRequest = new HashMap<>();
-        noticeCreateRequest.put("applyUrl", "hi.com");
+        noticeCreateRequest.put("applyUrl", "http://hi.com");
         noticeCreateRequest.put("startDate",
-                LocalDate.MIN.format(DateTimeFormatter.ISO_LOCAL_DATE));
+                LocalDate.of(1000, 3, 1).format(DateTimeFormatter.ISO_LOCAL_DATE));
         noticeCreateRequest.put("endDate",
-                LocalDate.MAX.format(DateTimeFormatter.ISO_LOCAL_DATE));
+                LocalDate.of(3000, 10, 2).format(DateTimeFormatter.ISO_LOCAL_DATE));
 
         //when
         //@formatter:off
