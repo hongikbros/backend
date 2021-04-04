@@ -35,7 +35,7 @@ public class LoginMemberAdapter extends DefaultOAuth2User {
         return Objects.hash(super.hashCode(), loginMember);
     }
 
-    public LoginMember getSessionMember() {
+    public LoginMember getLoginMember() {
         return loginMember;
     }
 }

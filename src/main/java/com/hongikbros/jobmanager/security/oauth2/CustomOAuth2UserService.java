@@ -50,7 +50,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         return new LoginMemberAdapter(
                 Collections.singletonList(new SimpleGrantedAuthority(member.getRole().getKey())),
                 attributes.getAttributes(),
-                attributes.getNameAttributeKey(),
+                attributes.getUserNameAttributeKey(),
                 LoginMember.of(member)
         );
     }

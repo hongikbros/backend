@@ -38,7 +38,7 @@ public class CustomOauth2SuccessHandler extends SimpleUrlAuthenticationSuccessHa
         try {
             final LoginMember loginMember = ((LoginMemberAdapter)
                     (SecurityContextHolder.getContext().getAuthentication().getPrincipal())
-            ).getSessionMember();
+            ).getLoginMember();
 
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
             response.setStatus(HttpStatus.OK.value());

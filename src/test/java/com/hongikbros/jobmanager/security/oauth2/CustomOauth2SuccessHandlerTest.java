@@ -25,7 +25,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.test.context.support.WithMockUser;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hongikbros.jobmanager.common.fixture.sessionmember.SessionMemberFixture;
+import com.hongikbros.jobmanager.common.fixture.member.MemberFixture;
 import com.hongikbros.jobmanager.member.domain.LoginMemberAdapter;
 
 @ExtendWith(MockitoExtension.class)
@@ -59,7 +59,7 @@ class CustomOauth2SuccessHandlerTest {
         customOauth2SuccessHandler = new CustomOauth2SuccessHandler(httpSession, objectMapper);
 
         given(securityContext.getAuthentication().getPrincipal()).willReturn(loginMemberAdapter);
-        given(loginMemberAdapter.getSessionMember()).willReturn(SessionMemberFixture.EUN_SEOK);
+        given(loginMemberAdapter.getLoginMember()).willReturn(MemberFixture.LOGIN_MEMBER_EUNSEOK);
 
         SecurityContextHolder.setContext(securityContext);
     }

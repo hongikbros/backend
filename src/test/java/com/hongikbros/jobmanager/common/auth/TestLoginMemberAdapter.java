@@ -2,14 +2,14 @@ package com.hongikbros.jobmanager.common.auth;
 
 import com.hongikbros.jobmanager.member.domain.LoginMember;
 
-public class TestAuthenticationToken {
+public class TestLoginMemberAdapter {
     private final LoginMember loginMember;
 
-    public TestAuthenticationToken(LoginMember loginMember) {
+    public TestLoginMemberAdapter(LoginMember loginMember) {
         this.loginMember = loginMember;
     }
 
-    public LoginMember getSessionMember() {
+    public LoginMember getLoginMember() {
         return loginMember;
     }
 }

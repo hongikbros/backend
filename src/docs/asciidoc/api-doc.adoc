@@ -22,4 +22,4 @@ https://github.com/hongikbros
 [[resources-Notice-find]]
 === 공고 단건 조회
 
-operation::api/notice[snippets='http-request,httpie-request,path-parameters,http-response,response-headers,response-fields']
+operation::api/notice[snippets='http-request,httpie-request,request-fields,http-response,response-headers,response-fields']

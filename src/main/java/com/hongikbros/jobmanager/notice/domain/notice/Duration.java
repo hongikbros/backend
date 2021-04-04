@@ -1,7 +1,7 @@
 package com.hongikbros.jobmanager.notice.domain.notice;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.Objects;
 
 import javax.persistence.Access;
@@ -12,18 +12,18 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class Duration implements Serializable {
 
-    private LocalDateTime startDate;
-    private LocalDateTime endDate;
+    private LocalDate startDate;
+    private LocalDate endDate;
 
     protected Duration() {
     }
 
-    private Duration(LocalDateTime startDate, LocalDateTime endDate) {
+    private Duration(LocalDate startDate, LocalDate endDate) {
         this.startDate = startDate;
         this.endDate = endDate;
     }
 
-    public static Duration of(LocalDateTime startDate, LocalDateTime endDate) {
+    public static Duration of(LocalDate startDate, LocalDate endDate) {
         return new Duration(startDate, endDate);
     }
 
@@ -43,11 +43,11 @@ public class Duration implements Serializable {
         return Objects.hash(startDate, endDate);
     }
 
-    public LocalDateTime getStartDate() {
+    public LocalDate getStartDate() {
         return startDate;
     }
 
-    public LocalDateTime getEndDate() {
+    public LocalDate getEndDate() {
         return endDate;
     }
 }

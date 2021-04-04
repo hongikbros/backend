@@ -22,7 +22,7 @@ import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import com.hongikbros.jobmanager.common.fixture.member.MemberFixture;
-import com.hongikbros.jobmanager.common.fixture.oauth.AttributesFixture;
+import com.hongikbros.jobmanager.common.fixture.oauth.OAuth2AttributesFixture;
 import com.hongikbros.jobmanager.member.domain.Member;
 import com.hongikbros.jobmanager.member.domain.MemberRepository;
 import com.hongikbros.jobmanager.member.domain.Role;
@@ -54,8 +54,8 @@ class CustomOAuth2UserServiceTest {
     @Test
     void should_saveOrUpdateMember_whenOauth2UserIsLoad() {
         // given
-        Map<String, Object> attributes = AttributesFixture.ATTRIBUTES_FIXTURE;
-        Member member = MemberFixture.EUN_SEOK;
+        Map<String, Object> attributes = OAuth2AttributesFixture.O_AUTH_ATTRIBUTES.getAttributes();
+        Member member = MemberFixture.MEMBER_EUN_SEOK;
 
         given(
                 userRequest.getClientRegistration()

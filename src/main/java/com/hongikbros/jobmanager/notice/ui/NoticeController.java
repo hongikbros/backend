@@ -1,11 +1,18 @@
 package com.hongikbros.jobmanager.notice.ui;
 
+import java.net.URI;
+
+import javax.validation.Valid;
+
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.hongikbros.jobmanager.notice.application.NoticeService;
+import com.hongikbros.jobmanager.notice.application.dto.NoticeResponse;
+import com.hongikbros.jobmanager.notice.ui.dto.NoticeCreateRequest;
 import com.hongikbros.jobmanager.security.core.AuthMember;
 import com.hongikbros.jobmanager.security.core.CurrentMember;
 
@@ -15,18 +22,22 @@ public class NoticeController {
 
     public static final String API_NOTICE = "/api/notice";
 
-    private final NoticeViewService noticeViewService;
+    private final NoticeService noticeService;
 
-    public NoticeController(NoticeViewService noticeViewService) {
-        this.noticeViewService = noticeViewService;
+    public NoticeController(NoticeService noticeViewService) {
+        this.noticeService = noticeViewService;
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<NoticeResponse> showNotice(@PathVariable Long id,
+    @PostMapping
+    public ResponseEntity<NoticeResponse> createNotice(
+            @RequestBody @Valid NoticeCreateRequest createNoticeRequest,
             @AuthMember CurrentMember currentMember) {
+        final NoticeResponse notice = noticeService.createNotice(currentMember.getId(),
+                createNoticeRequest.getApplyUrl(),
+                createNoticeRequest.toDuration());
 
-        final NoticeResponse noticeResponse = noticeViewService.showNotice(id, currentMember);
-
-        return ResponseEntity.ok(noticeResponse);
+        return ResponseEntity
+                .created(URI.create(API_NOTICE + "/" + notice.getId()))
+                .body(notice);
     }
 }
