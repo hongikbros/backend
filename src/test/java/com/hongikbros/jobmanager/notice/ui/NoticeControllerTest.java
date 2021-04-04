@@ -1,4 +1,4 @@
-package com.hongikbros.jobmanager.notice.notice.ui;
+package com.hongikbros.jobmanager.notice.ui;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -23,7 +23,6 @@ import com.hongikbros.jobmanager.notice.domain.company.Company;
 import com.hongikbros.jobmanager.notice.domain.notice.ApplyUrl;
 import com.hongikbros.jobmanager.notice.domain.notice.Duration;
 import com.hongikbros.jobmanager.notice.domain.notice.Notice;
-import com.hongikbros.jobmanager.notice.ui.NoticeController;
 import com.hongikbros.jobmanager.notice.ui.dto.NoticeCreateRequest;
 import com.hongikbros.jobmanager.security.core.CurrentMember;
 

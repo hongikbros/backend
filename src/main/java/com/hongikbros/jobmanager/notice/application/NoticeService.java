@@ -24,7 +24,7 @@ public class NoticeService {
     @Transactional
     public NoticeResponse createNotice(Long memberId, String url, Duration duration) {
         Notice notice = jsoupScraper.createNotice(memberId, url, duration);
-
+        
         noticeRepository.save(notice);
 
         return NoticeResponse.of(notice);

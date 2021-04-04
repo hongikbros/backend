@@ -11,7 +11,7 @@ import com.hongikbros.jobmanager.notice.domain.notice.Duration;
 
 public class NoticeCreateRequest {
 
-    @URL(message = "잘못된 url 형식 입니다")
+    @URL(protocol = "http", message = "잘못된 url 형식 입니다")
     private final String applyUrl;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "YYYY-MM-dd")

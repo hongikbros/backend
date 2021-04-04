@@ -6,6 +6,7 @@ import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -29,7 +30,7 @@ public class NoticeController {
 
     @PostMapping
     public ResponseEntity<NoticeResponse> createNotice(
-            @Valid NoticeCreateRequest createNoticeRequest,
+            @RequestBody @Valid NoticeCreateRequest createNoticeRequest,
             @AuthMember CurrentMember currentMember) {
         final NoticeResponse notice = noticeService.createNotice(currentMember.getId(),
                 createNoticeRequest.getApplyUrl(),
