@@ -1,7 +1,7 @@
 package com.hongikbros.jobmanager.security.config;
 
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import com.hongikbros.jobmanager.common.function.ThrowingConsumer;
@@ -59,7 +59,7 @@ public enum ConfigMode {
                 .headers().frameOptions().sameOrigin()
                 .and()
                     .csrf()
-                        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                        .csrfTokenRepository(new HttpSessionCsrfTokenRepository())
                         .requireCsrfProtectionMatcher(new AntPathRequestMatcher("!/h2/**"))
                 .and()
                     .authorizeRequests()
@@ -93,7 +93,7 @@ public enum ConfigMode {
                     .headers().frameOptions().sameOrigin()
                 .and()
                     .csrf()
-                        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                        .csrfTokenRepository(new HttpSessionCsrfTokenRepository())
                         .requireCsrfProtectionMatcher(new AntPathRequestMatcher("!/h2/**"))
                 .and()
                     .authorizeRequests()

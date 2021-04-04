@@ -13,6 +13,8 @@ import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
+import org.springframework.security.web.csrf.CsrfToken;
+import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -40,6 +42,8 @@ public class CustomOauth2SuccessHandler extends SimpleUrlAuthenticationSuccessHa
                     (SecurityContextHolder.getContext().getAuthentication().getPrincipal())
             ).getLoginMember();
 
+            CsrfToken csrfToken = new HttpSessionCsrfTokenRepository().loadToken(request);
+            response.setHeader("X-CSRF-TOKEN", csrfToken.getToken());
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
             response.setStatus(HttpStatus.OK.value());
             response.setCharacterEncoding("utf-8");
