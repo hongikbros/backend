@@ -70,13 +70,14 @@ public enum ConfigMode {
                         .invalidSessionUrl("/")
                 .and()
                     .logout()
+                        .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                         .logoutSuccessUrl("/")
                         .invalidateHttpSession(true)
                         .clearAuthentication(true)
                         .deleteCookies("JSESSIONID")
                 .and()
-                // TODO: 2021/04/04 login page change -> "/"
                     .oauth2Login()
+                        .loginPage("/")
                         .successHandler(customOauth2SuccessHandler)
                         .userInfoEndpoint()
                         .userService(customOAuth2UserService);
@@ -109,8 +110,8 @@ public enum ConfigMode {
                         .clearAuthentication(true)
                         .deleteCookies("JSESSIONID")
                 .and()
-                // TODO: 2021/04/04 login page change -> "/"
                     .oauth2Login()
+                        .loginPage("/")
                         .successHandler(customOauth2SuccessHandler)
                         .userInfoEndpoint()
                         .userService(customOAuth2UserService);
