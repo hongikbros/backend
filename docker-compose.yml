@@ -1,7 +1,7 @@
 version: "3"
 services:
-  seller_lee_database:
-    container_name: jb_database
+  jm_database:
+    container_name: jm_database
     build:
       context: .
       dockerfile: Dockerfile-mariadb
