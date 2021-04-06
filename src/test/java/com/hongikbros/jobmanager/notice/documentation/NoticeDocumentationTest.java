@@ -5,6 +5,7 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.springframework.restdocs.headers.HeaderDocumentation.*;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -78,7 +79,9 @@ class NoticeDocumentationTest extends Documentation {
         //when
         //@formatter:off
         given().
-                auth().principal(testLoginMemberAdapter).log().all().
+                auth().with(csrf().asHeader()).
+                auth().principal(testLoginMemberAdapter).
+                log().all().
                 contentType("application/json").
                 body(noticeCreateRequest).
                 when().
@@ -87,8 +90,9 @@ class NoticeDocumentationTest extends Documentation {
                     apply(document("api/notice",
                         getDocumentRequest(),
                         getDocumentResponse(),
-                        responseHeaders(
-                                headerWithName("Set-Cookie").description("csrf token, JSEESIONID - Required")
+                        requestHeaders(
+                                headerWithName("Content-Type").description("application/json"),
+                                headerWithName("X-CSRF-TOKEN").description("csrf token")
                         ),
                         requestFields(
                                 fieldWithPath("applyUrl").type(JsonFieldType.STRING).description("공고의 url"),

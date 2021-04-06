@@ -23,6 +23,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.web.csrf.CsrfToken;
+import org.springframework.security.web.csrf.DefaultCsrfToken;
+import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hongikbros.jobmanager.common.fixture.member.MemberFixture;
@@ -73,10 +76,16 @@ class CustomOauth2SuccessHandlerTest {
     @Test
     @WithMockUser
     void should_writeResponse_whenAuthenticationIsSuccessful() throws IOException {
+        //given
+        CsrfToken csrfToken = new DefaultCsrfToken("X-XSRF-TOKEN", "_csrf", "asd");
+        given(request.getSession(false)).willReturn(httpSession);
+        given(httpSession.getAttribute(HttpSessionCsrfTokenRepository.class.getName()
+                .concat(".CSRF_TOKEN"))).willReturn(csrfToken);
         // when
         customOauth2SuccessHandler.onAuthenticationSuccess(request, response, authentication);
         // then
         assertAll(
+                () -> then(httpSession).should(times(1)).getAttribute(any()),
                 () -> then(response).should(times(1))
                         .setContentType(MediaType.APPLICATION_JSON_VALUE),
                 () -> then(response).should(times(1)).setStatus(HttpStatus.OK.value()),
