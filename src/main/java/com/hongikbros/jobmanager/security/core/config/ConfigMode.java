@@ -89,33 +89,15 @@ public enum ConfigMode {
             CustomOAuth2UserService customOAuth2UserService) throws Exception {
         //@formatter:off
         http
-                .httpBasic().disable()
-                .formLogin().disable()
-                    .headers().frameOptions().sameOrigin()
+                .headers().frameOptions().sameOrigin()
                 .and()
                     .csrf()
                         .csrfTokenRepository(new HttpSessionCsrfTokenRepository())
                         .ignoringAntMatchers("/h2/**")
                 .and()
                     .authorizeRequests()
-                        .antMatchers("/h2","/docs/**").permitAll()
-                        .anyRequest().authenticated()
-                .and()
-                    .sessionManagement()
-                        .sessionFixation().changeSessionId()
-                        .invalidSessionUrl("/")
-                .and()
-                    .logout()
-                        .logoutSuccessUrl("/")
-                        .invalidateHttpSession(true)
-                        .clearAuthentication(true)
-                        .deleteCookies("JSESSIONID")
-                .and()
-                    .oauth2Login()
-                        .loginPage("/")
-                        .successHandler(customOauth2SuccessHandler)
-                        .userInfoEndpoint()
-                        .userService(customOAuth2UserService);
+                        .antMatchers("/h2").permitAll()
+                        .anyRequest().authenticated();
         //@formatter:on
     }
 

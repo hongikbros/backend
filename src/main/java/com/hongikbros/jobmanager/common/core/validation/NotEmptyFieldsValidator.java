@@ -9,7 +9,6 @@ public class NotEmptyFieldsValidator implements ConstraintValidator<NotEmptyFiel
 
     @Override
     public void initialize(NotEmptyFields constraint) {
-        throw new UnsupportedOperationException();
     }
 
     public boolean isValid(List<String> obj, ConstraintValidatorContext context) {

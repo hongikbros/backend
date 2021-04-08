@@ -5,6 +5,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
 
 import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -18,8 +20,8 @@ import com.hongikbros.jobmanager.common.fixture.member.MemberFixture;
 import com.hongikbros.jobmanager.common.utils.TestObjectUtils;
 import com.hongikbros.jobmanager.notice.application.dto.NoticeResponse;
 import com.hongikbros.jobmanager.notice.domain.NoticeRepository;
-import com.hongikbros.jobmanager.notice.domain.company.Company;
 import com.hongikbros.jobmanager.notice.domain.notice.ApplyUrl;
+import com.hongikbros.jobmanager.notice.domain.notice.Company;
 import com.hongikbros.jobmanager.notice.domain.notice.Duration;
 import com.hongikbros.jobmanager.notice.domain.notice.Notice;
 import com.hongikbros.jobmanager.security.core.CurrentMember;
@@ -41,12 +43,14 @@ class NoticeViewServiceTest {
     void should_returnNoticeResponse_whenShowNoticeIsRequested() {
         // given
         final CurrentMember currentMember = MemberFixture.LOGIN_MEMBER_EUNSEOK;
-        final Company toss = TestObjectUtils.createCompany(1L, "icon.url");
+        final List<String> skillTags = Arrays.asList("Spring Boot", "docker");
+
         final Notice notice = TestObjectUtils.createNotice(
                 1L,
                 currentMember.getId(),
-                toss,
                 "백앤드 개발자 상시모집",
+                Company.from("icon.url"),
+                TestObjectUtils.createSkills(skillTags),
                 Duration.of(LocalDate.MIN, LocalDate.MAX),
                 ApplyUrl.from("hi.com")
         );
@@ -59,6 +63,7 @@ class NoticeViewServiceTest {
         assertAll(
                 () -> assertThat(noticeResponse.getId()).isEqualTo(1L),
                 () -> assertThat(noticeResponse.getTitle()).isEqualTo("백앤드 개발자 상시모집"),
+                () -> assertThat(noticeResponse.getSkillTags()).contains("Spring Boot", "docker"),
                 () -> assertThat(noticeResponse.getStartDate()).isEqualTo(LocalDate.MIN),
                 () -> assertThat(noticeResponse.getEndDate()).isEqualTo(LocalDate.MAX),
                 () -> assertThat(noticeResponse.getApplyUrl()).isEqualTo("hi.com")

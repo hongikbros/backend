@@ -7,6 +7,8 @@ import static org.mockserver.model.HttpRequest.*;
 import static org.mockserver.model.HttpResponse.*;
 
 import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -26,8 +28,8 @@ import com.hongikbros.jobmanager.notice.domain.notice.Duration;
 import com.hongikbros.jobmanager.notice.domain.notice.Notice;
 import com.hongikbros.jobmanager.notice.domain.scraper.Scraper;
 import com.hongikbros.jobmanager.notice.infrastructure.exception.NotScrapingException;
+import com.hongikbros.jobmanager.notice.infrastructure.exception.ScrapingExceptionCode;
 import com.hongikbros.jobmanager.notice.infrastructure.scraper.JsoupScraper;
-import com.hongikbros.jobmanager.notice.infrastructure.scraper.ScrapingExceptionCode;
 import com.hongikbros.jobmanager.security.core.CurrentMember;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -41,6 +43,7 @@ class JsoupScraperTest {
     private final Scraper scraper = new JsoupScraper();
     private final Duration duration = Duration.of(LocalDate.MIN, LocalDate.MAX);
     private final CurrentMember currentMember = MemberFixture.LOGIN_MEMBER_EUNSEOK;
+    private final List<String> skillTags = Arrays.asList("Spring Boot", "docker");
 
     @BeforeAll
     void beforeAll() {
@@ -70,13 +73,14 @@ class JsoupScraperTest {
                         .withBody(response)
                 );
         // when
-        Notice notice = scraper.createNotice(currentMember.getId(), noticeUrl, duration);
+        Notice notice = scraper.createNotice(currentMember.getId(), noticeUrl, skillTags, duration);
         // then
         assertAll(
-                () -> assertThat(notice.getCompany().getIcon()).isNotNull(),
                 () -> assertThat(notice.getTitle()).isEqualTo(
                         "[vertical팀] 앱/웹 UX/UI 기획 지원 체험형 인턴 모집"
                 ),
+                () -> assertThat(notice.getCompany().getIcon()).isNotNull(),
+                () -> assertThat(notice.getSkills().size()).isEqualTo(2),
                 () -> assertThat(notice.getDuration().getStartDate()).isEqualTo(LocalDate.MIN),
                 () -> assertThat(notice.getDuration().getEndDate()).isEqualTo(LocalDate.MAX),
                 () -> assertThat(notice.getApplyUrl().getRedirectUrl()).isEqualTo(noticeUrl)
@@ -97,7 +101,7 @@ class JsoupScraperTest {
         //then
         assertThatThrownBy(
                 () -> scraper.createNotice(id, DOMAIN + MOCK_SEVER_PORT,
-                        duration))
+                        skillTags, duration))
                 .isInstanceOf(NotScrapingException.class)
                 .hasMessage(ScrapingExceptionCode.URL_NOT_CONNECT.getMessage());
     }
@@ -118,7 +122,7 @@ class JsoupScraperTest {
         //then
         assertThatThrownBy(
                 () -> scraper.createNotice(id, DOMAIN + MOCK_SEVER_PORT + PATH,
-                        duration))
+                        skillTags, duration))
                 .isInstanceOf(NotScrapingException.class)
                 .hasMessage(ScrapingExceptionCode.NOT_FOUND_URL.getMessage());
     }
@@ -139,7 +143,7 @@ class JsoupScraperTest {
         //then
         assertThatThrownBy(
                 () -> scraper.createNotice(id, DOMAIN + MOCK_SEVER_PORT + PATH,
-                        duration))
+                        skillTags, duration))
                 .isInstanceOf(NotScrapingException.class)
                 .hasMessage(ScrapingExceptionCode.TOO_MANY_REQUEST.getMessage());
     }
