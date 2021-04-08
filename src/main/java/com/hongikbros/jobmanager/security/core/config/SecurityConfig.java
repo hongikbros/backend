@@ -1,4 +1,4 @@
-package com.hongikbros.jobmanager.security.config;
+package com.hongikbros.jobmanager.security.core.config;
 
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.core.env.Environment;

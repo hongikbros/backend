@@ -1,8 +1,8 @@
-package com.hongikbros.jobmanager.notice.infrastructure.scraper;
+package com.hongikbros.jobmanager.notice.infrastructure.exception;
 
 public enum ParseExceptionCode {
-    NOT_FOUND_MATCH_REGEX("스크랩한 데이터에서 원하는 내용을 찾지 못했습니다.", "PARSE_1001"),
-    NOT_PARSE_COMPANY_LOGO("Company Logo를 parse하는 도중 문제가 발생하였습니다.", "PARSE_1002");
+    NOT_FOUND_MATCH_REGEX("스크랩한 데이터에서 원하는 내용을 찾지 못했습니다.", "PARSE_001"),
+    NOT_PARSE_COMPANY_LOGO("Company Logo를 parse하는 도중 문제가 발생하였습니다.", "PARSE_0002");
     private final String message;
     private final String statusCode;
 

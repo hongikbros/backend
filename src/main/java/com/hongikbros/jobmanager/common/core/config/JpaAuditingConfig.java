@@ -1,4 +1,4 @@
-package com.hongikbros.jobmanager.common.config;
+package com.hongikbros.jobmanager.common.core.config;
 
 import java.util.Objects;
 import java.util.Optional;
