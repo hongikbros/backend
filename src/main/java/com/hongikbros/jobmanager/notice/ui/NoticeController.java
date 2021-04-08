@@ -2,14 +2,14 @@ package com.hongikbros.jobmanager.notice.ui;
 
 import java.net.URI;
 
-import javax.validation.Valid;
-
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.hongikbros.jobmanager.common.core.validation.ValidationSequence;
 import com.hongikbros.jobmanager.notice.application.NoticeService;
 import com.hongikbros.jobmanager.notice.application.dto.NoticeResponse;
 import com.hongikbros.jobmanager.notice.ui.dto.NoticeCreateRequest;
@@ -30,11 +30,10 @@ public class NoticeController {
 
     @PostMapping
     public ResponseEntity<NoticeResponse> createNotice(
-            @RequestBody @Valid NoticeCreateRequest createNoticeRequest,
+            @RequestBody @Validated(ValidationSequence.class) NoticeCreateRequest createNoticeRequest,
             @AuthMember CurrentMember currentMember) {
-        final NoticeResponse notice = noticeService.createNotice(currentMember.getId(),
-                createNoticeRequest.getApplyUrl(),
-                createNoticeRequest.toDuration());
+        final NoticeResponse notice = noticeService.createNotice(currentMember,
+                createNoticeRequest);
 
         return ResponseEntity
                 .created(URI.create(API_NOTICE + "/" + notice.getId()))

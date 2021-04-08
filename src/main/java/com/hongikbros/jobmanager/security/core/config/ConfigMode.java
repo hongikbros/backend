@@ -1,4 +1,4 @@
-package com.hongikbros.jobmanager.security.config;
+package com.hongikbros.jobmanager.security.core.config;
 
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
@@ -60,13 +60,13 @@ public enum ConfigMode {
                 .and()
                     .csrf()
                         .csrfTokenRepository(new HttpSessionCsrfTokenRepository())
-                        .requireCsrfProtectionMatcher(new AntPathRequestMatcher("!/h2/**"))
                 .and()
                     .authorizeRequests()
                         .antMatchers("/h2","/docs/**").permitAll()
                         .anyRequest().authenticated()
                 .and()
                     .sessionManagement()
+                        .sessionFixation().changeSessionId()
                         .invalidSessionUrl("/")
                 .and()
                     .logout()
@@ -89,32 +89,15 @@ public enum ConfigMode {
             CustomOAuth2UserService customOAuth2UserService) throws Exception {
         //@formatter:off
         http
-                .httpBasic().disable()
-                .formLogin().disable()
-                    .headers().frameOptions().sameOrigin()
+                .headers().frameOptions().sameOrigin()
                 .and()
                     .csrf()
                         .csrfTokenRepository(new HttpSessionCsrfTokenRepository())
-                        .requireCsrfProtectionMatcher(new AntPathRequestMatcher("!/h2/**"))
+                        .ignoringAntMatchers("/h2/**")
                 .and()
                     .authorizeRequests()
-                        .antMatchers("/h2","/docs/**").permitAll()
-                        .anyRequest().authenticated()
-                .and()
-                    .sessionManagement()
-                        .invalidSessionUrl("/")
-                .and()
-                    .logout()
-                        .logoutSuccessUrl("/")
-                        .invalidateHttpSession(true)
-                        .clearAuthentication(true)
-                        .deleteCookies("JSESSIONID")
-                .and()
-                    .oauth2Login()
-                        .loginPage("/")
-                        .successHandler(customOauth2SuccessHandler)
-                        .userInfoEndpoint()
-                        .userService(customOAuth2UserService);
+                        .antMatchers("/h2").permitAll()
+                        .anyRequest().authenticated();
         //@formatter:on
     }
 

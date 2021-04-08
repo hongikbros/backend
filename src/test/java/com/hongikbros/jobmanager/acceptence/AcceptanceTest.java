@@ -3,6 +3,7 @@ package com.hongikbros.jobmanager.acceptence;
 import static com.hongikbros.jobmanager.acceptence.AcceptanceTest.*;
 import static org.mockserver.model.HttpRequest.*;
 import static org.mockserver.model.HttpResponse.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.*;
 
 import java.time.LocalDate;
@@ -19,7 +20,6 @@ import org.mockserver.integration.ClientAndServer;
 import org.mockserver.junit.jupiter.MockServerSettings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -46,18 +46,15 @@ public abstract class AcceptanceTest {
     protected static final String DOMAIN = "http://localhost:";
     private static final String DELIMITER = "/";
 
-    @LocalServerPort
-    protected int port;
-
     @Autowired
     private DataBaseClean dataBaseClean;
 
-    @Autowired
-    private ObjectMapper objectMapper;
-
     private ClientAndServer mockServer;
+    
+    @Autowired
+    protected ObjectMapper objectMapper;
 
-    private final TestLoginMemberAdapter testLoginMemberAdapter = new TestLoginMemberAdapter(
+    protected final TestLoginMemberAdapter testLoginMemberAdapter = new TestLoginMemberAdapter(
             MemberFixture.LOGIN_MEMBER_EUNSEOK);
 
     @BeforeAll
@@ -81,7 +78,7 @@ public abstract class AcceptanceTest {
         mockServer.stop();
     }
 
-    private static MockMvcRequestSpecification given() {
+    protected static MockMvcRequestSpecification given() {
         return RestAssuredMockMvc.given().log().all();
     }
 
@@ -106,11 +103,13 @@ public abstract class AcceptanceTest {
                 );
     }
 
-    protected NoticeResponse createNotice(String url, LocalDate startDate, LocalDate endDate) throws
+    protected NoticeResponse createNotice(String noticeUrl, List<String> skillTags,
+            LocalDate startDate, LocalDate endDate) throws
             JsonProcessingException {
         mocking200ScrapingServer();
 
-        NoticeCreateRequest noticeCreateRequest = new NoticeCreateRequest(url, startDate, endDate);
+        NoticeCreateRequest noticeCreateRequest = new NoticeCreateRequest(noticeUrl, skillTags,
+                startDate, endDate);
         final String createNoticeRequest = objectMapper.writeValueAsString(noticeCreateRequest);
 
         return post(createNoticeRequest, NoticeResponse.class);
@@ -119,7 +118,9 @@ public abstract class AcceptanceTest {
     protected <T> T post(String requestJson, Class<T> responseType) {
         // @formatter:off
         return
-                given().auth().principal(testLoginMemberAdapter).
+                given().
+                        auth().with(csrf()).
+                        auth().principal(testLoginMemberAdapter).
                         contentType(MediaType.APPLICATION_JSON_VALUE).
                         accept(MediaType.APPLICATION_JSON_VALUE).
                         body(requestJson).

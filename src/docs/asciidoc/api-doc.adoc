@@ -16,10 +16,53 @@ https://github.com/hongikbros
 
 취업 공고를 편하게 관리하는 Job Manager API 입니다.
 
+[[Login]]
+== 로그인
+
+Github OAuth2 를 사용합니다.
+
+=== Response headers
+
+|===
+| name | 설명
+
+| `Set-Cookie`
+| JSESSIONID 값이 포함됩니다.
+JSESSIONID는 브라우저에 의해 자동으로 요청시 보내집니다.
+| `X-CSRF-TOKEN`
+| csrf Token 값이 포함됩니다.
+서버 자원을 변경시킬시 함께 보내줘야 합니다.
+|===
+
+=== HTTP response
+
+[source,options="nowrap"]
+----
+HTTP/1.1 200
+Set-Cookie: JSESSIONID=TEST_ID; Path=/; HttpOnly
+X-CSRF-TOKEN: 47cc41eb-953f-4621-8cd7-dba15e32392e
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Frame-Options: SAMEORIGIN
+Content-Type: application/json;charset=utf-8
+Content-Length: 82
+Date: Thu, 08 Apr 2021 08:15:59 GMT
+Keep-Alive: timeout=60
+Connection: keep-alive
+
+{
+    "name":"EunSeok",
+    "avatar":"https://avatars.githubusercontent.com/u/53935703?v=4"
+}
+----
+
 [[resources-Notice]]
 == Notice
 
-[[resources-Notice-find]]
-=== 공고 단건 조회
+[[resources-Notice-Post]]
+=== 공고 등록
 
-operation::api/notice[snippets='http-request,httpie-request,request-fields,http-response,response-headers,response-fields']
+operation::api/notice[snippets='http-request,request-headers,request-fields,http-response,response-fields']

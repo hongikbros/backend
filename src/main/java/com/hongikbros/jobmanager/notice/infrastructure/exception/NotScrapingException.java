@@ -1,7 +1,6 @@
 package com.hongikbros.jobmanager.notice.infrastructure.exception;
 
 import com.hongikbros.jobmanager.common.exception.JobManagerException;
-import com.hongikbros.jobmanager.notice.infrastructure.scraper.ScrapingExceptionCode;
 
 public class NotScrapingException extends JobManagerException {
     public NotScrapingException(ScrapingExceptionCode scrapingExceptionCode) {

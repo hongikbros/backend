@@ -37,6 +37,10 @@ public class Documentation {
         );
     }
 
+    protected static Attributes.Attribute getRequired(boolean required) {
+        return key("required").value(required);
+    }
+
     protected static Attributes.Attribute getDateFormat() {
         return key("format").value("yyyy-MM-dd");
     }
