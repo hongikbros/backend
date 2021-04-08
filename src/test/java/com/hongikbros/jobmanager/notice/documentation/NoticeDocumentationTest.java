@@ -9,7 +9,9 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -27,13 +29,15 @@ import com.hongikbros.jobmanager.common.auth.TestLoginMemberAdapter;
 import com.hongikbros.jobmanager.common.documentation.Documentation;
 import com.hongikbros.jobmanager.common.fixture.member.MemberFixture;
 import com.hongikbros.jobmanager.common.utils.TestObjectUtils;
+import com.hongikbros.jobmanager.member.domain.LoginMember;
 import com.hongikbros.jobmanager.notice.application.NoticeService;
 import com.hongikbros.jobmanager.notice.application.dto.NoticeResponse;
-import com.hongikbros.jobmanager.notice.domain.company.Company;
 import com.hongikbros.jobmanager.notice.domain.notice.ApplyUrl;
+import com.hongikbros.jobmanager.notice.domain.notice.Company;
 import com.hongikbros.jobmanager.notice.domain.notice.Duration;
 import com.hongikbros.jobmanager.notice.domain.notice.Notice;
 import com.hongikbros.jobmanager.notice.ui.NoticeController;
+import com.hongikbros.jobmanager.notice.ui.dto.NoticeCreateRequest;
 
 @WebMvcTest(controllers = NoticeController.class)
 class NoticeDocumentationTest extends Documentation {
@@ -52,25 +56,30 @@ class NoticeDocumentationTest extends Documentation {
     @WithMockUser
     void should_generateNoticePostDocument() {
         //given
+        final LoginMember loginMember = MemberFixture.LOGIN_MEMBER_EUNSEOK;
         final TestLoginMemberAdapter testLoginMemberAdapter = new TestLoginMemberAdapter(
-                MemberFixture.LOGIN_MEMBER_EUNSEOK);
+                loginMember);
 
-        final Company toss = TestObjectUtils.createCompany(1L, "icon.url");
+        final List<String> skillTags = Arrays.asList("Spring Boot", "docker");
         final Notice notice = TestObjectUtils.createNotice(
                 1L,
-                testLoginMemberAdapter.getLoginMember().getId(),
-                toss,
+                loginMember.getId(),
                 "백앤드 개발자 상시모집",
+                Company.from("icon.url"),
+                TestObjectUtils.createSkills(skillTags),
                 Duration.of(LocalDate.of(1000, 3, 1)
                         , LocalDate.of(3000, 10, 2)),
-                ApplyUrl.from("hi.com")
+                ApplyUrl.from("http://apply.url")
         );
+
         NoticeResponse noticeResponse = NoticeResponse.of(notice);
-        BDDMockito.given(noticeService.createNotice(anyLong(), any(), any()))
+        BDDMockito.given(
+                noticeService.createNotice(eq(loginMember), any(NoticeCreateRequest.class)))
                 .willReturn(noticeResponse);
 
-        Map<String, String> noticeCreateRequest = new HashMap<>();
-        noticeCreateRequest.put("applyUrl", "http://hi.com");
+        Map<String, Object> noticeCreateRequest = new HashMap<>();
+        noticeCreateRequest.put("applyUrl", "http://apply.url");
+        noticeCreateRequest.put("skillTags", skillTags);
         noticeCreateRequest.put("startDate",
                 LocalDate.of(1000, 3, 1).format(DateTimeFormatter.ISO_LOCAL_DATE));
         noticeCreateRequest.put("endDate",
@@ -91,17 +100,14 @@ class NoticeDocumentationTest extends Documentation {
                         getDocumentRequest(),
                         getDocumentResponse(),
                         requestHeaders(
-                                headerWithName("Content-Type").description("application/json"),
-                                headerWithName("X-CSRF-TOKEN").description("csrf token")
+                                headerWithName("Content-Type").attributes(getRequired(true)).description("application/json"),
+                                headerWithName("X-CSRF-TOKEN").attributes(getRequired(true)).description("csrf token")
                         ),
                         requestFields(
-                                fieldWithPath("applyUrl").type(JsonFieldType.STRING).description("공고의 url"),
-                                fieldWithPath("startDate").type(JsonFieldType.STRING)
-                                        .attributes(getDateFormat())
-                                        .description("공고의 startDate"),
-                                fieldWithPath("endDate").type(JsonFieldType.STRING)
-                                        .attributes(getDateFormat())
-                                        .description("공고의 endDate")),
+                                fieldWithPath("applyUrl").type(JsonFieldType.STRING).attributes(getRequired(true)).description("공고의 url"),
+                                fieldWithPath("skillTags").type(JsonFieldType.ARRAY).attributes(getRequired(false)).description("공고 skill Tags - SkillTag가 없을 경우 빈 배열을 포함해서 요청해야 합나다."),
+                                fieldWithPath("startDate").type(JsonFieldType.STRING).attributes(getRequired(true)).attributes(getDateFormat()).description("공고의 startDate"),
+                                fieldWithPath("endDate").type(JsonFieldType.STRING).attributes(getRequired(true)).attributes(getDateFormat()).description("공고의 endDate")),
                         responseFields(
                                 fieldWithPath("id").type(JsonFieldType.NUMBER)
                                         .description("공고의 id"),
@@ -109,6 +115,8 @@ class NoticeDocumentationTest extends Documentation {
                                         .description("공고의 title"),
                                 fieldWithPath("icon").type(JsonFieldType.STRING)
                                         .description("공고 company icon"),
+                                fieldWithPath("skillTags").type(JsonFieldType.ARRAY)
+                                        .description("공고 skill Tags").optional(),
                                 fieldWithPath("startDate").type(JsonFieldType.STRING)
                                         .attributes(getDateFormat())
                                         .description("공고의 startDate"),

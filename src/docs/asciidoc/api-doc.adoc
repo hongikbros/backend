@@ -20,6 +20,6 @@ https://github.com/hongikbros
 == Notice
 
 [[resources-Notice-find]]
-=== 공고 단건 조회
+=== 공고 등록
 
-operation::api/notice[snippets='http-request,httpie-request,request-fields,http-response,response-headers,response-fields']
+operation::api/notice[snippets='http-request,request-headers,request-fields,http-response,response-fields']

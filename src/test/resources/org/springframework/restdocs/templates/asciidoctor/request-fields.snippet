@@ -1,10 +1,11 @@
 |===
-|Path|Type|Format|Description
+|Path|Type|Format|Required|Description
 
 {{#fields}}
 |{{#tableCellContent}}`+{{path}}+`{{/tableCellContent}}
 |{{#tableCellContent}}`+{{type}}+`{{/tableCellContent}}
 |{{#tableCellContent}}{{#format}}{{.}}{{/format}}{{/tableCellContent}}
+|{{#tableCellContent}}{{#required}}true{{/required}}{{/tableCellContent}}
 |{{#tableCellContent}}{{description}}{{/tableCellContent}}
 
 {{/fields}}
