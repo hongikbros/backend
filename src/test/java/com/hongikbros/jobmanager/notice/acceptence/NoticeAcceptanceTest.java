@@ -3,16 +3,26 @@ package com.hongikbros.jobmanager.notice.acceptence;
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.DynamicTest.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Stream;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DynamicTest;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.hongikbros.jobmanager.acceptence.AcceptanceTest;
 import com.hongikbros.jobmanager.notice.application.dto.NoticeResponse;
+import com.hongikbros.jobmanager.notice.ui.NoticeController;
+import com.hongikbros.jobmanager.notice.ui.dto.NoticeCreateRequest;
 
 class NoticeAcceptanceTest extends AcceptanceTest {
 
@@ -23,15 +33,18 @@ class NoticeAcceptanceTest extends AcceptanceTest {
      *<br/>
      * Given 회원은 로그인한 상태이다. <br/>
      *
-     * When 게시글을 삭제한다. <br/>
-     * Then 게시글이 삭제된다. <br/>
+     * When 게시글 등록을 요청한다. <br/>
+     * Then 게시글이 등독된다. <br/>
      */
     @TestFactory
     Stream<DynamicTest> should_createNotice() {
         return Stream.of(dynamicTest("Feature: 공고를 등록한다.", () -> {
                     final String noticeUrl = DOMAIN + MOCK_SEVER_PORT + PATH;
+                    final List<String> skillTags = Arrays.asList("Spring Boot", "docker");
 
-                    final NoticeResponse notice = createNotice(noticeUrl, LocalDate.of(1000, 3, 1),
+                    final NoticeResponse notice = createNotice(noticeUrl,
+                            skillTags,
+                            LocalDate.of(1000, 3, 1),
                             LocalDate.of(3000, 10, 2));
                     assertAll(
                             () -> assertThat(notice.getTitle()).isEqualTo(
@@ -47,6 +60,40 @@ class NoticeAcceptanceTest extends AcceptanceTest {
                     );
                 }
         ));
+    }
+
+    /**
+     * Feature: 공고를 잘못된 공고 요청시 에러를 던진다.<br/>
+     *<br/>
+     * Scenario: 회원은 자신이 북마크할 공고를 등록한다. <br/>
+     *<br/>
+     * Given 회원은 로그인한 상태이다. <br/>
+     *
+     * When 게시글을 잘못된 요청을 보낸다. <br/>
+     * Then 게시글이 에러를 던진다. <br/>
+     */
+    @DisplayName("Feature: 공고를 잘못된 공고 요청시 에러를 던진다.")
+    @Test
+    void should_createException_whenBadRequest() throws JsonProcessingException {
+        final String noticeUrl = DOMAIN + MOCK_SEVER_PORT + PATH;
+        NoticeCreateRequest noticeCreateRequest = new NoticeCreateRequest(noticeUrl, null,
+                LocalDate.of(1000, 3, 1),
+                LocalDate.of(3000, 10, 2));
+        final String exceptionNoticeRequest = objectMapper.writeValueAsString(noticeCreateRequest);
+
+        // @formatter:off
+        given().
+                auth().with(csrf()).
+                auth().principal(testLoginMemberAdapter).
+                contentType(MediaType.APPLICATION_JSON_VALUE).
+                accept(MediaType.APPLICATION_JSON_VALUE).
+                body(exceptionNoticeRequest).
+        when().
+                post(NoticeController.API_NOTICE).
+        then().
+                log().all().
+                statusCode(HttpStatus.BAD_REQUEST.value());
+        // @formatter:on
     }
 
 }

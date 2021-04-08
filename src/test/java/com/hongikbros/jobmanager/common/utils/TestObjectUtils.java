@@ -1,16 +1,19 @@
 package com.hongikbros.jobmanager.common.utils;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.test.util.ReflectionTestUtils;
 
 import com.hongikbros.jobmanager.member.domain.LoginMember;
 import com.hongikbros.jobmanager.member.domain.Member;
-import com.hongikbros.jobmanager.notice.domain.company.Company;
 import com.hongikbros.jobmanager.notice.domain.notice.ApplyUrl;
+import com.hongikbros.jobmanager.notice.domain.notice.Company;
 import com.hongikbros.jobmanager.notice.domain.notice.Duration;
 import com.hongikbros.jobmanager.notice.domain.notice.Notice;
+import com.hongikbros.jobmanager.notice.domain.skill.Skill;
 import com.hongikbros.jobmanager.security.oauth2.OAuthAttributes;
 
 public class TestObjectUtils {
@@ -22,19 +25,19 @@ public class TestObjectUtils {
         return member;
     }
 
-    public static Notice createNotice(Long id, Long memberId, Company company, String title,
+    public static Notice createNotice(Long id, Long memberId, String title, Company company,
+            List<Skill> skills,
             Duration duration, ApplyUrl applyUrl) {
-        Notice notice = Notice.of(memberId, company, title, duration, applyUrl);
+        Notice notice = Notice.of(memberId, title, company, skills, duration, applyUrl);
         ReflectionTestUtils.setField(notice, "id", id);
 
         return notice;
     }
 
-    public static Company createCompany(Long id, String icon) {
-        Company company = Company.from(icon);
-        ReflectionTestUtils.setField(company, "id", id);
-
-        return company;
+    public static List<Skill> createSkills(List<String> skillTags) {
+        return skillTags.stream()
+                .map(Skill::from)
+                .collect(Collectors.toList());
     }
 
     public static LoginMember createSessionMember(Member member) {

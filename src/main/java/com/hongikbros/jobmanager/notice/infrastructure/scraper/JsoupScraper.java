@@ -4,6 +4,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.jsoup.HttpStatusException;
 import org.jsoup.Jsoup;
@@ -11,13 +13,16 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.springframework.stereotype.Component;
 
-import com.hongikbros.jobmanager.notice.domain.company.Company;
 import com.hongikbros.jobmanager.notice.domain.notice.ApplyUrl;
+import com.hongikbros.jobmanager.notice.domain.notice.Company;
 import com.hongikbros.jobmanager.notice.domain.notice.Duration;
 import com.hongikbros.jobmanager.notice.domain.notice.Notice;
 import com.hongikbros.jobmanager.notice.domain.scraper.Scraper;
+import com.hongikbros.jobmanager.notice.domain.skill.Skill;
 import com.hongikbros.jobmanager.notice.infrastructure.exception.NotParseException;
 import com.hongikbros.jobmanager.notice.infrastructure.exception.NotScrapingException;
+import com.hongikbros.jobmanager.notice.infrastructure.exception.ParseExceptionCode;
+import com.hongikbros.jobmanager.notice.infrastructure.exception.ScrapingExceptionCode;
 
 @Component
 public class JsoupScraper implements Scraper {
@@ -27,17 +32,17 @@ public class JsoupScraper implements Scraper {
     private static final int NOT_FOUND = 404;
     private static final int TOO_MANY_REQUEST = 429;
 
-    public Notice createNotice(Long memberId, String noticeUrl, Duration duration) {
-        return parseNotice(memberId, noticeUrl, duration);
-    }
-
-    private Notice parseNotice(Long memberId, String noticeUrl, Duration duration) {
+    public Notice createNotice(Long memberId, String noticeUrl, List<String> skillTags,
+            Duration duration) {
         final Document document = scrapDocument(noticeUrl);
+        final List<Skill> skills = skillTags.stream()
+                .map(Skill::from)
+                .collect(Collectors.toList());
         final Company company = parseCompany(document);
         final String title = parseTitle(document);
         final ApplyUrl applyUrl = ApplyUrl.from(noticeUrl);
 
-        return Notice.of(memberId, company, title, duration, applyUrl);
+        return Notice.of(memberId, title, company, skills, duration, applyUrl);
     }
 
     private String parseTitle(Document document) {
@@ -66,7 +71,7 @@ public class JsoupScraper implements Scraper {
         }
     }
 
-    public Document scrapDocument(String noticeUrl) {
+    private Document scrapDocument(String noticeUrl) {
         try {
             return Jsoup.connect(noticeUrl)
                     .userAgent(USER_AGENT)

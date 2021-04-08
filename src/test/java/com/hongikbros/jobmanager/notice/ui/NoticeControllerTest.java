@@ -5,6 +5,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
 
 import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,8 +21,8 @@ import com.hongikbros.jobmanager.common.fixture.member.MemberFixture;
 import com.hongikbros.jobmanager.common.utils.TestObjectUtils;
 import com.hongikbros.jobmanager.notice.application.NoticeService;
 import com.hongikbros.jobmanager.notice.application.dto.NoticeResponse;
-import com.hongikbros.jobmanager.notice.domain.company.Company;
 import com.hongikbros.jobmanager.notice.domain.notice.ApplyUrl;
+import com.hongikbros.jobmanager.notice.domain.notice.Company;
 import com.hongikbros.jobmanager.notice.domain.notice.Duration;
 import com.hongikbros.jobmanager.notice.domain.notice.Notice;
 import com.hongikbros.jobmanager.notice.ui.dto.NoticeCreateRequest;
@@ -40,23 +42,26 @@ class NoticeControllerTest {
     void should_returnResponseEntity() {
         // given
         final CurrentMember currentMember = MemberFixture.LOGIN_MEMBER_EUNSEOK;
-        final Company toss = TestObjectUtils.createCompany(1L, "icon.url");
+        final List<String> skillTags = Arrays.asList("Spring Boot", "docker");
+
         final Notice notice = TestObjectUtils.createNotice(
                 1L,
                 currentMember.getId(),
-                toss,
                 "백앤드 개발자 상시모집",
+                Company.from("icon.url"),
+                TestObjectUtils.createSkills(skillTags),
                 Duration.of(LocalDate.MIN, LocalDate.MAX),
                 ApplyUrl.from("hi.com")
         );
 
         NoticeCreateRequest noticeCreateRequest = new NoticeCreateRequest(
                 "apply.url",
+                skillTags,
                 LocalDate.MIN,
                 LocalDate.MAX
         );
         NoticeResponse noticeResponse = NoticeResponse.of(notice);
-        given(noticeService.createNotice(anyLong(), any(), any())).willReturn(noticeResponse);
+        given(noticeService.createNotice(any(), any())).willReturn(noticeResponse);
 
         //when
         final ResponseEntity<NoticeResponse> responseEntity = noticeController.createNotice(
