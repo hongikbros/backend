@@ -1,4 +1,4 @@
-package com.hongikbros.jobmanager.security.config;
+package com.hongikbros.jobmanager.security.core.config;
 
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
@@ -60,13 +60,13 @@ public enum ConfigMode {
                 .and()
                     .csrf()
                         .csrfTokenRepository(new HttpSessionCsrfTokenRepository())
-                        .requireCsrfProtectionMatcher(new AntPathRequestMatcher("!/h2/**"))
                 .and()
                     .authorizeRequests()
                         .antMatchers("/h2","/docs/**").permitAll()
                         .anyRequest().authenticated()
                 .and()
                     .sessionManagement()
+                        .sessionFixation().changeSessionId()
                         .invalidSessionUrl("/")
                 .and()
                     .logout()
