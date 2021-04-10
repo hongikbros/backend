@@ -6,8 +6,13 @@ import static org.mockito.BDDMockito.*;
 
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
+import com.hongikbros.jobmanager.notice.query.applicaion.NoticeViewService;
+import com.hongikbros.jobmanager.notice.query.dao.NoticeViewDao;
+import com.hongikbros.jobmanager.notice.query.dto.NoticeResponses;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,20 +24,20 @@ import org.springframework.http.ResponseEntity;
 
 import com.hongikbros.jobmanager.common.fixture.member.MemberFixture;
 import com.hongikbros.jobmanager.common.utils.TestObjectUtils;
-import com.hongikbros.jobmanager.notice.application.NoticeService;
-import com.hongikbros.jobmanager.notice.application.dto.NoticeResponse;
-import com.hongikbros.jobmanager.notice.domain.notice.ApplyUrl;
-import com.hongikbros.jobmanager.notice.domain.notice.Company;
-import com.hongikbros.jobmanager.notice.domain.notice.Duration;
-import com.hongikbros.jobmanager.notice.domain.notice.Notice;
-import com.hongikbros.jobmanager.notice.ui.dto.NoticeCreateRequest;
+import com.hongikbros.jobmanager.notice.command.application.NoticeService;
+import com.hongikbros.jobmanager.notice.command.dto.NoticeResponse;
+import com.hongikbros.jobmanager.notice.command.domain.notice.ApplyUrl;
+import com.hongikbros.jobmanager.notice.command.domain.notice.Company;
+import com.hongikbros.jobmanager.notice.command.domain.notice.Duration;
+import com.hongikbros.jobmanager.notice.command.domain.notice.Notice;
+import com.hongikbros.jobmanager.notice.command.dto.NoticeCreateRequest;
 import com.hongikbros.jobmanager.security.core.CurrentMember;
 
 @ExtendWith(MockitoExtension.class)
 class NoticeControllerTest {
 
     @Mock
-    private NoticeService noticeService;
+    private NoticeViewService noticeViewService;
 
     @InjectMocks
     private NoticeController noticeController;
@@ -43,7 +48,6 @@ class NoticeControllerTest {
         // given
         final CurrentMember currentMember = MemberFixture.LOGIN_MEMBER_EUNSEOK;
         final List<String> skillTags = Arrays.asList("Spring Boot", "docker");
-
         final Notice notice = TestObjectUtils.createNotice(
                 1L,
                 currentMember.getId(),
@@ -54,21 +58,14 @@ class NoticeControllerTest {
                 ApplyUrl.from("hi.com")
         );
 
-        NoticeCreateRequest noticeCreateRequest = new NoticeCreateRequest(
-                "apply.url",
-                skillTags,
-                LocalDate.MIN,
-                LocalDate.MAX
-        );
-        NoticeResponse noticeResponse = NoticeResponse.of(notice);
-        given(noticeService.createNotice(any(), any())).willReturn(noticeResponse);
+        NoticeResponses noticeResponses = NoticeResponses.of(Collections.singletonList(notice));
+        given(noticeViewService.findAllByMemberId(any())).willReturn(noticeResponses);
 
         //when
-        final ResponseEntity<NoticeResponse> responseEntity = noticeController.createNotice(
-                noticeCreateRequest, MemberFixture.LOGIN_MEMBER_EUNSEOK);
+        final ResponseEntity<NoticeResponses> responseEntity = noticeController.findAll(currentMember);
         // then
         assertAll(
-                () -> assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.CREATED),
+                () -> assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK),
                 () -> assertThat(responseEntity.getBody()).isNotNull()
         );
     }

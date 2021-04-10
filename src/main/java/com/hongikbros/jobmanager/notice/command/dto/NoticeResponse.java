@@ -42,7 +42,7 @@ public class NoticeResponse {
 
     private static List<String> convertSkillTagsToStrings(List<Skill> skills) {
         return skills.stream()
-                .map(Skill::getSkill)
+                .map(Skill::getSkillTag)
                 .collect(Collectors.toList());
     }
 

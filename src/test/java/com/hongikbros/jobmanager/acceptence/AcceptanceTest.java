@@ -10,6 +10,7 @@ import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 
+import com.hongikbros.jobmanager.notice.query.dto.NoticeResponses;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -30,9 +31,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hongikbros.jobmanager.common.auth.TestLoginMemberAdapter;
 import com.hongikbros.jobmanager.common.fixture.member.MemberFixture;
 import com.hongikbros.jobmanager.common.utils.TestFileIoUtils;
-import com.hongikbros.jobmanager.notice.application.dto.NoticeResponse;
+import com.hongikbros.jobmanager.notice.command.dto.NoticeResponse;
 import com.hongikbros.jobmanager.notice.ui.NoticeController;
-import com.hongikbros.jobmanager.notice.ui.dto.NoticeCreateRequest;
+import com.hongikbros.jobmanager.notice.command.dto.NoticeCreateRequest;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import io.restassured.module.mockmvc.specification.MockMvcRequestSpecification;
 
@@ -50,7 +51,7 @@ public abstract class AcceptanceTest {
     private DataBaseClean dataBaseClean;
 
     private ClientAndServer mockServer;
-    
+
     @Autowired
     protected ObjectMapper objectMapper;
 
@@ -103,8 +104,13 @@ public abstract class AcceptanceTest {
                 );
     }
 
+    protected NoticeResponses findAllNotices(Long id) {
+        NoticeResponses notices = findAll(NoticeController.API_NOTICE, id, NoticeResponses.class);
+        return notices;
+    }
+
     protected NoticeResponse createNotice(String noticeUrl, List<String> skillTags,
-            LocalDate startDate, LocalDate endDate) throws
+                                          LocalDate startDate, LocalDate endDate) throws
             JsonProcessingException {
         mocking200ScrapingServer();
 
@@ -112,10 +118,10 @@ public abstract class AcceptanceTest {
                 startDate, endDate);
         final String createNoticeRequest = objectMapper.writeValueAsString(noticeCreateRequest);
 
-        return post(createNoticeRequest, NoticeResponse.class);
+        return post(NoticeController.API_NOTICE, createNoticeRequest, NoticeResponse.class);
     }
 
-    protected <T> T post(String requestJson, Class<T> responseType) {
+    protected <T> T post(String path, String requestJson, Class<T> responseType) {
         // @formatter:off
         return
                 given().
@@ -125,7 +131,7 @@ public abstract class AcceptanceTest {
                         accept(MediaType.APPLICATION_JSON_VALUE).
                         body(requestJson).
                 when().
-                        post(NoticeController.API_NOTICE).
+                        post(path).
                 then().
                         log().all().
                         statusCode(HttpStatus.CREATED.value()).
@@ -133,4 +139,18 @@ public abstract class AcceptanceTest {
         // @formatter:on
     }
 
+    private <T> T findAll(String path, Long id, Class<T> responseType) {
+        // @formatter:off
+        return
+                given().
+                        auth().principal(testLoginMemberAdapter).
+                        accept(MediaType.APPLICATION_JSON_VALUE).
+                when().
+                        get(NoticeController.API_NOTICE + "/" + id).
+                then().
+                        log().all().
+                        statusCode(HttpStatus.OK.value()).
+                        extract().as(responseType);
+        // @formatter:on
+    }
 }

@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
+import com.hongikbros.jobmanager.notice.query.dto.NoticeResponses;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
@@ -20,25 +21,30 @@ import org.springframework.http.MediaType;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.hongikbros.jobmanager.acceptence.AcceptanceTest;
-import com.hongikbros.jobmanager.notice.application.dto.NoticeResponse;
+import com.hongikbros.jobmanager.notice.command.dto.NoticeResponse;
 import com.hongikbros.jobmanager.notice.ui.NoticeController;
-import com.hongikbros.jobmanager.notice.ui.dto.NoticeCreateRequest;
+import com.hongikbros.jobmanager.notice.command.dto.NoticeCreateRequest;
 
 class NoticeAcceptanceTest extends AcceptanceTest {
 
     /**
-     * Feature: 공고를 등록한다.<br/>
-     *<br/>
+     * Feature: 공고를 관리한다. <br/>
+     * <br/>
      * Scenario: 회원은 자신이 북마크할 공고를 등록한다. <br/>
-     *<br/>
+     * <br/>
      * Given 회원은 로그인한 상태이다. <br/>
-     *
+     * <p>
      * When 게시글 등록을 요청한다. <br/>
-     * Then 게시글이 등독된다. <br/>
+     * Then 게시글이 등록된다. <br/>
+     * <p>
+     * When 게시글을 조회한다. <br/>
+     * Then 게시글이 조회된다.
      */
+    @DisplayName("Feature: 공고를 관리한다.")
     @TestFactory
     Stream<DynamicTest> should_createNotice() {
-        return Stream.of(dynamicTest("Feature: 공고를 등록한다.", () -> {
+        return Stream.of(
+                dynamicTest("공고를 만드는 요청으로 새로운 공고를 생성한다.", () -> {
                     final String noticeUrl = DOMAIN + MOCK_SEVER_PORT + PATH;
                     final List<String> skillTags = Arrays.asList("Spring Boot", "docker");
 
@@ -58,17 +64,22 @@ class NoticeAcceptanceTest extends AcceptanceTest {
                                     LocalDate.of(3000, 10, 2).format(DateTimeFormatter.ISO_LOCAL_DATE)),
                             () -> assertThat(notice.getApplyUrl()).isEqualTo(noticeUrl)
                     );
-                }
-        ));
+                }),
+                dynamicTest("전체 공고를 불러온다.", () -> {
+                    NoticeResponses noticeResponses = findAllNotices(testLoginMemberAdapter.getLoginMember().getId());
+
+                    assertThat(noticeResponses.getNoticeResponses().size()).isEqualTo(1);
+                })
+        );
     }
 
     /**
      * Feature: 공고를 잘못된 공고 요청시 에러를 던진다.<br/>
-     *<br/>
+     * <br/>
      * Scenario: 회원은 자신이 북마크할 공고를 등록한다. <br/>
-     *<br/>
+     * <br/>
      * Given 회원은 로그인한 상태이다. <br/>
-     *
+     * <p>
      * When 게시글을 잘못된 요청을 보낸다. <br/>
      * Then 게시글이 에러를 던진다. <br/>
      */

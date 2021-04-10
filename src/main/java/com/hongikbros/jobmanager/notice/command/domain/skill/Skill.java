@@ -15,14 +15,14 @@ public class Skill extends BaseEntity {
     @Column(name = "skill_id")
     Long id;
 
-    String skill;
+    String skillTag;
 
     protected Skill() {
     }
 
-    private Skill(Long id, String skill) {
+    private Skill(Long id, String skillTag) {
         this.id = id;
-        this.skill = skill;
+        this.skillTag = skillTag;
     }
 
     public static Skill from(String skill) {
@@ -33,7 +33,7 @@ public class Skill extends BaseEntity {
         return id;
     }
 
-    public String getSkill() {
-        return skill;
+    public String getSkillTag() {
+        return skillTag;
     }
 }
