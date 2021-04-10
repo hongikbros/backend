@@ -1,17 +1,11 @@
 package com.hongikbros.jobmanager.notice.acceptence;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.DynamicTest.*;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
-
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Stream;
-
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.hongikbros.jobmanager.acceptence.AcceptanceTest;
+import com.hongikbros.jobmanager.notice.command.dto.NoticeCreateRequest;
+import com.hongikbros.jobmanager.notice.command.dto.NoticeDetail;
 import com.hongikbros.jobmanager.notice.query.dto.NoticeResponses;
+import com.hongikbros.jobmanager.notice.ui.NoticeController;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
@@ -19,11 +13,16 @@ import org.junit.jupiter.api.TestFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.hongikbros.jobmanager.acceptence.AcceptanceTest;
-import com.hongikbros.jobmanager.notice.command.dto.NoticeResponse;
-import com.hongikbros.jobmanager.notice.ui.NoticeController;
-import com.hongikbros.jobmanager.notice.command.dto.NoticeCreateRequest;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Stream;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.DynamicTest.dynamicTest;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 
 class NoticeAcceptanceTest extends AcceptanceTest {
 
@@ -48,7 +47,7 @@ class NoticeAcceptanceTest extends AcceptanceTest {
                     final String noticeUrl = DOMAIN + MOCK_SEVER_PORT + PATH;
                     final List<String> skillTags = Arrays.asList("Spring Boot", "docker");
 
-                    final NoticeResponse notice = createNotice(noticeUrl,
+                    final NoticeDetail notice = createNotice(noticeUrl,
                             skillTags,
                             LocalDate.of(1000, 3, 1),
                             LocalDate.of(3000, 10, 2));

@@ -1,13 +1,13 @@
 package com.hongikbros.jobmanager.notice.command.dto;
 
+import com.hongikbros.jobmanager.notice.command.domain.notice.Notice;
+import com.hongikbros.jobmanager.notice.command.domain.skill.Skill;
+
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.hongikbros.jobmanager.notice.command.domain.notice.Notice;
-import com.hongikbros.jobmanager.notice.command.domain.skill.Skill;
-
-public class NoticeResponse {
+public class NoticeDetail {
 
     private final Long id;
     private final String title;
@@ -17,8 +17,8 @@ public class NoticeResponse {
     private final LocalDate endDate;
     private final String applyUrl;
 
-    public NoticeResponse(Long id, String title, String icon, List<String> skillTags,
-            LocalDate startDate, LocalDate endDate, String applyUrl) {
+    public NoticeDetail(Long id, String title, String icon, List<String> skillTags,
+                        LocalDate startDate, LocalDate endDate, String applyUrl) {
         this.id = id;
         this.title = title;
         this.icon = icon;
@@ -28,8 +28,8 @@ public class NoticeResponse {
         this.applyUrl = applyUrl;
     }
 
-    public static NoticeResponse of(Notice notice) {
-        return new NoticeResponse(
+    public static NoticeDetail of(Notice notice) {
+        return new NoticeDetail(
                 notice.getId(),
                 notice.getTitle(),
                 notice.getCompany().getIcon(),

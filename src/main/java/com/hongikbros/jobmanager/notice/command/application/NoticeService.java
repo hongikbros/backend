@@ -1,17 +1,17 @@
 package com.hongikbros.jobmanager.notice.command.application;
 
-import static com.hongikbros.jobmanager.notice.command.exception.NoticeServiceExceptionCode.*;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import com.hongikbros.jobmanager.notice.command.dto.NoticeResponse;
-import com.hongikbros.jobmanager.notice.command.exception.NotAllowedEmptyUser;
+import com.hongikbros.jobmanager.member.application.NotAllowedEmptyUser;
 import com.hongikbros.jobmanager.notice.command.domain.NoticeRepository;
 import com.hongikbros.jobmanager.notice.command.domain.notice.Notice;
 import com.hongikbros.jobmanager.notice.command.domain.scraper.Scraper;
 import com.hongikbros.jobmanager.notice.command.dto.NoticeCreateRequest;
+import com.hongikbros.jobmanager.notice.command.dto.NoticeDetail;
 import com.hongikbros.jobmanager.security.core.CurrentMember;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import static com.hongikbros.jobmanager.member.application.MemberExceptionCode.NOT_ALLOWED_EMPTY_USER;
+
 
 @Service
 public class NoticeService {
@@ -26,8 +26,8 @@ public class NoticeService {
     }
 
     @Transactional
-    public NoticeResponse createNotice(CurrentMember currentMember,
-            NoticeCreateRequest noticeCreateRequest) {
+    public NoticeDetail createNotice(CurrentMember currentMember,
+                                     NoticeCreateRequest noticeCreateRequest) {
         verityCurrentMember(currentMember);
         Notice notice = jsoupScraper.createNotice(
                 currentMember.getId(),
@@ -38,7 +38,7 @@ public class NoticeService {
 
         noticeRepository.save(notice);
 
-        return NoticeResponse.of(notice);
+        return NoticeDetail.of(notice);
     }
 
     private void verityCurrentMember(CurrentMember currentMember) {

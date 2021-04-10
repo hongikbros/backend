@@ -1,21 +1,17 @@
 package com.hongikbros.jobmanager.acceptence;
 
-import static com.hongikbros.jobmanager.acceptence.AcceptanceTest.*;
-import static org.mockserver.model.HttpRequest.*;
-import static org.mockserver.model.HttpResponse.*;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
-import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.*;
-
-import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.List;
-
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hongikbros.jobmanager.common.auth.TestLoginMemberAdapter;
+import com.hongikbros.jobmanager.common.fixture.member.MemberFixture;
+import com.hongikbros.jobmanager.common.utils.TestFileIoUtils;
+import com.hongikbros.jobmanager.notice.command.dto.NoticeCreateRequest;
+import com.hongikbros.jobmanager.notice.command.dto.NoticeDetail;
 import com.hongikbros.jobmanager.notice.query.dto.NoticeResponses;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.TestInstance;
+import com.hongikbros.jobmanager.notice.ui.NoticeController;
+import io.restassured.module.mockmvc.RestAssuredMockMvc;
+import io.restassured.module.mockmvc.specification.MockMvcRequestSpecification;
+import org.junit.jupiter.api.*;
 import org.mockserver.client.MockServerClient;
 import org.mockserver.integration.ClientAndServer;
 import org.mockserver.junit.jupiter.MockServerSettings;
@@ -26,16 +22,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.context.WebApplicationContext;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hongikbros.jobmanager.common.auth.TestLoginMemberAdapter;
-import com.hongikbros.jobmanager.common.fixture.member.MemberFixture;
-import com.hongikbros.jobmanager.common.utils.TestFileIoUtils;
-import com.hongikbros.jobmanager.notice.command.dto.NoticeResponse;
-import com.hongikbros.jobmanager.notice.ui.NoticeController;
-import com.hongikbros.jobmanager.notice.command.dto.NoticeCreateRequest;
-import io.restassured.module.mockmvc.RestAssuredMockMvc;
-import io.restassured.module.mockmvc.specification.MockMvcRequestSpecification;
+import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
+
+import static com.hongikbros.jobmanager.acceptence.AcceptanceTest.MOCK_SEVER_PORT;
+import static org.mockserver.model.HttpRequest.request;
+import static org.mockserver.model.HttpResponse.response;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @MockServerSettings(ports = {MOCK_SEVER_PORT})
@@ -105,12 +100,11 @@ public abstract class AcceptanceTest {
     }
 
     protected NoticeResponses findAllNotices(Long id) {
-        NoticeResponses notices = findAll(NoticeController.API_NOTICE, id, NoticeResponses.class);
-        return notices;
+        return findAll(NoticeController.API_NOTICE, id, NoticeResponses.class);
     }
 
-    protected NoticeResponse createNotice(String noticeUrl, List<String> skillTags,
-                                          LocalDate startDate, LocalDate endDate) throws
+    protected NoticeDetail createNotice(String noticeUrl, List<String> skillTags,
+                                        LocalDate startDate, LocalDate endDate) throws
             JsonProcessingException {
         mocking200ScrapingServer();
 
@@ -118,7 +112,7 @@ public abstract class AcceptanceTest {
                 startDate, endDate);
         final String createNoticeRequest = objectMapper.writeValueAsString(noticeCreateRequest);
 
-        return post(NoticeController.API_NOTICE, createNoticeRequest, NoticeResponse.class);
+        return post(NoticeController.API_NOTICE, createNoticeRequest, NoticeDetail.class);
     }
 
     protected <T> T post(String path, String requestJson, Class<T> responseType) {

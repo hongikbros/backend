@@ -1,9 +1,9 @@
 package com.hongikbros.jobmanager.notice.query.dao;
 
-import com.hongikbros.jobmanager.notice.query.dto.NoticeResponses;
+import com.hongikbros.jobmanager.notice.command.dto.NoticeDetail;
 
-import java.util.Optional;
+import java.util.List;
 
 public interface NoticeViewDao {
-    Optional<NoticeResponses> findByMemberId(Long id);
+    List<NoticeDetail> findByMemberId(Long id);
 }

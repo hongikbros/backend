@@ -1,19 +1,18 @@
 package com.hongikbros.jobmanager.notice.ui;
 
-import java.net.URI;
-
+import com.hongikbros.jobmanager.common.core.validation.ValidationSequence;
+import com.hongikbros.jobmanager.notice.command.application.NoticeService;
+import com.hongikbros.jobmanager.notice.command.dto.NoticeCreateRequest;
+import com.hongikbros.jobmanager.notice.command.dto.NoticeDetail;
 import com.hongikbros.jobmanager.notice.query.applicaion.NoticeViewService;
 import com.hongikbros.jobmanager.notice.query.dto.NoticeResponses;
+import com.hongikbros.jobmanager.security.core.AuthMember;
+import com.hongikbros.jobmanager.security.core.CurrentMember;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import com.hongikbros.jobmanager.common.core.validation.ValidationSequence;
-import com.hongikbros.jobmanager.notice.command.application.NoticeService;
-import com.hongikbros.jobmanager.notice.command.dto.NoticeResponse;
-import com.hongikbros.jobmanager.notice.command.dto.NoticeCreateRequest;
-import com.hongikbros.jobmanager.security.core.AuthMember;
-import com.hongikbros.jobmanager.security.core.CurrentMember;
+import java.net.URI;
 
 @RestController
 @RequestMapping(NoticeController.API_NOTICE)
@@ -30,10 +29,10 @@ public class NoticeController {
     }
 
     @PostMapping
-    public ResponseEntity<NoticeResponse> createNotice(
+    public ResponseEntity<NoticeDetail> createNotice(
             @RequestBody @Validated(ValidationSequence.class) NoticeCreateRequest createNoticeRequest,
             @AuthMember CurrentMember currentMember) {
-        final NoticeResponse notice = noticeService.createNotice(currentMember,
+        final NoticeDetail notice = noticeService.createNotice(currentMember,
                 createNoticeRequest);
 
         return ResponseEntity
@@ -43,7 +42,7 @@ public class NoticeController {
 
     @GetMapping()
     public ResponseEntity<NoticeResponses> findAll(@AuthMember CurrentMember currentMember) {
-        NoticeResponses noticeResponses = noticeViewService.findAllByMemberId(currentMember);
+        final NoticeResponses noticeResponses = noticeViewService.findAllByMemberId(currentMember);
 
         return ResponseEntity.ok(noticeResponses);
     }
