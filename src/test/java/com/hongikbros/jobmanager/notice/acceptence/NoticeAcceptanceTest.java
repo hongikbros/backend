@@ -2,9 +2,9 @@ package com.hongikbros.jobmanager.notice.acceptence;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.hongikbros.jobmanager.acceptence.AcceptanceTest;
-import com.hongikbros.jobmanager.notice.command.dto.NoticeCreateRequest;
-import com.hongikbros.jobmanager.notice.command.dto.NoticeDetail;
-import com.hongikbros.jobmanager.notice.query.dto.NoticeResponses;
+import com.hongikbros.jobmanager.notice.command.application.dto.NoticeCreateRequest;
+import com.hongikbros.jobmanager.notice.query.applicaion.dto.NoticeDetail;
+import com.hongikbros.jobmanager.notice.query.applicaion.dto.NoticeResponses;
 import com.hongikbros.jobmanager.notice.ui.NoticeController;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DynamicTest;

@@ -2,10 +2,10 @@ package com.hongikbros.jobmanager.notice.ui;
 
 import com.hongikbros.jobmanager.common.core.validation.ValidationSequence;
 import com.hongikbros.jobmanager.notice.command.application.NoticeService;
-import com.hongikbros.jobmanager.notice.command.dto.NoticeCreateRequest;
-import com.hongikbros.jobmanager.notice.command.dto.NoticeDetail;
-import com.hongikbros.jobmanager.notice.query.applicaion.NoticeViewService;
-import com.hongikbros.jobmanager.notice.query.dto.NoticeResponses;
+import com.hongikbros.jobmanager.notice.command.application.dto.NoticeCreateRequest;
+import com.hongikbros.jobmanager.notice.query.applicaion.NoticeViewListService;
+import com.hongikbros.jobmanager.notice.query.applicaion.dto.NoticeDetail;
+import com.hongikbros.jobmanager.notice.query.applicaion.dto.NoticeResponses;
 import com.hongikbros.jobmanager.security.core.AuthMember;
 import com.hongikbros.jobmanager.security.core.CurrentMember;
 import org.springframework.http.ResponseEntity;
@@ -21,11 +21,11 @@ public class NoticeController {
     public static final String API_NOTICE = "/api/notice";
 
     private final NoticeService noticeService;
-    private final NoticeViewService noticeViewService;
+    private final NoticeViewListService noticeViewListService;
 
-    public NoticeController(NoticeService noticeService, NoticeViewService noticeViewService) {
+    public NoticeController(NoticeService noticeService, NoticeViewListService noticeViewListService) {
         this.noticeService = noticeService;
-        this.noticeViewService = noticeViewService;
+        this.noticeViewListService = noticeViewListService;
     }
 
     @PostMapping
@@ -42,7 +42,7 @@ public class NoticeController {
 
     @GetMapping()
     public ResponseEntity<NoticeResponses> findAll(@AuthMember CurrentMember currentMember) {
-        final NoticeResponses noticeResponses = noticeViewService.findAllByMemberId(currentMember);
+        final NoticeResponses noticeResponses = noticeViewListService.findAllByMemberId(currentMember);
 
         return ResponseEntity.ok(noticeResponses);
     }

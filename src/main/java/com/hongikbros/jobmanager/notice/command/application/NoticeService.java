@@ -1,11 +1,11 @@
 package com.hongikbros.jobmanager.notice.command.application;
 
 import com.hongikbros.jobmanager.member.application.NotAllowedEmptyUser;
+import com.hongikbros.jobmanager.notice.command.application.dto.NoticeCreateRequest;
 import com.hongikbros.jobmanager.notice.command.domain.NoticeRepository;
 import com.hongikbros.jobmanager.notice.command.domain.notice.Notice;
 import com.hongikbros.jobmanager.notice.command.domain.scraper.Scraper;
-import com.hongikbros.jobmanager.notice.command.dto.NoticeCreateRequest;
-import com.hongikbros.jobmanager.notice.command.dto.NoticeDetail;
+import com.hongikbros.jobmanager.notice.query.applicaion.dto.NoticeDetail;
 import com.hongikbros.jobmanager.security.core.CurrentMember;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

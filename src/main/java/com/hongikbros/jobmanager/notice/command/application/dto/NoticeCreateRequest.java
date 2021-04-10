@@ -1,18 +1,16 @@
-package com.hongikbros.jobmanager.notice.command.dto;
-
-import java.time.LocalDate;
-import java.util.List;
-
-import javax.validation.constraints.FutureOrPresent;
-import javax.validation.constraints.NotNull;
-
-import org.hibernate.validator.constraints.URL;
+package com.hongikbros.jobmanager.notice.command.application.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.hongikbros.jobmanager.common.core.validation.FirstValid;
 import com.hongikbros.jobmanager.common.core.validation.NotEmptyFields;
 import com.hongikbros.jobmanager.common.core.validation.SecondValid;
 import com.hongikbros.jobmanager.notice.command.domain.notice.Duration;
+import org.hibernate.validator.constraints.URL;
+
+import javax.validation.constraints.FutureOrPresent;
+import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
+import java.util.List;
 
 public class NoticeCreateRequest {
 

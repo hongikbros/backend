@@ -6,10 +6,10 @@ import com.hongikbros.jobmanager.notice.command.domain.notice.ApplyUrl;
 import com.hongikbros.jobmanager.notice.command.domain.notice.Company;
 import com.hongikbros.jobmanager.notice.command.domain.notice.Duration;
 import com.hongikbros.jobmanager.notice.command.domain.notice.Notice;
-import com.hongikbros.jobmanager.notice.command.dto.NoticeDetail;
-import com.hongikbros.jobmanager.notice.query.applicaion.NoticeViewService;
+import com.hongikbros.jobmanager.notice.query.applicaion.NoticeViewListService;
+import com.hongikbros.jobmanager.notice.query.applicaion.dto.NoticeDetail;
+import com.hongikbros.jobmanager.notice.query.applicaion.dto.NoticeResponses;
 import com.hongikbros.jobmanager.notice.query.dao.NoticeViewDao;
-import com.hongikbros.jobmanager.notice.query.dto.NoticeResponses;
 import com.hongikbros.jobmanager.security.core.CurrentMember;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -28,12 +28,12 @@ import static org.mockito.BDDMockito.anyLong;
 import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
-class NoticeViewServiceTest {
+class NoticeViewListServiceTest {
     @Mock
     private NoticeViewDao noticeViewDao;
 
     @InjectMocks
-    private NoticeViewService noticeViewService;
+    private NoticeViewListService noticeViewListService;
 
     @DisplayName("공고 상세 내용을 조회하면 NoticeResponses dto를 반환한다.")
     @Test
@@ -53,7 +53,7 @@ class NoticeViewServiceTest {
         given(noticeViewDao.findByMemberId(anyLong())).willReturn(Collections.singletonList(NoticeDetail.of(notice)));
 
         // when
-        final NoticeResponses noticeResponses = noticeViewService.findAllByMemberId(MemberFixture.LOGIN_MEMBER_EUNSEOK);
+        final NoticeResponses noticeResponses = noticeViewListService.findAllByMemberId(MemberFixture.LOGIN_MEMBER_EUNSEOK);
         // then
         assertThat(noticeResponses.getNoticeResponses().size()).isEqualTo(1);
     }

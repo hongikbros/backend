@@ -6,9 +6,9 @@ import com.hongikbros.jobmanager.notice.command.domain.notice.ApplyUrl;
 import com.hongikbros.jobmanager.notice.command.domain.notice.Company;
 import com.hongikbros.jobmanager.notice.command.domain.notice.Duration;
 import com.hongikbros.jobmanager.notice.command.domain.notice.Notice;
-import com.hongikbros.jobmanager.notice.command.dto.NoticeDetail;
-import com.hongikbros.jobmanager.notice.query.applicaion.NoticeViewService;
-import com.hongikbros.jobmanager.notice.query.dto.NoticeResponses;
+import com.hongikbros.jobmanager.notice.query.applicaion.NoticeViewListService;
+import com.hongikbros.jobmanager.notice.query.applicaion.dto.NoticeDetail;
+import com.hongikbros.jobmanager.notice.query.applicaion.dto.NoticeResponses;
 import com.hongikbros.jobmanager.security.core.CurrentMember;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -33,7 +33,7 @@ import static org.mockito.BDDMockito.given;
 class NoticeControllerTest {
 
     @Mock
-    private NoticeViewService noticeViewService;
+    private NoticeViewListService noticeViewListService;
 
     @InjectMocks
     private NoticeController noticeController;
@@ -57,7 +57,7 @@ class NoticeControllerTest {
         final NoticeDetail noticeDetail = NoticeDetail.of(notice);
         final NoticeResponses noticeResponses = NoticeResponses.of(Collections.singletonList(noticeDetail));
 
-        given(noticeViewService.findAllByMemberId(any())).willReturn(noticeResponses);
+        given(noticeViewListService.findAllByMemberId(any())).willReturn(noticeResponses);
 
         //when
         final ResponseEntity<NoticeResponses> responseEntity = noticeController.findAll(currentMember);

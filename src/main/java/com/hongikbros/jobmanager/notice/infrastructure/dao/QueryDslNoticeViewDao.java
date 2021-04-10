@@ -1,6 +1,6 @@
 package com.hongikbros.jobmanager.notice.infrastructure.dao;
 
-import com.hongikbros.jobmanager.notice.command.dto.NoticeDetail;
+import com.hongikbros.jobmanager.notice.query.applicaion.dto.NoticeDetail;
 import com.hongikbros.jobmanager.notice.query.dao.NoticeViewDao;
 import org.springframework.stereotype.Repository;
 

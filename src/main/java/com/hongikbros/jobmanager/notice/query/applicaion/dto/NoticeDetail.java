@@ -1,4 +1,4 @@
-package com.hongikbros.jobmanager.notice.command.dto;
+package com.hongikbros.jobmanager.notice.query.applicaion.dto;
 
 import com.hongikbros.jobmanager.notice.command.domain.notice.Notice;
 import com.hongikbros.jobmanager.notice.command.domain.skill.Skill;

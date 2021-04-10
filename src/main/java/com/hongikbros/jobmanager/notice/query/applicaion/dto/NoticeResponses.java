@@ -1,6 +1,4 @@
-package com.hongikbros.jobmanager.notice.query.dto;
-
-import com.hongikbros.jobmanager.notice.command.dto.NoticeDetail;
+package com.hongikbros.jobmanager.notice.query.applicaion.dto;
 
 import java.util.List;
 

@@ -1,14 +1,16 @@
 package com.hongikbros.jobmanager.notice.application;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.BDDMockito.*;
-
-import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.List;
-
+import com.hongikbros.jobmanager.common.fixture.member.MemberFixture;
+import com.hongikbros.jobmanager.common.utils.TestObjectUtils;
 import com.hongikbros.jobmanager.notice.command.application.NoticeService;
+import com.hongikbros.jobmanager.notice.command.application.dto.NoticeCreateRequest;
+import com.hongikbros.jobmanager.notice.command.domain.NoticeRepository;
+import com.hongikbros.jobmanager.notice.command.domain.notice.ApplyUrl;
+import com.hongikbros.jobmanager.notice.command.domain.notice.Company;
+import com.hongikbros.jobmanager.notice.command.domain.notice.Duration;
+import com.hongikbros.jobmanager.notice.command.domain.notice.Notice;
+import com.hongikbros.jobmanager.notice.command.domain.scraper.Scraper;
+import com.hongikbros.jobmanager.security.core.CurrentMember;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,16 +18,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.hongikbros.jobmanager.common.fixture.member.MemberFixture;
-import com.hongikbros.jobmanager.common.utils.TestObjectUtils;
-import com.hongikbros.jobmanager.notice.command.domain.NoticeRepository;
-import com.hongikbros.jobmanager.notice.command.domain.notice.ApplyUrl;
-import com.hongikbros.jobmanager.notice.command.domain.notice.Company;
-import com.hongikbros.jobmanager.notice.command.domain.notice.Duration;
-import com.hongikbros.jobmanager.notice.command.domain.notice.Notice;
-import com.hongikbros.jobmanager.notice.command.domain.scraper.Scraper;
-import com.hongikbros.jobmanager.notice.command.dto.NoticeCreateRequest;
-import com.hongikbros.jobmanager.security.core.CurrentMember;
+import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.mockito.BDDMockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class NoticeServiceTest {
