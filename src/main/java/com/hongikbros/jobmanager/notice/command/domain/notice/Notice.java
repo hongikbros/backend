@@ -1,21 +1,13 @@
-package com.hongikbros.jobmanager.notice.domain.notice;
+package com.hongikbros.jobmanager.notice.command.domain.notice;
 
 import java.util.List;
 
-import javax.persistence.AttributeOverride;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 
 import com.hongikbros.jobmanager.common.domain.Association;
 import com.hongikbros.jobmanager.common.domain.BaseEntity;
 import com.hongikbros.jobmanager.member.domain.Member;
-import com.hongikbros.jobmanager.notice.domain.skill.Skill;
+import com.hongikbros.jobmanager.notice.command.domain.skill.Skill;
 
 @Entity
 public class Notice extends BaseEntity {
@@ -35,7 +27,8 @@ public class Notice extends BaseEntity {
     @Embedded
     private Company company;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "skill_id")
+    @JoinColumn(name = "skill_id")
     private List<Skill> skills;
 
     @Embedded
@@ -50,9 +43,9 @@ public class Notice extends BaseEntity {
     }
 
     public Notice(Long id,
-            Association<Member> memberId, String title,
-            Company company, List<Skill> skills,
-            Duration duration, ApplyUrl applyUrl) {
+                  Association<Member> memberId, String title,
+                  Company company, List<Skill> skills,
+                  Duration duration, ApplyUrl applyUrl) {
         this.id = id;
         this.memberId = memberId;
         this.title = title;
@@ -63,7 +56,7 @@ public class Notice extends BaseEntity {
     }
 
     public static Notice of(Long memberId, String title, Company company, List<Skill> skills,
-            Duration duration, ApplyUrl applyUrl) {
+                            Duration duration, ApplyUrl applyUrl) {
         return new Notice(null, new Association<>(memberId), title, company, skills, duration,
                 applyUrl);
     }

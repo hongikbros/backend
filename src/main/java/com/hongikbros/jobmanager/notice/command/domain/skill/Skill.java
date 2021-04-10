@@ -1,4 +1,6 @@
-package com.hongikbros.jobmanager.notice.domain.skill;
+package com.hongikbros.jobmanager.notice.command.domain.skill;
+
+import com.hongikbros.jobmanager.common.domain.BaseEntity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -7,7 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
-public class Skill {
+public class Skill extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "skill_id")

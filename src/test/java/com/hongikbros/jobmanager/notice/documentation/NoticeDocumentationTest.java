@@ -30,14 +30,14 @@ import com.hongikbros.jobmanager.common.documentation.Documentation;
 import com.hongikbros.jobmanager.common.fixture.member.MemberFixture;
 import com.hongikbros.jobmanager.common.utils.TestObjectUtils;
 import com.hongikbros.jobmanager.member.domain.LoginMember;
-import com.hongikbros.jobmanager.notice.application.NoticeService;
-import com.hongikbros.jobmanager.notice.application.dto.NoticeResponse;
-import com.hongikbros.jobmanager.notice.domain.notice.ApplyUrl;
-import com.hongikbros.jobmanager.notice.domain.notice.Company;
-import com.hongikbros.jobmanager.notice.domain.notice.Duration;
-import com.hongikbros.jobmanager.notice.domain.notice.Notice;
+import com.hongikbros.jobmanager.notice.command.application.NoticeService;
+import com.hongikbros.jobmanager.notice.command.dto.NoticeResponse;
+import com.hongikbros.jobmanager.notice.command.domain.notice.ApplyUrl;
+import com.hongikbros.jobmanager.notice.command.domain.notice.Company;
+import com.hongikbros.jobmanager.notice.command.domain.notice.Duration;
+import com.hongikbros.jobmanager.notice.command.domain.notice.Notice;
 import com.hongikbros.jobmanager.notice.ui.NoticeController;
-import com.hongikbros.jobmanager.notice.ui.dto.NoticeCreateRequest;
+import com.hongikbros.jobmanager.notice.command.dto.NoticeCreateRequest;
 
 @WebMvcTest(controllers = NoticeController.class)
 class NoticeDocumentationTest extends Documentation {

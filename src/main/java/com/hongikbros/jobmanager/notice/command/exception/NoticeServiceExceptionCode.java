@@ -1,4 +1,4 @@
-package com.hongikbros.jobmanager.notice.application.exception;
+package com.hongikbros.jobmanager.notice.command.exception;
 
 public enum NoticeServiceExceptionCode {
     NOT_ALLOWED_EMPTY_USER("Login이 안된 User입니다.", "NOTICE_SERVICE_001");

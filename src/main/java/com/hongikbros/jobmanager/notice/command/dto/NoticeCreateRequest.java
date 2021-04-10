@@ -1,4 +1,4 @@
-package com.hongikbros.jobmanager.notice.ui.dto;
+package com.hongikbros.jobmanager.notice.command.dto;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -12,7 +12,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.hongikbros.jobmanager.common.core.validation.FirstValid;
 import com.hongikbros.jobmanager.common.core.validation.NotEmptyFields;
 import com.hongikbros.jobmanager.common.core.validation.SecondValid;
-import com.hongikbros.jobmanager.notice.domain.notice.Duration;
+import com.hongikbros.jobmanager.notice.command.domain.notice.Duration;
 
 public class NoticeCreateRequest {
 

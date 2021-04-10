@@ -24,9 +24,9 @@ import org.springframework.http.HttpStatus;
 
 import com.hongikbros.jobmanager.common.fixture.member.MemberFixture;
 import com.hongikbros.jobmanager.common.utils.TestFileIoUtils;
-import com.hongikbros.jobmanager.notice.domain.notice.Duration;
-import com.hongikbros.jobmanager.notice.domain.notice.Notice;
-import com.hongikbros.jobmanager.notice.domain.scraper.Scraper;
+import com.hongikbros.jobmanager.notice.command.domain.notice.Duration;
+import com.hongikbros.jobmanager.notice.command.domain.notice.Notice;
+import com.hongikbros.jobmanager.notice.command.domain.scraper.Scraper;
 import com.hongikbros.jobmanager.notice.infrastructure.exception.NotScrapingException;
 import com.hongikbros.jobmanager.notice.infrastructure.exception.ScrapingExceptionCode;
 import com.hongikbros.jobmanager.notice.infrastructure.scraper.JsoupScraper;

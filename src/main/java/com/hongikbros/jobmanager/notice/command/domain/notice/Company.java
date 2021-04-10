@@ -1,12 +1,13 @@
-package com.hongikbros.jobmanager.notice.domain.notice;
+package com.hongikbros.jobmanager.notice.command.domain.notice;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 import javax.persistence.Embeddable;
 import javax.persistence.Lob;
 
 @Embeddable
-public class Company {
+public class Company implements Serializable {
 
     @Lob
     private String icon;
@@ -32,7 +33,7 @@ public class Company {
             return true;
         if (o == null || getClass() != o.getClass())
             return false;
-        Company company = (Company)o;
+        Company company = (Company) o;
         return Objects.equals(icon, company.icon);
     }
 

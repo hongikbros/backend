@@ -1,11 +1,11 @@
-package com.hongikbros.jobmanager.notice.application.dto;
+package com.hongikbros.jobmanager.notice.command.dto;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.hongikbros.jobmanager.notice.domain.notice.Notice;
-import com.hongikbros.jobmanager.notice.domain.skill.Skill;
+import com.hongikbros.jobmanager.notice.command.domain.notice.Notice;
+import com.hongikbros.jobmanager.notice.command.domain.skill.Skill;
 
 public class NoticeResponse {
 
