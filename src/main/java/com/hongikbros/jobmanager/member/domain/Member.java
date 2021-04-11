@@ -1,19 +1,11 @@
 package com.hongikbros.jobmanager.member.domain;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Index;
-import javax.persistence.Table;
-
 import com.hongikbros.jobmanager.common.domain.BaseEntity;
 
+import javax.persistence.*;
+
 @Entity
-@Table(indexes = @Index(name = "email", columnList = "email"))
+@Table(indexes = @Index(name = "oauth_id", columnList = "oauthId"))
 public class Member extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

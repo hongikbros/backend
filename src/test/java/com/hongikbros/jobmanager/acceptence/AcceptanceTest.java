@@ -140,7 +140,7 @@ public abstract class AcceptanceTest {
                         auth().principal(testLoginMemberAdapter).
                         accept(MediaType.APPLICATION_JSON_VALUE).
                 when().
-                        get(NoticeController.API_NOTICE + "/" + id).
+                        get(path + "/" + id).
                 then().
                         log().all().
                         statusCode(HttpStatus.OK.value()).

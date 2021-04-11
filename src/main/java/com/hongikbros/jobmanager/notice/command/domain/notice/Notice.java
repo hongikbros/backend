@@ -1,13 +1,12 @@
 package com.hongikbros.jobmanager.notice.command.domain.notice;
 
-import java.util.List;
-
-import javax.persistence.*;
-
 import com.hongikbros.jobmanager.common.domain.Association;
 import com.hongikbros.jobmanager.common.domain.BaseEntity;
 import com.hongikbros.jobmanager.member.domain.Member;
 import com.hongikbros.jobmanager.notice.command.domain.skill.Skill;
+
+import javax.persistence.*;
+import java.util.List;
 
 @Entity
 public class Notice extends BaseEntity {
@@ -27,7 +26,7 @@ public class Notice extends BaseEntity {
     @Embedded
     private Company company;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "skill_id")
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "skill_id")
     private List<Skill> skills;
 

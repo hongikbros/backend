@@ -17,7 +17,7 @@ public class NoticeDetail {
     private final LocalDate endDate;
     private final String applyUrl;
 
-    public NoticeDetail(Long id, String title, String icon, List<String> skillTags,
+    private NoticeDetail(Long id, String title, String icon, List<String> skillTags,
                         LocalDate startDate, LocalDate endDate, String applyUrl) {
         this.id = id;
         this.title = title;
