@@ -27,7 +27,7 @@ public class Notice extends BaseEntity {
     private Company company;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "skill_id")
+    @JoinColumn(name = "notice_id")
     private List<Skill> skills;
 
     @Embedded
@@ -58,6 +58,19 @@ public class Notice extends BaseEntity {
                             Duration duration, ApplyUrl applyUrl) {
         return new Notice(null, new Association<>(memberId), title, company, skills, duration,
                 applyUrl);
+    }
+
+    @Override
+    public String toString() {
+        return "Notice{" +
+                "id=" + id +
+                ", memberId=" + memberId +
+                ", title='" + title + '\'' +
+                ", company=" + company +
+                ", skills=" + skills +
+                ", duration=" + duration +
+                ", applyUrl=" + applyUrl +
+                '}';
     }
 
     public Long getId() {
