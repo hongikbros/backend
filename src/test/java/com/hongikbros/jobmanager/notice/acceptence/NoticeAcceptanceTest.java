@@ -38,10 +38,18 @@ class NoticeAcceptanceTest extends AcceptanceTest {
      * <p>
      * When 게시글을 조회한다. <br/>
      * Then 게시글이 조회된다.
+     * <p>
+     * When 게시글 삭제 요청한다. <br/>
+     * Then 게시글이 삭제된다.
      */
     @DisplayName("Feature: 공고를 관리한다.")
     @TestFactory
-    Stream<DynamicTest> should_createNotice() {
+    Stream<DynamicTest> should_createNotice() throws JsonProcessingException {
+        final NoticeDetail setupNotice = createNotice(DOMAIN + MOCK_SEVER_PORT + PATH,
+                Arrays.asList("JPA", "JAVA"),
+                LocalDate.of(2000, 3, 1),
+                LocalDate.of(2000, 10, 2));
+
         return Stream.of(
                 dynamicTest("공고를 만드는 요청으로 새로운 공고를 생성한다.", () -> {
                     final String noticeUrl = DOMAIN + MOCK_SEVER_PORT + PATH;
@@ -66,9 +74,23 @@ class NoticeAcceptanceTest extends AcceptanceTest {
                 dynamicTest("전체 공고를 불러온다.", () -> {
                     NoticeResponses noticeResponses = findAllNotices();
 
-                    assertThat(noticeResponses.getNoticeDetails().size()).isEqualTo(1);
-                })
+                    assertThat(noticeResponses.getNoticeDetails().size()).isEqualTo(2);
+                }),
+                dynamicTest("게시글 삭제 요청한다.", () -> deleteById(setupNotice.getId()))
         );
+    }
+
+    protected void deleteById(Long id) {
+        // @formatter:off
+        given().
+                auth().with(csrf()).
+                auth().principal(testLoginMemberAdapter).
+        when().
+                delete(NoticeController.API_NOTICE+"/{id}",id).
+        then().
+                log().all().
+                statusCode(HttpStatus.NO_CONTENT.value());
+        // @formatter:on
     }
 
     /**

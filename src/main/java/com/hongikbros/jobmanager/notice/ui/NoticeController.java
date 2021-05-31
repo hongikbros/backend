@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.constraints.NotNull;
 import java.net.URI;
 
 @RestController
@@ -45,5 +46,14 @@ public class NoticeController {
         final NoticeResponses noticeResponses = noticeViewListService.findAllByMemberId(currentMember);
 
         return ResponseEntity.ok(noticeResponses);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteById(@PathVariable @NotNull(message = "삭제할 공고를 입력하세요") Long id){
+        noticeService.deleteById(id);
+
+        return ResponseEntity
+                .noContent()
+                .build();
     }
 }

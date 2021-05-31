@@ -48,4 +48,8 @@ public class NoticeService {
                     NOT_ALLOWED_EMPTY_USER.getStatusCode());
         }
     }
+
+    public void deleteById(Long id) {
+        noticeRepository.deleteById(id);
+    }
 }
