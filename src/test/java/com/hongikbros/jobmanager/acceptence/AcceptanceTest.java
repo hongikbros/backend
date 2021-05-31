@@ -99,8 +99,8 @@ public abstract class AcceptanceTest {
                 );
     }
 
-    protected NoticeResponses findAllNotices(Long id) {
-        return findAll(NoticeController.API_NOTICE, id, NoticeResponses.class);
+    protected NoticeResponses findAllNotices() {
+        return findAll(NoticeController.API_NOTICE, NoticeResponses.class);
     }
 
     protected NoticeDetail createNotice(String noticeUrl, List<String> skillTags,
@@ -133,14 +133,14 @@ public abstract class AcceptanceTest {
         // @formatter:on
     }
 
-    private <T> T findAll(String path, Long id, Class<T> responseType) {
+    private <T> T findAll(String path, Class<T> responseType) {
         // @formatter:off
         return
                 given().
                         auth().principal(testLoginMemberAdapter).
                         accept(MediaType.APPLICATION_JSON_VALUE).
                 when().
-                        get(path + "/" + id).
+                        get(path).
                 then().
                         log().all().
                         statusCode(HttpStatus.OK.value()).

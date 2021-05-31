@@ -7,7 +7,6 @@ import com.hongikbros.jobmanager.notice.command.domain.notice.Company;
 import com.hongikbros.jobmanager.notice.command.domain.notice.Duration;
 import com.hongikbros.jobmanager.notice.command.domain.notice.Notice;
 import com.hongikbros.jobmanager.notice.query.applicaion.NoticeViewListService;
-import com.hongikbros.jobmanager.notice.query.applicaion.dto.NoticeDetail;
 import com.hongikbros.jobmanager.notice.query.applicaion.dto.NoticeResponses;
 import com.hongikbros.jobmanager.security.core.CurrentMember;
 import org.junit.jupiter.api.DisplayName;
@@ -54,8 +53,7 @@ class NoticeControllerTest {
                 ApplyUrl.from("hi.com")
         );
 
-        final NoticeDetail noticeDetail = NoticeDetail.of(notice);
-        final NoticeResponses noticeResponses = NoticeResponses.of(Collections.singletonList(noticeDetail));
+        final NoticeResponses noticeResponses = NoticeResponses.of(Collections.singletonList(notice));
 
         given(noticeViewListService.findAllByMemberId(any())).willReturn(noticeResponses);
 

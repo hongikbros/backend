@@ -40,7 +40,7 @@ public class NoticeController {
                 .body(notice);
     }
 
-    @GetMapping()
+    @GetMapping
     public ResponseEntity<NoticeResponses> findAll(@AuthMember CurrentMember currentMember) {
         final NoticeResponses noticeResponses = noticeViewListService.findAllByMemberId(currentMember);
 

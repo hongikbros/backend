@@ -7,7 +7,6 @@ import com.hongikbros.jobmanager.notice.command.domain.notice.Company;
 import com.hongikbros.jobmanager.notice.command.domain.notice.Duration;
 import com.hongikbros.jobmanager.notice.command.domain.notice.Notice;
 import com.hongikbros.jobmanager.notice.query.applicaion.NoticeViewListService;
-import com.hongikbros.jobmanager.notice.query.applicaion.dto.NoticeDetail;
 import com.hongikbros.jobmanager.notice.query.applicaion.dto.NoticeResponses;
 import com.hongikbros.jobmanager.notice.query.dao.NoticeViewDao;
 import com.hongikbros.jobmanager.security.core.CurrentMember;
@@ -50,12 +49,12 @@ class NoticeViewListServiceTest {
                 Duration.of(LocalDate.MIN, LocalDate.MAX),
                 ApplyUrl.from("hi.com")
         );
-        given(noticeViewDao.findByMemberId(anyLong())).willReturn(Collections.singletonList(NoticeDetail.of(notice)));
+        given(noticeViewDao.findByMemberId(anyLong())).willReturn(NoticeResponses.of(Collections.singletonList(notice)));
 
         // when
         final NoticeResponses noticeResponses = noticeViewListService.findAllByMemberId(MemberFixture.LOGIN_MEMBER_EUNSEOK);
         // then
-        assertThat(noticeResponses.getNoticeResponses().size()).isEqualTo(1);
+        assertThat(noticeResponses.getNoticeDetails().size()).isEqualTo(1);
     }
 
 }

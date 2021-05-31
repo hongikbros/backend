@@ -17,6 +17,6 @@ public class NoticeViewListService {
 
     @Transactional(readOnly = true)
     public NoticeResponses findAllByMemberId(CurrentMember currentMember) {
-        return NoticeResponses.of(noticeViewDao.findByMemberId(currentMember.getId()));
+        return noticeViewDao.findByMemberId(currentMember.getId());
     }
 }

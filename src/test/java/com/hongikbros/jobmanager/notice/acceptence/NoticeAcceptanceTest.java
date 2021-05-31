@@ -49,25 +49,24 @@ class NoticeAcceptanceTest extends AcceptanceTest {
 
                     final NoticeDetail notice = createNotice(noticeUrl,
                             skillTags,
-                            LocalDate.of(1000, 3, 1),
-                            LocalDate.of(3000, 10, 2));
+                            LocalDate.of(2000, 3, 1),
+                            LocalDate.of(2000, 10, 2));
                     assertAll(
                             () -> assertThat(notice.getTitle()).isEqualTo(
                                     "[vertical팀] 앱/웹 UX/UI 기획 지원 체험형 인턴 모집"
                             ),
                             () -> assertThat(notice.getIcon()).isNotNull(),
                             () -> assertThat(notice.getStartDate()).isEqualTo(
-                                    LocalDate.of(1000, 3, 1).format(
-                                            DateTimeFormatter.ISO_LOCAL_DATE)),
+                                    LocalDate.of(2000, 3, 1).format(DateTimeFormatter.ISO_LOCAL_DATE)),
                             () -> assertThat(notice.getEndDate()).isEqualTo(
-                                    LocalDate.of(3000, 10, 2).format(DateTimeFormatter.ISO_LOCAL_DATE)),
+                                    LocalDate.of(2000, 10, 2).format(DateTimeFormatter.ISO_LOCAL_DATE)),
                             () -> assertThat(notice.getApplyUrl()).isEqualTo(noticeUrl)
                     );
                 }),
                 dynamicTest("전체 공고를 불러온다.", () -> {
-                    NoticeResponses noticeResponses = findAllNotices(testLoginMemberAdapter.getLoginMember().getId());
+                    NoticeResponses noticeResponses = findAllNotices();
 
-                    assertThat(noticeResponses.getNoticeResponses().size()).isEqualTo(1);
+                    assertThat(noticeResponses.getNoticeDetails().size()).isEqualTo(1);
                 })
         );
     }
@@ -87,8 +86,8 @@ class NoticeAcceptanceTest extends AcceptanceTest {
     void should_createException_whenBadRequest() throws JsonProcessingException {
         final String noticeUrl = DOMAIN + MOCK_SEVER_PORT + PATH;
         NoticeCreateRequest noticeCreateRequest = new NoticeCreateRequest(noticeUrl, null,
-                LocalDate.of(1000, 3, 1),
-                LocalDate.of(3000, 10, 2));
+                LocalDate.of(2000, 3, 1),
+                LocalDate.of(2000, 10, 2));
         final String exceptionNoticeRequest = objectMapper.writeValueAsString(noticeCreateRequest);
 
         // @formatter:off

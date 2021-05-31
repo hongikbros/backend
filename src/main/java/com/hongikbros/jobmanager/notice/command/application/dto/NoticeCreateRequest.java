@@ -15,24 +15,23 @@ import java.util.List;
 public class NoticeCreateRequest {
 
     @URL(protocol = "http", message = "잘못된 url 형식 입니다")
-    private final String applyUrl;
+    private String applyUrl;
 
     @NotNull(message = "skills는 null이 될 수 없습니다. skill이 없다면 빈 배열을 필요로 합니다.", groups = FirstValid.class)
     @NotEmptyFields(message = "skill 항목에 빈 string이 포함되어 있습니다.", groups = SecondValid.class)
-    private final List<String> skillTags;
+    private List<String> skillTags;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "YYYY-MM-dd")
-    private final LocalDate startDate;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd",timezone = "Asia/Seoul")
+    private LocalDate startDate;
 
     @FutureOrPresent(message = "공고 종료일이 잘못 됐습니다.")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "YYYY-MM-dd")
-    private final LocalDate endDate;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd",timezone = "Asia/Seoul")
+    private LocalDate endDate;
 
-    public NoticeCreateRequest(
-            @URL(protocol = "http", message = "잘못된 url 형식 입니다") String applyUrl,
-            @NotNull(message = "skills는 null이 될 수 없습니다. skill이 없다면 빈 배열을 필요로 합니다.") List<String> skillTags,
-            LocalDate startDate,
-            @FutureOrPresent(message = "공고 종료일이 잘못 됐습니다.") LocalDate endDate) {
+    private NoticeCreateRequest() {
+    }
+
+    public NoticeCreateRequest(String applyUrl, List<String> skillTags, LocalDate startDate, LocalDate endDate) {
         this.applyUrl = applyUrl;
         this.skillTags = skillTags;
         this.startDate = startDate;
