@@ -1,7 +1,7 @@
 package com.hongikbros.jobmanager.notice.infrastructure.dao;
 
 import com.hongikbros.jobmanager.notice.command.domain.notice.Notice;
-import com.hongikbros.jobmanager.notice.query.applicaion.dto.NoticeDetail;
+import com.hongikbros.jobmanager.notice.query.applicaion.dto.NoticeResponses;
 import com.hongikbros.jobmanager.notice.query.dao.NoticeViewDao;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.stereotype.Repository;
@@ -20,12 +20,14 @@ public class QueryDslNoticeViewDao implements NoticeViewDao {
     }
 
     @Override
-    public List<NoticeDetail> findByMemberId(Long id) {
-        List<Notice> notices = jpaQueryFactory.selectFrom(notice).fetch();
+    public NoticeResponses findByMemberId(Long id) {
+        final List<Notice> notices = jpaQueryFactory
+                .selectFrom(notice).distinct()
+                .join(notice.skills)
+                .fetchJoin()
+                .where(notice.memberId.id.eq(id))
+                .fetch();
 
-        System.out.println(notices.get(0).toString());
-        System.out.println(notices.get(0).getSkills().get(0).getSkillTag());
-
-        return null;
+        return NoticeResponses.of(notices);
     }
 }

@@ -7,7 +7,7 @@ import com.hongikbros.jobmanager.notice.command.domain.notice.ApplyUrl;
 import com.hongikbros.jobmanager.notice.command.domain.notice.Company;
 import com.hongikbros.jobmanager.notice.command.domain.notice.Duration;
 import com.hongikbros.jobmanager.notice.command.domain.notice.Notice;
-import com.hongikbros.jobmanager.notice.query.applicaion.dto.NoticeDetail;
+import com.hongikbros.jobmanager.notice.query.applicaion.dto.NoticeResponses;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -50,7 +50,7 @@ class QueryDslNoticeViewDaoTest {
         final Long memberId = 1L;
         final List<String> skillTags = Arrays.asList("Spring Boot", "docker");
         final Notice notice1 = TestObjectUtils.createNotice(
-                1L,
+                null,
                 memberId,
                 "백앤드 개발자 상시모집",
                 Company.from("icon.url"),
@@ -60,7 +60,7 @@ class QueryDslNoticeViewDaoTest {
                 ApplyUrl.from("https://apply.url")
         );
         final Notice notice2 = TestObjectUtils.createNotice(
-                2L,
+                null,
                 memberId,
                 "백앤드 개발자 상시모집",
                 Company.from("icon.url"),
@@ -71,12 +71,10 @@ class QueryDslNoticeViewDaoTest {
         );
         noticeRepository.save(notice1);
         noticeRepository.save(notice2);
-        entityManager.flush();
-        entityManager.clear();
 
         //when
-        final List<NoticeDetail> noticeDetails = queryDslNoticeViewDao.findByMemberId(memberId);
+        final NoticeResponses noticeResponses = queryDslNoticeViewDao.findByMemberId(memberId);
 
-        assertThat(noticeDetails.size()).isEqualTo(2);
+        assertThat(noticeResponses.getNoticeDetails().size()).isEqualTo(2);
     }
 }
