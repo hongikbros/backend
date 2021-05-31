@@ -1,5 +1,30 @@
 package com.hongikbros.jobmanager.acceptence;
 
+import static com.hongikbros.jobmanager.acceptence.AcceptanceTest.*;
+import static org.mockserver.model.HttpRequest.*;
+import static org.mockserver.model.HttpResponse.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.*;
+
+import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
+
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.TestInstance;
+import org.mockserver.client.MockServerClient;
+import org.mockserver.integration.ClientAndServer;
+import org.mockserver.junit.jupiter.MockServerSettings;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.web.context.WebApplicationContext;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hongikbros.jobmanager.common.auth.TestLoginMemberAdapter;
@@ -11,26 +36,6 @@ import com.hongikbros.jobmanager.notice.query.applicaion.dto.NoticeResponses;
 import com.hongikbros.jobmanager.notice.ui.NoticeController;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import io.restassured.module.mockmvc.specification.MockMvcRequestSpecification;
-import org.junit.jupiter.api.*;
-import org.mockserver.client.MockServerClient;
-import org.mockserver.integration.ClientAndServer;
-import org.mockserver.junit.jupiter.MockServerSettings;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.web.context.WebApplicationContext;
-
-import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.List;
-
-import static com.hongikbros.jobmanager.acceptence.AcceptanceTest.MOCK_SEVER_PORT;
-import static org.mockserver.model.HttpRequest.request;
-import static org.mockserver.model.HttpResponse.response;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @MockServerSettings(ports = {MOCK_SEVER_PORT})
@@ -104,7 +109,7 @@ public abstract class AcceptanceTest {
     }
 
     protected NoticeDetail createNotice(String noticeUrl, List<String> skillTags,
-                                        LocalDate startDate, LocalDate endDate) throws
+            LocalDate startDate, LocalDate endDate) throws
             JsonProcessingException {
         mocking200ScrapingServer();
 
@@ -145,6 +150,34 @@ public abstract class AcceptanceTest {
                         log().all().
                         statusCode(HttpStatus.OK.value()).
                         extract().as(responseType);
+        // @formatter:on
+    }
+
+    protected void updateById(String path, Long id, String response) {
+        // @formatter:off
+        given().
+                auth().with(csrf()).
+                auth().principal(testLoginMemberAdapter).
+                contentType(MediaType.APPLICATION_JSON_VALUE).
+                body(response).
+                when().
+                put(path+"/{id}",id).
+                then().
+                log().all().
+                statusCode(HttpStatus.NO_CONTENT.value());
+        // @formatter:on
+    }
+
+    protected void deleteById(String path, Long id) {
+        // @formatter:off
+        given().
+                auth().with(csrf()).
+                auth().principal(testLoginMemberAdapter).
+                when().
+                delete(path+"/{id}",id).
+                then().
+                log().all().
+                statusCode(HttpStatus.NO_CONTENT.value());
         // @formatter:on
     }
 }

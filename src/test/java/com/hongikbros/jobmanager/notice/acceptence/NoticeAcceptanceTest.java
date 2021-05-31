@@ -1,17 +1,9 @@
 package com.hongikbros.jobmanager.notice.acceptence;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.hongikbros.jobmanager.acceptence.AcceptanceTest;
-import com.hongikbros.jobmanager.notice.command.application.dto.NoticeCreateRequest;
-import com.hongikbros.jobmanager.notice.query.applicaion.dto.NoticeDetail;
-import com.hongikbros.jobmanager.notice.query.applicaion.dto.NoticeResponses;
-import com.hongikbros.jobmanager.notice.ui.NoticeController;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.DynamicTest;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestFactory;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
+import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.DynamicTest.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -19,10 +11,20 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.DynamicTest.dynamicTest;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.DynamicTest;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.hongikbros.jobmanager.acceptence.AcceptanceTest;
+import com.hongikbros.jobmanager.notice.command.application.dto.NoticeChangeRequest;
+import com.hongikbros.jobmanager.notice.command.application.dto.NoticeCreateRequest;
+import com.hongikbros.jobmanager.notice.query.applicaion.dto.NoticeDetail;
+import com.hongikbros.jobmanager.notice.query.applicaion.dto.NoticeResponses;
+import com.hongikbros.jobmanager.notice.ui.NoticeController;
 
 class NoticeAcceptanceTest extends AcceptanceTest {
 
@@ -65,9 +67,11 @@ class NoticeAcceptanceTest extends AcceptanceTest {
                             ),
                             () -> assertThat(notice.getIcon()).isNotNull(),
                             () -> assertThat(notice.getStartDate()).isEqualTo(
-                                    LocalDate.of(2000, 3, 1).format(DateTimeFormatter.ISO_LOCAL_DATE)),
+                                    LocalDate.of(2000, 3, 1)
+                                            .format(DateTimeFormatter.ISO_LOCAL_DATE)),
                             () -> assertThat(notice.getEndDate()).isEqualTo(
-                                    LocalDate.of(2000, 10, 2).format(DateTimeFormatter.ISO_LOCAL_DATE)),
+                                    LocalDate.of(2000, 10, 2)
+                                            .format(DateTimeFormatter.ISO_LOCAL_DATE)),
                             () -> assertThat(notice.getApplyUrl()).isEqualTo(noticeUrl)
                     );
                 }),
@@ -76,21 +80,24 @@ class NoticeAcceptanceTest extends AcceptanceTest {
 
                     assertThat(noticeResponses.getNoticeDetails().size()).isEqualTo(2);
                 }),
-                dynamicTest("게시글 삭제 요청한다.", () -> deleteById(setupNotice.getId()))
-        );
-    }
+                dynamicTest("게시글 수정 요청한다.", () -> {
 
-    protected void deleteById(Long id) {
-        // @formatter:off
-        given().
-                auth().with(csrf()).
-                auth().principal(testLoginMemberAdapter).
-        when().
-                delete(NoticeController.API_NOTICE+"/{id}",id).
-        then().
-                log().all().
-                statusCode(HttpStatus.NO_CONTENT.value());
-        // @formatter:on
+                    NoticeChangeRequest noticeChangeRequest = new NoticeChangeRequest(
+                            "재무시스템",
+                            "icon.url",
+                            Arrays.asList("JPA", "MyBatis"),
+                            LocalDate.now(),
+                            LocalDate.of(2021, 4, 15),
+                            "http://kakao.com"
+                    );
+
+                    final String request = objectMapper.writeValueAsString(noticeChangeRequest);
+
+                    updateById(NoticeController.API_NOTICE, setupNotice.getId(), request);
+                }),
+                dynamicTest("게시글 삭제 요청한다.",
+                        () -> deleteById(NoticeController.API_NOTICE, setupNotice.getId()))
+        );
     }
 
     /**

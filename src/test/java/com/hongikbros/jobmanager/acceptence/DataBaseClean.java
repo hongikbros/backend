@@ -1,15 +1,17 @@
 package com.hongikbros.jobmanager.acceptence;
 
-import com.google.common.base.CaseFormat;
-import org.springframework.stereotype.Service;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 import javax.persistence.Entity;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
-import java.util.List;
-import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Service;
+
+import com.google.common.base.CaseFormat;
 
 @Service
 public class DataBaseClean {
@@ -36,7 +38,7 @@ public class DataBaseClean {
             entityManager.createNativeQuery("TRUNCATE TABLE " + tableName).executeUpdate();
             entityManager.createNativeQuery(
                     "ALTER TABLE " + tableName + " ALTER COLUMN " + tableName
-                            + "_ID RESTART WITH 1")
+                            + "_id RESTART WITH 1")
                     .executeUpdate();
         }
 
