@@ -1,9 +1,9 @@
 package com.hongikbros.jobmanager.security.oauth2;
 
-import java.util.Collections;
-
-import javax.servlet.http.HttpSession;
-
+import com.hongikbros.jobmanager.member.domain.LoginMember;
+import com.hongikbros.jobmanager.member.domain.LoginMemberAdapter;
+import com.hongikbros.jobmanager.member.domain.Member;
+import com.hongikbros.jobmanager.member.domain.MemberRepository;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -12,10 +12,8 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.hongikbros.jobmanager.member.domain.LoginMember;
-import com.hongikbros.jobmanager.member.domain.LoginMemberAdapter;
-import com.hongikbros.jobmanager.member.domain.Member;
-import com.hongikbros.jobmanager.member.domain.MemberRepository;
+import javax.servlet.http.HttpSession;
+import java.util.Collections;
 
 @Service
 public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
@@ -58,7 +56,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
     private Member saveOrUpdate(OAuthAttributes attributes) {
         httpSession.setAttribute(PRINCIPAL_OAUTHID_BEFORE_SAVING, attributes.getName());
 
-        Member member = memberRepository.findByEmail(attributes.getEmail())
+        Member member = memberRepository.findByOauthId(attributes.getOauthId())
                 .map(entity -> entity.update(attributes.getName(), attributes.getAvatar()))
                 .orElse(attributes.toEntity());
 

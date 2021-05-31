@@ -9,11 +9,11 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import com.hongikbros.jobmanager.member.domain.LoginMember;
 import com.hongikbros.jobmanager.member.domain.Member;
-import com.hongikbros.jobmanager.notice.domain.notice.ApplyUrl;
-import com.hongikbros.jobmanager.notice.domain.notice.Company;
-import com.hongikbros.jobmanager.notice.domain.notice.Duration;
-import com.hongikbros.jobmanager.notice.domain.notice.Notice;
-import com.hongikbros.jobmanager.notice.domain.skill.Skill;
+import com.hongikbros.jobmanager.notice.command.domain.notice.ApplyUrl;
+import com.hongikbros.jobmanager.notice.command.domain.notice.Company;
+import com.hongikbros.jobmanager.notice.command.domain.notice.Duration;
+import com.hongikbros.jobmanager.notice.command.domain.notice.Notice;
+import com.hongikbros.jobmanager.notice.command.domain.skill.Skill;
 import com.hongikbros.jobmanager.security.oauth2.OAuthAttributes;
 
 public class TestObjectUtils {

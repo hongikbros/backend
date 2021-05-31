@@ -1,14 +1,10 @@
 package com.hongikbros.jobmanager.security.oauth2;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.BDDMockito.*;
-
-import java.util.Map;
-import java.util.Optional;
-
-import javax.servlet.http.HttpSession;
-
+import com.hongikbros.jobmanager.common.fixture.member.MemberFixture;
+import com.hongikbros.jobmanager.common.fixture.oauth.OAuth2AttributesFixture;
+import com.hongikbros.jobmanager.member.domain.Member;
+import com.hongikbros.jobmanager.member.domain.MemberRepository;
+import com.hongikbros.jobmanager.member.domain.Role;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,11 +17,13 @@ import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserServ
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
-import com.hongikbros.jobmanager.common.fixture.member.MemberFixture;
-import com.hongikbros.jobmanager.common.fixture.oauth.OAuth2AttributesFixture;
-import com.hongikbros.jobmanager.member.domain.Member;
-import com.hongikbros.jobmanager.member.domain.MemberRepository;
-import com.hongikbros.jobmanager.member.domain.Role;
+import javax.servlet.http.HttpSession;
+import java.util.Map;
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.mockito.BDDMockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class CustomOAuth2UserServiceTest {
@@ -65,7 +63,7 @@ class CustomOAuth2UserServiceTest {
         ).willReturn("id");
         given(defaultOAuth2UserService.loadUser(any())).willReturn(oAuth2User);
         given(oAuth2User.getAttributes()).willReturn(attributes);
-        given(memberRepository.findByEmail(any())).willReturn(Optional.of(member));
+        given(memberRepository.findByOauthId(any())).willReturn(Optional.of(member));
         given(memberRepository.save(any())).willReturn(member);
         // when
         final OAuth2User defaultOAuth2User = customOAuth2UserService.loadUser(userRequest);

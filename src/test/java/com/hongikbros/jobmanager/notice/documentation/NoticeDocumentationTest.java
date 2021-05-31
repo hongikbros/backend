@@ -1,19 +1,18 @@
 package com.hongikbros.jobmanager.notice.documentation;
 
-import static io.restassured.module.mockmvc.RestAssuredMockMvc.*;
-import static org.mockito.ArgumentMatchers.*;
-import static org.springframework.restdocs.headers.HeaderDocumentation.*;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.*;
-import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
-
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.hongikbros.jobmanager.common.auth.TestLoginMemberAdapter;
+import com.hongikbros.jobmanager.common.documentation.Documentation;
+import com.hongikbros.jobmanager.common.fixture.member.MemberFixture;
+import com.hongikbros.jobmanager.common.utils.TestObjectUtils;
+import com.hongikbros.jobmanager.member.domain.LoginMember;
+import com.hongikbros.jobmanager.notice.command.application.NoticeService;
+import com.hongikbros.jobmanager.notice.command.application.dto.NoticeCreateRequest;
+import com.hongikbros.jobmanager.notice.command.domain.notice.ApplyUrl;
+import com.hongikbros.jobmanager.notice.command.domain.notice.Company;
+import com.hongikbros.jobmanager.notice.command.domain.notice.Duration;
+import com.hongikbros.jobmanager.notice.command.domain.notice.Notice;
+import com.hongikbros.jobmanager.notice.query.applicaion.dto.NoticeDetail;
+import com.hongikbros.jobmanager.notice.ui.NoticeController;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -25,19 +24,21 @@ import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.web.context.WebApplicationContext;
 
-import com.hongikbros.jobmanager.common.auth.TestLoginMemberAdapter;
-import com.hongikbros.jobmanager.common.documentation.Documentation;
-import com.hongikbros.jobmanager.common.fixture.member.MemberFixture;
-import com.hongikbros.jobmanager.common.utils.TestObjectUtils;
-import com.hongikbros.jobmanager.member.domain.LoginMember;
-import com.hongikbros.jobmanager.notice.application.NoticeService;
-import com.hongikbros.jobmanager.notice.application.dto.NoticeResponse;
-import com.hongikbros.jobmanager.notice.domain.notice.ApplyUrl;
-import com.hongikbros.jobmanager.notice.domain.notice.Company;
-import com.hongikbros.jobmanager.notice.domain.notice.Duration;
-import com.hongikbros.jobmanager.notice.domain.notice.Notice;
-import com.hongikbros.jobmanager.notice.ui.NoticeController;
-import com.hongikbros.jobmanager.notice.ui.dto.NoticeCreateRequest;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static io.restassured.module.mockmvc.RestAssuredMockMvc.given;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 
 @WebMvcTest(controllers = NoticeController.class)
 class NoticeDocumentationTest extends Documentation {
@@ -72,10 +73,10 @@ class NoticeDocumentationTest extends Documentation {
                 ApplyUrl.from("http://apply.url")
         );
 
-        NoticeResponse noticeResponse = NoticeResponse.of(notice);
+        NoticeDetail noticeDetail = NoticeDetail.of(notice);
         BDDMockito.given(
                 noticeService.createNotice(eq(loginMember), any(NoticeCreateRequest.class)))
-                .willReturn(noticeResponse);
+                .willReturn(noticeDetail);
 
         Map<String, Object> noticeCreateRequest = new HashMap<>();
         noticeCreateRequest.put("applyUrl", "http://apply.url");

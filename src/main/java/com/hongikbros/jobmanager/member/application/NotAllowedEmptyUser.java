@@ -1,4 +1,4 @@
-package com.hongikbros.jobmanager.notice.application.exception;
+package com.hongikbros.jobmanager.member.application;
 
 import com.hongikbros.jobmanager.common.exception.JobManagerException;
 

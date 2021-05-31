@@ -1,21 +1,12 @@
-package com.hongikbros.jobmanager.notice.domain.notice;
-
-import java.util.List;
-
-import javax.persistence.AttributeOverride;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+package com.hongikbros.jobmanager.notice.command.domain.notice;
 
 import com.hongikbros.jobmanager.common.domain.Association;
 import com.hongikbros.jobmanager.common.domain.BaseEntity;
 import com.hongikbros.jobmanager.member.domain.Member;
-import com.hongikbros.jobmanager.notice.domain.skill.Skill;
+import com.hongikbros.jobmanager.notice.command.domain.skill.Skill;
+
+import javax.persistence.*;
+import java.util.List;
 
 @Entity
 public class Notice extends BaseEntity {
@@ -36,6 +27,7 @@ public class Notice extends BaseEntity {
     private Company company;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "notice_id")
     private List<Skill> skills;
 
     @Embedded
@@ -50,9 +42,9 @@ public class Notice extends BaseEntity {
     }
 
     public Notice(Long id,
-            Association<Member> memberId, String title,
-            Company company, List<Skill> skills,
-            Duration duration, ApplyUrl applyUrl) {
+                  Association<Member> memberId, String title,
+                  Company company, List<Skill> skills,
+                  Duration duration, ApplyUrl applyUrl) {
         this.id = id;
         this.memberId = memberId;
         this.title = title;
@@ -63,9 +55,22 @@ public class Notice extends BaseEntity {
     }
 
     public static Notice of(Long memberId, String title, Company company, List<Skill> skills,
-            Duration duration, ApplyUrl applyUrl) {
+                            Duration duration, ApplyUrl applyUrl) {
         return new Notice(null, new Association<>(memberId), title, company, skills, duration,
                 applyUrl);
+    }
+
+    @Override
+    public String toString() {
+        return "Notice{" +
+                "id=" + id +
+                ", memberId=" + memberId +
+                ", title='" + title + '\'' +
+                ", company=" + company +
+                ", skills=" + skills +
+                ", duration=" + duration +
+                ", applyUrl=" + applyUrl +
+                '}';
     }
 
     public Long getId() {

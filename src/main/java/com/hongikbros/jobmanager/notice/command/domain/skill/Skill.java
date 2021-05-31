@@ -1,4 +1,6 @@
-package com.hongikbros.jobmanager.notice.domain.skill;
+package com.hongikbros.jobmanager.notice.command.domain.skill;
+
+import com.hongikbros.jobmanager.common.domain.BaseEntity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -7,20 +9,20 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
-public class Skill {
+public class Skill extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "skill_id")
     Long id;
 
-    String skill;
+    String skillTag;
 
     protected Skill() {
     }
 
-    private Skill(Long id, String skill) {
+    private Skill(Long id, String skillTag) {
         this.id = id;
-        this.skill = skill;
+        this.skillTag = skillTag;
     }
 
     public static Skill from(String skill) {
@@ -31,7 +33,7 @@ public class Skill {
         return id;
     }
 
-    public String getSkill() {
-        return skill;
+    public String getSkillTag() {
+        return skillTag;
     }
 }

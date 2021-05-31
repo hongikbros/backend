@@ -8,6 +8,7 @@ import com.hongikbros.jobmanager.notice.command.domain.notice.Duration;
 import com.hongikbros.jobmanager.notice.command.domain.notice.Notice;
 import com.hongikbros.jobmanager.notice.query.applicaion.NoticeViewListService;
 import com.hongikbros.jobmanager.notice.query.applicaion.dto.NoticeResponses;
+import com.hongikbros.jobmanager.notice.query.dao.NoticeViewDao;
 import com.hongikbros.jobmanager.security.core.CurrentMember;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,8 +16,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -24,22 +23,20 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.mockito.BDDMockito.any;
+import static org.mockito.BDDMockito.anyLong;
 import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
-class NoticeControllerTest {
-
+class NoticeViewListServiceTest {
     @Mock
-    private NoticeViewListService noticeViewListService;
+    private NoticeViewDao noticeViewDao;
 
     @InjectMocks
-    private NoticeController noticeController;
+    private NoticeViewListService noticeViewListService;
 
-    @DisplayName("공고 전체조회 NoticeResponses Dto 타입의 ResponseEntity를 리턴함")
+    @DisplayName("공고 상세 내용을 조회하면 NoticeResponses dto를 반환한다.")
     @Test
-    void should_returnResponseEntity() {
+    void should_returnNoticeResponse_whenShowNoticeIsRequested() {
         // given
         final CurrentMember currentMember = MemberFixture.LOGIN_MEMBER_EUNSEOK;
         final List<String> skillTags = Arrays.asList("Spring Boot", "docker");
@@ -52,17 +49,12 @@ class NoticeControllerTest {
                 Duration.of(LocalDate.MIN, LocalDate.MAX),
                 ApplyUrl.from("hi.com")
         );
+        given(noticeViewDao.findByMemberId(anyLong())).willReturn(NoticeResponses.of(Collections.singletonList(notice)));
 
-        final NoticeResponses noticeResponses = NoticeResponses.of(Collections.singletonList(notice));
-
-        given(noticeViewListService.findAllByMemberId(any())).willReturn(noticeResponses);
-
-        //when
-        final ResponseEntity<NoticeResponses> responseEntity = noticeController.findAll(currentMember);
+        // when
+        final NoticeResponses noticeResponses = noticeViewListService.findAllByMemberId(MemberFixture.LOGIN_MEMBER_EUNSEOK);
         // then
-        assertAll(
-                () -> assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK),
-                () -> assertThat(responseEntity.getBody()).isNotNull()
-        );
+        assertThat(noticeResponses.getNoticeDetails().size()).isEqualTo(1);
     }
+
 }

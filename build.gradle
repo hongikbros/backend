@@ -28,6 +28,11 @@ sourceSets {
             srcDirs "src/main/resources", "src/main/resources-$profile"
         }
     }
+    test {
+        resources {
+            srcDirs "src/test/resources","src/test/resources-test"
+        }
+    }
 }
 
 dependencies {

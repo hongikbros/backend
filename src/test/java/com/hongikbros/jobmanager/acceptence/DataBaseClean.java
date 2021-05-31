@@ -1,20 +1,19 @@
 package com.hongikbros.jobmanager.acceptence;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import com.google.common.base.CaseFormat;
+import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import javax.persistence.Entity;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
-
-import org.springframework.stereotype.Service;
-
-import com.google.common.base.CaseFormat;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class DataBaseClean {
+
     @PersistenceContext
     private EntityManager entityManager;
 

@@ -1,20 +1,17 @@
 package com.hongikbros.jobmanager.acceptence;
 
-import static com.hongikbros.jobmanager.acceptence.AcceptanceTest.*;
-import static org.mockserver.model.HttpRequest.*;
-import static org.mockserver.model.HttpResponse.*;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
-import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.*;
-
-import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.List;
-
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.TestInstance;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hongikbros.jobmanager.common.auth.TestLoginMemberAdapter;
+import com.hongikbros.jobmanager.common.fixture.member.MemberFixture;
+import com.hongikbros.jobmanager.common.utils.TestFileIoUtils;
+import com.hongikbros.jobmanager.notice.command.application.dto.NoticeCreateRequest;
+import com.hongikbros.jobmanager.notice.query.applicaion.dto.NoticeDetail;
+import com.hongikbros.jobmanager.notice.query.applicaion.dto.NoticeResponses;
+import com.hongikbros.jobmanager.notice.ui.NoticeController;
+import io.restassured.module.mockmvc.RestAssuredMockMvc;
+import io.restassured.module.mockmvc.specification.MockMvcRequestSpecification;
+import org.junit.jupiter.api.*;
 import org.mockserver.client.MockServerClient;
 import org.mockserver.integration.ClientAndServer;
 import org.mockserver.junit.jupiter.MockServerSettings;
@@ -25,16 +22,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.context.WebApplicationContext;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hongikbros.jobmanager.common.auth.TestLoginMemberAdapter;
-import com.hongikbros.jobmanager.common.fixture.member.MemberFixture;
-import com.hongikbros.jobmanager.common.utils.TestFileIoUtils;
-import com.hongikbros.jobmanager.notice.application.dto.NoticeResponse;
-import com.hongikbros.jobmanager.notice.ui.NoticeController;
-import com.hongikbros.jobmanager.notice.ui.dto.NoticeCreateRequest;
-import io.restassured.module.mockmvc.RestAssuredMockMvc;
-import io.restassured.module.mockmvc.specification.MockMvcRequestSpecification;
+import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
+
+import static com.hongikbros.jobmanager.acceptence.AcceptanceTest.MOCK_SEVER_PORT;
+import static org.mockserver.model.HttpRequest.request;
+import static org.mockserver.model.HttpResponse.response;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @MockServerSettings(ports = {MOCK_SEVER_PORT})
@@ -50,7 +46,7 @@ public abstract class AcceptanceTest {
     private DataBaseClean dataBaseClean;
 
     private ClientAndServer mockServer;
-    
+
     @Autowired
     protected ObjectMapper objectMapper;
 
@@ -103,8 +99,12 @@ public abstract class AcceptanceTest {
                 );
     }
 
-    protected NoticeResponse createNotice(String noticeUrl, List<String> skillTags,
-            LocalDate startDate, LocalDate endDate) throws
+    protected NoticeResponses findAllNotices() {
+        return findAll(NoticeController.API_NOTICE, NoticeResponses.class);
+    }
+
+    protected NoticeDetail createNotice(String noticeUrl, List<String> skillTags,
+                                        LocalDate startDate, LocalDate endDate) throws
             JsonProcessingException {
         mocking200ScrapingServer();
 
@@ -112,10 +112,10 @@ public abstract class AcceptanceTest {
                 startDate, endDate);
         final String createNoticeRequest = objectMapper.writeValueAsString(noticeCreateRequest);
 
-        return post(createNoticeRequest, NoticeResponse.class);
+        return post(NoticeController.API_NOTICE, createNoticeRequest, NoticeDetail.class);
     }
 
-    protected <T> T post(String requestJson, Class<T> responseType) {
+    protected <T> T post(String path, String requestJson, Class<T> responseType) {
         // @formatter:off
         return
                 given().
@@ -125,7 +125,7 @@ public abstract class AcceptanceTest {
                         accept(MediaType.APPLICATION_JSON_VALUE).
                         body(requestJson).
                 when().
-                        post(NoticeController.API_NOTICE).
+                        post(path).
                 then().
                         log().all().
                         statusCode(HttpStatus.CREATED.value()).
@@ -133,4 +133,18 @@ public abstract class AcceptanceTest {
         // @formatter:on
     }
 
+    private <T> T findAll(String path, Class<T> responseType) {
+        // @formatter:off
+        return
+                given().
+                        auth().principal(testLoginMemberAdapter).
+                        accept(MediaType.APPLICATION_JSON_VALUE).
+                when().
+                        get(path).
+                then().
+                        log().all().
+                        statusCode(HttpStatus.OK.value()).
+                        extract().as(responseType);
+        // @formatter:on
+    }
 }

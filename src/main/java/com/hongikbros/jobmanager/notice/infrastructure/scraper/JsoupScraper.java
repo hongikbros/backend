@@ -13,12 +13,12 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.springframework.stereotype.Component;
 
-import com.hongikbros.jobmanager.notice.domain.notice.ApplyUrl;
-import com.hongikbros.jobmanager.notice.domain.notice.Company;
-import com.hongikbros.jobmanager.notice.domain.notice.Duration;
-import com.hongikbros.jobmanager.notice.domain.notice.Notice;
-import com.hongikbros.jobmanager.notice.domain.scraper.Scraper;
-import com.hongikbros.jobmanager.notice.domain.skill.Skill;
+import com.hongikbros.jobmanager.notice.command.domain.notice.ApplyUrl;
+import com.hongikbros.jobmanager.notice.command.domain.notice.Company;
+import com.hongikbros.jobmanager.notice.command.domain.notice.Duration;
+import com.hongikbros.jobmanager.notice.command.domain.notice.Notice;
+import com.hongikbros.jobmanager.notice.command.domain.scraper.Scraper;
+import com.hongikbros.jobmanager.notice.command.domain.skill.Skill;
 import com.hongikbros.jobmanager.notice.infrastructure.exception.NotParseException;
 import com.hongikbros.jobmanager.notice.infrastructure.exception.NotScrapingException;
 import com.hongikbros.jobmanager.notice.infrastructure.exception.ParseExceptionCode;
