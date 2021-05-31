@@ -1,5 +1,6 @@
 package com.hongikbros.jobmanager.notice.query.applicaion.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.hongikbros.jobmanager.notice.command.domain.notice.Notice;
 import com.hongikbros.jobmanager.notice.command.domain.skill.Skill;
 
@@ -9,16 +10,20 @@ import java.util.stream.Collectors;
 
 public class NoticeDetail {
 
-    private final Long id;
-    private final String title;
-    private final String icon;
-    private final List<String> skillTags;
-    private final LocalDate startDate;
-    private final LocalDate endDate;
-    private final String applyUrl;
+    private Long id;
+    private String title;
+    private String icon;
+    private List<String> skillTags;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private LocalDate startDate;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private LocalDate endDate;
+    private String applyUrl;
 
-    private NoticeDetail(Long id, String title, String icon, List<String> skillTags,
-                        LocalDate startDate, LocalDate endDate, String applyUrl) {
+    private NoticeDetail() {
+    }
+
+    public NoticeDetail(Long id, String title, String icon, List<String> skillTags, LocalDate startDate, LocalDate endDate, String applyUrl) {
         this.id = id;
         this.title = title;
         this.icon = icon;
@@ -27,6 +32,7 @@ public class NoticeDetail {
         this.endDate = endDate;
         this.applyUrl = applyUrl;
     }
+
 
     public static NoticeDetail of(Notice notice) {
         return new NoticeDetail(
