@@ -1,12 +1,22 @@
 package com.hongikbros.jobmanager.notice.command.domain.notice;
 
+import java.util.List;
+
+import javax.persistence.AttributeOverride;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+
 import com.hongikbros.jobmanager.common.domain.Association;
 import com.hongikbros.jobmanager.common.domain.BaseEntity;
 import com.hongikbros.jobmanager.member.domain.Member;
 import com.hongikbros.jobmanager.notice.command.domain.skill.Skill;
-
-import javax.persistence.*;
-import java.util.List;
 
 @Entity
 public class Notice extends BaseEntity {
@@ -42,9 +52,9 @@ public class Notice extends BaseEntity {
     }
 
     public Notice(Long id,
-                  Association<Member> memberId, String title,
-                  Company company, List<Skill> skills,
-                  Duration duration, ApplyUrl applyUrl) {
+            Association<Member> memberId, String title,
+            Company company, List<Skill> skills,
+            Duration duration, ApplyUrl applyUrl) {
         this.id = id;
         this.memberId = memberId;
         this.title = title;
@@ -55,7 +65,7 @@ public class Notice extends BaseEntity {
     }
 
     public static Notice of(Long memberId, String title, Company company, List<Skill> skills,
-                            Duration duration, ApplyUrl applyUrl) {
+            Duration duration, ApplyUrl applyUrl) {
         return new Notice(null, new Association<>(memberId), title, company, skills, duration,
                 applyUrl);
     }
@@ -71,6 +81,16 @@ public class Notice extends BaseEntity {
                 ", duration=" + duration +
                 ", applyUrl=" + applyUrl +
                 '}';
+    }
+
+    public void update(Notice updateNotice) {
+        this.title = updateNotice.title;
+        this.company = updateNotice.company;
+        this.applyUrl = updateNotice.applyUrl;
+        this.duration = updateNotice.duration;
+
+        this.skills.clear();
+        this.skills.addAll(updateNotice.skills);
     }
 
     public Long getId() {
